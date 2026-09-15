@@ -40,6 +40,54 @@ LOOKBACK_HOURS = 30
 DUBLIN = ZoneInfo("Europe/Dublin")
 CLAUDE_MODEL = "claude-sonnet-4-5"
 
+# Path to the dedupe state file. Committed back to the repo by the GitHub
+# Actions workflow after each run - see the "Persist dedupe state" step.
+SEEN_STORIES_PATH = "seen_stories.json"
+SEEN_RETENTION_DAYS = 5  # comfortably longer than LOOKBACK_HOURS so a story
+                          # can't reappear across two consecutive runs
+
+# --- Weather (Open-Meteo, free, no key needed) ---
+DUBLIN_LAT, DUBLIN_LON = 53.3498, -6.2603
+WMO_WEATHER_CODES = {
+    0: "Clear sky", 1: "Mainly clear", 2: "Partly cloudy", 3: "Overcast",
+    45: "Fog", 48: "Depositing rime fog",
+    51: "Light drizzle", 53: "Moderate drizzle", 55: "Dense drizzle",
+    56: "Light freezing drizzle", 57: "Dense freezing drizzle",
+    61: "Slight rain", 63: "Moderate rain", 65: "Heavy rain",
+    66: "Light freezing rain", 67: "Heavy freezing rain",
+    71: "Slight snow", 73: "Moderate snow", 75: "Heavy snow", 77: "Snow grains",
+    80: "Slight rain showers", 81: "Moderate rain showers", 82: "Violent rain showers",
+    85: "Slight snow showers", 86: "Heavy snow showers",
+    95: "Thunderstorm", 96: "Thunderstorm with slight hail", 99: "Thunderstorm with heavy hail",
+}
+
+# --- Economic calendar ---
+# Static list of known scheduled events (dates are published well in advance
+# by the ECB/Fed/Irish government, so this is more reliable than any free
+# calendar API). Update yearly - see README.md.
+ECON_EVENTS = [
+    {"name": "Irish Budget Day (Budget 2027)", "date": "2026-10-06"},
+    {"name": "Federal Reserve (FOMC) rate decision", "date": "2026-01-28"},
+    {"name": "Federal Reserve (FOMC) rate decision", "date": "2026-03-18"},
+    {"name": "Federal Reserve (FOMC) rate decision", "date": "2026-04-29"},
+    {"name": "Federal Reserve (FOMC) rate decision", "date": "2026-06-17"},
+    {"name": "Federal Reserve (FOMC) rate decision", "date": "2026-07-29"},
+    {"name": "Federal Reserve (FOMC) rate decision", "date": "2026-09-16"},
+    {"name": "Federal Reserve (FOMC) rate decision", "date": "2026-10-28"},
+    {"name": "Federal Reserve (FOMC) rate decision", "date": "2026-12-09"},
+    {"name": "ECB Governing Council rate decision", "date": "2026-02-05"},
+    {"name": "ECB Governing Council rate decision", "date": "2026-03-19"},
+    {"name": "ECB Governing Council rate decision", "date": "2026-04-30"},
+    {"name": "ECB Governing Council rate decision", "date": "2026-06-11"},
+    {"name": "ECB Governing Council rate decision", "date": "2026-07-23"},
+    {"name": "ECB Governing Council rate decision", "date": "2026-09-10"},
+    {"name": "ECB Governing Council rate decision", "date": "2026-10-29"},
+    {"name": "ECB Governing Council rate decision", "date": "2026-12-17"},
+    {"name": "ECB Governing Council rate decision", "date": "2027-02-04"},
+    {"name": "ECB Governing Council rate decision", "date": "2027-03-18"},
+]
+ECON_EVENTS_HORIZON_DAYS = 10  # show events within this many days
+
 # News feeds. Category (Ireland/Business/Politics/Technology/World) is
 # decided by Claude from content, not by which feed a story came from - so
 # these groupings just control which feeds get fetched, not where a story
@@ -82,8 +130,8 @@ MAX_WORTH_KNOWING = 6
 # General sport feeds, filtered by keyword then curated down by Claude.
 SPORT_FEEDS = {
     "BBC - Football":                 "http://feeds.bbci.co.uk/sport/football/rss.xml",
-    "Sky Sports - Football": "https://www.skysports.com/rss/12040",
-    "Liverpool Echo - LFC":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
+    "Sky Sports - Football (VERIFY)": "https://www.skysports.com/rss/12040",
+    "Liverpool Echo - LFC (VERIFY)":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
 }
 TEAM_KEYWORDS = [
     "liverpool", "salah", "mohamed salah",
@@ -239,6 +287,86 @@ def build_fixtures_data(today_dublin, yesterday_dublin):
         "results_yesterday": results_yesterday,
         "full_matchday": full_matchday,
     }
+
+# ---------------------------------------------------------------------------
+# WEATHER & ECONOMIC CALENDAR
+# ---------------------------------------------------------------------------
+
+def get_dublin_weather():
+    try:
+        r = requests.get(
+            "https://api.open-meteo.com/v1/forecast",
+            params={
+                "latitude": DUBLIN_LAT, "longitude": DUBLIN_LON,
+                "daily": "temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode",
+                "timezone": "Europe/Dublin", "forecast_days": 1,
+            },
+            timeout=20,
+        )
+        r.raise_for_status()
+        d = r.json()["daily"]
+        code = d["weathercode"][0]
+        desc = WMO_WEATHER_CODES.get(code, "Mixed conditions")
+        lo, hi = round(d["temperature_2m_min"][0]), round(d["temperature_2m_max"][0])
+        rain = d["precipitation_probability_max"][0]
+        return f"Dublin today: {desc}, {lo}\u2013{hi}\u00b0C, {rain}% chance of rain"
+    except Exception as exc:
+        print(f"  [warn] weather fetch failed: {exc}", file=sys.stderr)
+        return None
+
+
+def get_upcoming_econ_events(today_dublin):
+    upcoming = []
+    for ev in ECON_EVENTS:
+        try:
+            ev_date = dt.date.fromisoformat(ev["date"])
+        except ValueError:
+            continue
+        delta = (ev_date - today_dublin).days
+        if 0 <= delta <= ECON_EVENTS_HORIZON_DAYS:
+            upcoming.append((delta, ev_date, ev["name"]))
+    upcoming.sort(key=lambda x: x[0])
+    lines = []
+    for delta, ev_date, name in upcoming:
+        when = "today" if delta == 0 else ("tomorrow" if delta == 1 else f"in {delta} days")
+        lines.append(f"{name} \u2014 {ev_date.strftime('%a %d %b')} ({when})")
+    return lines
+
+# ---------------------------------------------------------------------------
+# DEDUPE STATE
+# ---------------------------------------------------------------------------
+
+def story_key(item):
+    return item.get("link") or item.get("title", "").strip().lower()
+
+
+def load_seen_state(path):
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def save_seen_state(state, path):
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(state, f, indent=2, sort_keys=True)
+    except Exception as exc:
+        print(f"  [warn] could not save dedupe state file: {exc}", file=sys.stderr)
+
+
+def filter_unseen(items, seen):
+    return [it for it in items if story_key(it) not in seen]
+
+
+def mark_seen(items, seen, today_str):
+    for it in items:
+        seen[story_key(it)] = today_str
+
+
+def prune_seen(seen, cutoff_date_str):
+    return {k: v for k, v in seen.items() if v >= cutoff_date_str}
 
 # ---------------------------------------------------------------------------
 # CLAUDE
@@ -483,7 +611,8 @@ your entire response must be valid JSON starting with [ and ending with ].
 # RENDERING
 # ---------------------------------------------------------------------------
 
-def render_html(bulletin, top_stories, category_sections, worth_knowing, sport_items, fixtures_data, edition_date):
+def render_html(bulletin, top_stories, category_sections, worth_knowing, sport_items, fixtures_data,
+                 edition_date, weather_line=None, econ_events=None):
 
     def section_header(text, size="16px"):
         return f"""<div style="font-family:Georgia,serif;font-size:{size};font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">{text}</div>"""
@@ -548,6 +677,19 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing, sport_i
     </div>
     """
 
+    # --- Economic calendar ---
+    econ_html = ""
+    if econ_events:
+        econ_html = f"""
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">\U0001F4C5 On The Calendar</div>
+          {list_block(econ_events, "", font_size="13px")}
+        </div>
+        """
+
+    # --- Weather line ---
+    weather_html = f"""<div style="text-align:center;font-family:Georgia,serif;font-size:13px;color:#555;margin-top:6px;">{weather_line}</div>""" if weather_line else ""
+
     # --- Top stories ---
     top_html = "".join(full_story_block(it) for it in top_stories) or "<p style='color:#777;'>Nothing cleared the must-know bar today.</p>"
 
@@ -575,10 +717,12 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing, sport_i
   <div style="text-align:center;border-bottom:4px double #111;padding-bottom:10px;margin-bottom:18px;">
     <div style="font-family:Georgia,serif;font-size:30px;font-weight:900;letter-spacing:0.02em;">THE MORNING BRIEF</div>
     <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">{edition_date}</div>
+    {weather_html}
   </div>
 
   {bulletin_html}
   {fixtures_html}
+  {econ_html}
 
   {section_header(TOP_LABEL, size="18px")}
   {top_html}
@@ -632,6 +776,10 @@ def main():
     yesterday_dublin = today_dublin - dt.timedelta(days=1)
     edition_date = now_dublin.strftime("%A %d %B %Y")
 
+    print("Loading dedupe state...")
+    seen = load_seen_state(SEEN_STORIES_PATH)
+    print(f"  {len(seen)} previously-sent stories on file")
+
     print("Fetching Ireland feeds...")
     ireland_raw = collect(IRELAND_FEEDS, cutoff)
     print("Fetching world feeds...")
@@ -639,15 +787,24 @@ def main():
     print("Fetching technology feeds...")
     tech_raw = collect(TECH_FEEDS, cutoff)
     all_news_raw = ireland_raw + world_raw + tech_raw
-    print(f"  {len(all_news_raw)} total news items collected")
+    all_news_raw = filter_unseen(all_news_raw, seen)
+    print(f"  {len(all_news_raw)} total news items collected (after dedupe)")
 
     print("Fetching sport feeds...")
     sport_raw = collect(SPORT_FEEDS, cutoff)
     sport_filtered = filter_by_keywords(sport_raw, TEAM_KEYWORDS)
-    print(f"  {len(sport_filtered)} sport items matched your keywords")
+    sport_filtered = filter_unseen(sport_filtered, seen)
+    print(f"  {len(sport_filtered)} sport items matched your keywords (after dedupe)")
 
     print("Fetching fixtures & results...")
     fixtures_data = build_fixtures_data(today_dublin, yesterday_dublin)
+
+    print("Fetching weather...")
+    weather_line = get_dublin_weather()
+
+    print("Checking economic calendar...")
+    econ_events = get_upcoming_econ_events(today_dublin)
+    print(f"  {len(econ_events)} upcoming events within {ECON_EVENTS_HORIZON_DAYS} days")
 
     print("Scoring, categorizing, and writing breakdowns for news...")
     top_stories, category_sections, worth_knowing = build_news_sections(all_news_raw)
@@ -667,11 +824,20 @@ def main():
     bulletin = write_bulletin(top_stories, category_sections, sport_curated, fixtures_data)
     print(f"  bulletin has {len(bulletin)} bullets")
 
-    html = render_html(bulletin, top_stories, category_sections, worth_knowing, sport_curated, fixtures_data, edition_date)
+    html = render_html(bulletin, top_stories, category_sections, worth_knowing, sport_curated,
+                        fixtures_data, edition_date, weather_line, econ_events)
 
     print("Sending email...")
     send_email(html, subject=f"Morning Brief — {edition_date}")
     print("Done.")
+
+    print("Updating dedupe state...")
+    shown_items = top_stories + [it for items in category_sections.values() for it in items] + worth_knowing + sport_curated
+    mark_seen(shown_items, seen, today_dublin.isoformat())
+    cutoff_date_str = (today_dublin - dt.timedelta(days=SEEN_RETENTION_DAYS)).isoformat()
+    seen = prune_seen(seen, cutoff_date_str)
+    save_seen_state(seen, SEEN_STORIES_PATH)
+    print(f"  {len(seen)} stories now on file")
 
 
 if __name__ == "__main__":
