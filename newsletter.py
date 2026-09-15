@@ -490,15 +490,14 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing, sport_i
 
     def full_story_block(it):
         b = it.get("breakdown", {})
+        flowing = " ".join(
+            part for part in (b.get("what_happened", ""), b.get("why_it_matters", ""), b.get("watch_next", "")) if part
+        )
         return f"""
         <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
           <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">{it['title']}</div>
           <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">{it['source']}</div>
-          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">
-            <div style="margin-bottom:6px;"><b>What happened:</b> {b.get('what_happened','')}</div>
-            <div style="margin-bottom:6px;"><b>Why it matters:</b> {b.get('why_it_matters','')}</div>
-            <div><b>Watch next:</b> {b.get('watch_next','')}</div>
-          </div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">{flowing}</div>
           <a href="{it['link']}" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
         </div>
         """
