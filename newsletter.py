@@ -3,11 +3,12 @@
 Personal morning newsletter generator.
 
 Pulls RSS feeds (finance/politics, split Ireland vs rest of world), filters
-sport items to the teams/players you care about, fetches today's fixtures
-and yesterday's results for Liverpool / Real Betis / Cork City FC (plus full
-Premier League and Champions League matchdays when applicable), uses Claude
-to write short blurbs, rank the most impactful stories, and write a top
-bulletin, then renders an HTML "newspaper" page and emails it to you.
+sport items to the teams/players you care about and curates them down to
+the genuinely newsworthy ones, fetches today's fixtures and yesterday's
+results for Liverpool / Real Betis / Cork City FC (plus full Premier League
+and Champions League matchdays) via TheSportsDB, uses Claude to write short
+blurbs, rank the most impactful stories, and write a top bulletin, then
+renders an HTML "newspaper" page and emails it to you.
 
 IMPORTANT: this never fetches or reproduces full paywalled article text
 (FT, The Athletic, etc). It only ever uses what the RSS feed itself
@@ -38,8 +39,8 @@ LOOKBACK_HOURS = 30
 DUBLIN = ZoneInfo("Europe/Dublin")
 CLAUDE_MODEL = "claude-sonnet-4-5"
 
-# Finance / politics feeds, split so they can be ranked and rendered
-# separately. FT and BBC URLs are verified working RSS feeds as of writing.
+# Finance / politics feeds, split so they're ranked and rendered separately.
+# FT and BBC URLs are verified working RSS feeds as of writing.
 # TheJournal.ie is marked VERIFY - confirm with the PowerShell check in
 # README.md; if it 404s try "https://www.thejournal.ie/rss/" instead.
 IRELAND_FEEDS = {
@@ -55,7 +56,9 @@ WORLD_FEEDS = {
 MAX_IRELAND_STORIES = 6
 MAX_WORLD_STORIES = 8
 
-# General sport feeds, filtered down to your teams/players by keyword.
+# General sport feeds, filtered by keyword then curated down by Claude -
+# these feeds (especially club-tag feeds like the Echo's) carry a lot of
+# volume, most of it not worth your morning.
 SPORT_FEEDS = {
     "BBC - Football":                 "http://feeds.bbci.co.uk/sport/football/rss.xml",
     "Sky Sports - Football (VERIFY)": "https://www.skysports.com/rss/12040",
@@ -69,27 +72,22 @@ TEAM_KEYWORDS = [
     "republic of ireland", "ireland national team", "boys in green",
     "league of ireland", "fai ",
 ]
+MAX_SPORT_ITEMS = 8
 
-# --- Fixtures / results ---
-# football-data.org: free tier, needs a free API key (FOOTBALL_DATA_API_KEY env var).
-# Known team IDs on football-data.org's v4 API - verify once via:
-#   curl -H "X-Auth-Token: YOUR_KEY" https://api.football-data.org/v4/teams/64
-# (should return Liverpool FC). If it doesn't, look the ID up at
-# https://www.football-data.org/ and update below.
-FOOTBALL_DATA_BASE = "https://api.football-data.org/v4"
-FOOTBALL_DATA_TEAMS = {
-    "Liverpool FC": 64,
-    "Real Betis": 90,
-}
-FOOTBALL_DATA_FULL_DAY_COMPETITIONS = {
-    "PL": "Premier League",
-    "CL": "Champions League",
-}
-
-# TheSportsDB: free, no signup, shared public test key "3". Good enough for
-# a personal daily lookup; not guaranteed enterprise-grade uptime.
+# --- Fixtures / results, all via TheSportsDB ---
+# Free, no signup, shared public test key "3". Team and league IDs are
+# looked up by name at runtime (not hardcoded) so there's nothing here to
+# get wrong or need re-verifying if TheSportsDB's internal IDs change.
 THESPORTSDB_BASE = "https://www.thesportsdb.com/api/v1/json/3"
-CORK_CITY_SEARCH_NAME = "Cork City"
+TEAM_SEARCH_NAMES = {
+    "Liverpool FC": "Liverpool",
+    "Real Betis": "Real Betis",
+    "Cork City FC": "Cork City",
+}
+LEAGUE_SEARCH_NAMES = {
+    "Premier League": "English Premier League",
+    "Champions League": "UEFA Champions League",
+}
 
 # ---------------------------------------------------------------------------
 # RSS FETCHING
@@ -141,114 +139,86 @@ def filter_by_keywords(items, keywords):
     return out
 
 # ---------------------------------------------------------------------------
-# FIXTURES & RESULTS
+# FIXTURES & RESULTS (TheSportsDB)
 # ---------------------------------------------------------------------------
 
-def fd_get(path, params, api_key):
+def tsdb_get(endpoint, params):
     try:
-        resp = requests.get(
-            f"{FOOTBALL_DATA_BASE}{path}",
-            headers={"X-Auth-Token": api_key},
-            params=params,
-            timeout=30,
-        )
-        if resp.status_code != 200:
-            print(f"  [warn] football-data.org {path}: HTTP {resp.status_code}", file=sys.stderr)
-            return []
-        return resp.json().get("matches", [])
+        r = requests.get(f"{THESPORTSDB_BASE}/{endpoint}", params=params, timeout=30)
+        if r.status_code != 200:
+            print(f"  [warn] TheSportsDB {endpoint}: HTTP {r.status_code}", file=sys.stderr)
+            return {}
+        return r.json() or {}
     except Exception as exc:
-        print(f"  [warn] football-data.org {path}: {exc}", file=sys.stderr)
-        return []
+        print(f"  [warn] TheSportsDB {endpoint}: {exc}", file=sys.stderr)
+        return {}
 
 
-def fd_match_summary(m):
-    home = m["homeTeam"]["name"]
-    away = m["awayTeam"]["name"]
-    comp = m["competition"]["name"]
-    utc = dt.datetime.fromisoformat(m["utcDate"].replace("Z", "+00:00"))
-    local_time = utc.astimezone(DUBLIN).strftime("%H:%M")
-    status = m["status"]
-    if status == "FINISHED":
-        score = m.get("score", {}).get("fullTime", {})
-        return f"{home} {score.get('home', '?')} - {score.get('away', '?')} {away}  ({comp})"
-    return f"{home} v {away} — {local_time} Irish time  ({comp})"
+def find_team_id(search_name):
+    data = tsdb_get("searchteams.php", {"t": search_name})
+    teams = data.get("teams") or []
+    return teams[0]["idTeam"] if teams else None
 
 
-def get_team_fixtures_and_results(api_key, today, yesterday):
-    """Returns (today_fixtures, yesterday_results) for the named teams."""
-    fixtures, results = [], []
-    for name, team_id in FOOTBALL_DATA_TEAMS.items():
-        today_matches = fd_get(f"/teams/{team_id}/matches",
-                                {"dateFrom": today, "dateTo": today}, api_key)
-        fixtures.extend(today_matches)
-        yesterday_matches = fd_get(f"/teams/{team_id}/matches",
-                                    {"dateFrom": yesterday, "dateTo": yesterday}, api_key)
-        results.extend([m for m in yesterday_matches if m["status"] == "FINISHED"])
-    return fixtures, results
+def find_league_id(search_name):
+    data = tsdb_get("all_leagues.php", {})
+    for league in data.get("leagues") or []:
+        if league.get("strSport") == "Soccer" and search_name.lower() in (league.get("strLeague") or "").lower():
+            return league["idLeague"]
+    return None
 
 
-def get_full_matchday(api_key, date):
-    """Returns {competition name: [matches]} for PL/CL matches on the given date."""
-    out = {}
-    for code, name in FOOTBALL_DATA_FULL_DAY_COMPETITIONS.items():
-        matches = fd_get(f"/competitions/{code}/matches", {"dateFrom": date, "dateTo": date}, api_key)
-        if matches:
-            out[name] = matches
-    return out
+def event_str(e, with_score=False):
+    home, away = e.get("strHomeTeam", "?"), e.get("strAwayTeam", "?")
+    league = e.get("strLeague", "")
+    if with_score:
+        return f"{home} {e.get('intHomeScore', '?')} - {e.get('intAwayScore', '?')} {away}  ({league})"
+    time_str = e.get("strTime", "")
+    suffix = f" — {time_str} UTC" if time_str else ""
+    return f"{home} v {away}{suffix}  ({league})"
 
 
-def get_cork_city_fixtures_and_results(today, yesterday):
-    fixtures, results = [], []
-    try:
-        r = requests.get(f"{THESPORTSDB_BASE}/searchteams.php",
-                          params={"t": CORK_CITY_SEARCH_NAME}, timeout=30)
-        teams = (r.json() or {}).get("teams") or []
-        if not teams:
-            print("  [warn] TheSportsDB: Cork City team not found", file=sys.stderr)
-            return fixtures, results
-        team_id = teams[0]["idTeam"]
+def get_team_fixture_today(team_id, today_str):
+    data = tsdb_get("eventsnext.php", {"id": team_id})
+    return [event_str(e) for e in (data.get("events") or []) if e.get("dateEvent") == today_str]
 
-        r = requests.get(f"{THESPORTSDB_BASE}/eventsnext.php", params={"id": team_id}, timeout=30)
-        for e in (r.json() or {}).get("events") or []:
-            if e.get("dateEvent") == today:
-                fixtures.append(f"{e['strHomeTeam']} v {e['strAwayTeam']} — {e.get('strTime', '')} ({e.get('strLeague', '')})")
 
-        r = requests.get(f"{THESPORTSDB_BASE}/eventslast.php", params={"id": team_id}, timeout=30)
-        for e in (r.json() or {}).get("results") or []:
-            if e.get("dateEvent") == yesterday:
-                results.append(f"{e['strHomeTeam']} {e.get('intHomeScore', '?')} - {e.get('intAwayScore', '?')} {e['strAwayTeam']} ({e.get('strLeague', '')})")
-    except Exception as exc:
-        print(f"  [warn] TheSportsDB: {exc}", file=sys.stderr)
-    return fixtures, results
+def get_team_result_yesterday(team_id, yesterday_str):
+    data = tsdb_get("eventslast.php", {"id": team_id})
+    return [event_str(e, with_score=True) for e in (data.get("results") or []) if e.get("dateEvent") == yesterday_str]
+
+
+def get_league_day_matches(league_id, date_str):
+    data = tsdb_get("eventsday.php", {"d": date_str, "l": league_id})
+    return [event_str(e) for e in (data.get("events") or [])]
 
 
 def build_fixtures_data(today_dublin, yesterday_dublin):
-    """Gathers all fixture/result data. Skips football-data.org gracefully if no key set."""
-    api_key = os.environ.get("FOOTBALL_DATA_API_KEY")
     today_str, yesterday_str = today_dublin.isoformat(), yesterday_dublin.isoformat()
 
-    team_fixtures_text, team_results_text = [], []
-    full_matchday_text = {}
+    fixtures_today, results_yesterday = [], []
+    for name, search_name in TEAM_SEARCH_NAMES.items():
+        team_id = find_team_id(search_name)
+        if not team_id:
+            print(f"  [warn] TheSportsDB: could not find team id for {name}", file=sys.stderr)
+            continue
+        fixtures_today.extend(get_team_fixture_today(team_id, today_str))
+        results_yesterday.extend(get_team_result_yesterday(team_id, yesterday_str))
 
-    if api_key:
-        fixtures, results = get_team_fixtures_and_results(api_key, today_str, yesterday_str)
-        team_fixtures_text.extend(fd_match_summary(m) for m in fixtures)
-        team_results_text.extend(fd_match_summary(m) for m in results)
-
-        matchday = get_full_matchday(api_key, today_str)
-        for comp_name, matches in matchday.items():
-            full_matchday_text[comp_name] = [fd_match_summary(m) for m in matches]
-    else:
-        print("  [warn] FOOTBALL_DATA_API_KEY not set - skipping Liverpool/Betis/PL/CL fixtures", file=sys.stderr)
-
-    cork_fixtures, cork_results = get_cork_city_fixtures_and_results(today_str, yesterday_str)
-    team_fixtures_text.extend(cork_fixtures)
-    team_results_text.extend(cork_results)
+    full_matchday = {}
+    for name, search_name in LEAGUE_SEARCH_NAMES.items():
+        league_id = find_league_id(search_name)
+        if not league_id:
+            print(f"  [warn] TheSportsDB: could not find league id for {name}", file=sys.stderr)
+            continue
+        matches = get_league_day_matches(league_id, today_str)
+        if matches:
+            full_matchday[name] = matches
 
     return {
-        "fixtures_today": team_fixtures_text,
-        "results_yesterday": team_results_text,
-        "full_matchday": full_matchday_text,
+        "fixtures_today": fixtures_today,
+        "results_yesterday": results_yesterday,
+        "full_matchday": full_matchday,
     }
 
 # ---------------------------------------------------------------------------
@@ -276,6 +246,20 @@ def call_claude(prompt, max_tokens=2000):
     return "".join(b.get("text", "") for b in data.get("content", []) if b.get("type") == "text")
 
 
+def extract_json(raw):
+    """Strip markdown code fences and surrounding prose Claude sometimes adds
+    despite being told not to, and isolate the JSON array."""
+    raw = raw.strip()
+    if raw.startswith("```"):
+        raw = raw.strip("`")
+        if raw.lower().startswith("json"):
+            raw = raw[4:]
+    start, end = raw.find("["), raw.rfind("]")
+    if start != -1 and end != -1 and end > start:
+        raw = raw[start:end + 1]
+    return raw.strip()
+
+
 def rank_stories(items, limit, region_label):
     if not items:
         return []
@@ -292,13 +276,13 @@ Candidate headlines with source teaser text:
 
 Pick the {limit} most impactful stories (skip celebrity/soft news and duplicates). For each,
 write a neutral 2-sentence blurb based ONLY on the teaser text given - do not invent details.
-Return ONLY valid JSON, no markdown fences, no preamble:
+Return ONLY a JSON array, no markdown fences, no preamble, no explanation:
 
 [{{"index": <int index from list above>, "blurb": "<2 sentence summary>"}}]
 """
     raw = call_claude(prompt, max_tokens=3000)
     try:
-        picks = json.loads(raw)
+        picks = json.loads(extract_json(raw))
     except json.JSONDecodeError:
         print(f"  [warn] could not parse {region_label} ranking JSON, falling back to first N", file=sys.stderr)
         return [{"item": it, "blurb": it["summary"][:280]} for it in items[:limit]]
@@ -309,6 +293,34 @@ Return ONLY valid JSON, no markdown fences, no preamble:
         if idx is not None and 0 <= idx < len(items):
             out.append({"item": items[idx], "blurb": p.get("blurb", items[idx]["summary"][:280])})
     return out
+
+
+def select_top_sport_items(items, limit):
+    """Curate down to the genuinely newsworthy items - drops transfer gossip,
+    opinion pieces, and minor/youth-team filler that keyword filtering alone
+    lets through from broad club-tag feeds."""
+    if len(items) <= limit:
+        return items
+    listing = "\n".join(f"{i}. [{it['source']}] {it['title']} — {it['summary'][:200]}" for i, it in enumerate(items))
+    prompt = f"""From this list of football news items (already filtered to Liverpool, Real Betis,
+Cork City FC, Troy Parrott, Mohamed Salah, and the Republic of Ireland national team), pick the
+{limit} most genuinely newsworthy for a fan's morning briefing: match reports, confirmed team
+news, injuries, results, significant transfer developments. Skip speculative transfer gossip,
+opinion/ranking pieces, minor youth-team news, and duplicates.
+
+{listing}
+
+Return ONLY a JSON array of the chosen indices, e.g. [0, 3, 5]. No markdown fences, no preamble.
+"""
+    try:
+        raw = call_claude(prompt, max_tokens=200)
+        indices = json.loads(extract_json(raw))
+        chosen = [items[i] for i in indices if isinstance(i, int) and 0 <= i < len(items)]
+        if chosen:
+            return chosen
+    except Exception as exc:
+        print(f"  [warn] sport curation failed, falling back to first N: {exc}", file=sys.stderr)
+    return items[:limit]
 
 
 def blurb_for_sport_item(item):
@@ -356,13 +368,15 @@ TODAY'S FIXTURES:
 YESTERDAY'S RESULTS:
 {results_lines}
 
-Return ONLY a JSON array of 3-5 short strings, no markdown fences, no preamble.
+Return ONLY a JSON array of 3-5 short strings. No markdown fences, no preamble, no explanation -
+your entire response must be valid JSON starting with [ and ending with ].
 """
     try:
         raw = call_claude(prompt, max_tokens=600)
-        bullets = json.loads(raw)
+        bullets = json.loads(extract_json(raw))
         if isinstance(bullets, list) and bullets:
             return bullets
+        print(f"  [warn] bulletin JSON parsed but was empty/invalid. Raw: {raw[:200]}", file=sys.stderr)
     except Exception as exc:
         print(f"  [warn] bulletin generation failed: {exc}", file=sys.stderr)
     return []
@@ -509,14 +523,19 @@ def main():
     print("Ranking world stories with Claude...")
     world_ranked = rank_stories(world_raw, MAX_WORLD_STORIES, "Rest of World")
 
+    print("Curating sport items with Claude...")
+    sport_curated = select_top_sport_items(sport_filtered, MAX_SPORT_ITEMS)
+    print(f"  kept {len(sport_curated)} of {len(sport_filtered)} sport items")
+
     print("Writing sport blurbs...")
-    for it in sport_filtered:
+    for it in sport_curated:
         it["blurb"] = blurb_for_sport_item(it)
 
     print("Writing today's bulletin...")
-    bulletin = write_bulletin(ireland_ranked, world_ranked, sport_filtered, fixtures_data)
+    bulletin = write_bulletin(ireland_ranked, world_ranked, sport_curated, fixtures_data)
+    print(f"  bulletin has {len(bulletin)} bullets")
 
-    html = render_html(bulletin, ireland_ranked, world_ranked, sport_filtered, fixtures_data, edition_date)
+    html = render_html(bulletin, ireland_ranked, world_ranked, sport_curated, fixtures_data, edition_date)
 
     print("Sending email...")
     send_email(html, subject=f"Morning Brief — {edition_date}")
