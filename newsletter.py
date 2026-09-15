@@ -134,8 +134,8 @@ MAX_WORTH_KNOWING = 6
 # General sport feeds, filtered by keyword then curated down by Claude.
 SPORT_FEEDS = {
     "BBC - Football":                 "http://feeds.bbci.co.uk/sport/football/rss.xml",
-    "Sky Sports - Football": "https://www.skysports.com/rss/12040",
-    "Liverpool Echo - LFC ":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
+    "Sky Sports - Football":          "https://www.skysports.com/rss/11095",
+    "Liverpool Echo - LFC":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
 }
 # CIES Football Observatory - genuinely free/public research posts, not
 # paywalled. Disabled for now: the guessed RSS URL 404s and the real one
@@ -146,7 +146,7 @@ SPORT_FEEDS = {
 CIES_FEEDS = {
     # "CIES Football Observatory": "https://www.cies.ch/...",
 }
-LIVERPOOL_ECHO_SOURCE = "Liverpool Echo - LFC (VERIFY)"
+LIVERPOOL_ECHO_SOURCE = "Liverpool Echo - LFC"
 
 TEAM_KEYWORDS = [
     "liverpool", "salah", "mohamed salah",
