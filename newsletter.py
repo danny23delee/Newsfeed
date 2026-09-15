@@ -46,6 +46,9 @@ SEEN_STORIES_PATH = "seen_stories.json"
 SEEN_RETENTION_DAYS = 5  # comfortably longer than LOOKBACK_HOURS so a story
                           # can't reappear across two consecutive runs
 
+WEEKLY_HISTORY_PATH = "weekly_history.json"
+WEEKLY_HISTORY_RETENTION_DAYS = 8  # a little over a week, so Sunday always has a full week on file
+
 # --- Weather (Open-Meteo, free, no key needed) ---
 DUBLIN_LAT, DUBLIN_LON = 53.3498, -6.2603
 WMO_WEATHER_CODES = {
@@ -133,6 +136,17 @@ SPORT_FEEDS = {
     "Sky Sports - Football (VERIFY)": "https://www.skysports.com/rss/12040",
     "Liverpool Echo - LFC (VERIFY)":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
 }
+# CIES Football Observatory - genuinely free/public research posts, not
+# paywalled. Disabled for now: the guessed RSS URL 404s and the real one
+# wasn't confirmed. Once you find the working URL, put it back in here
+# (same VERIFY-with-PowerShell approach as the other feeds) - the rest of
+# the pipeline (rendering, dedupe) already handles it, this dict is the
+# only thing to change.
+CIES_FEEDS = {
+    # "CIES Football Observatory": "https://www.cies.ch/...",
+}
+LIVERPOOL_ECHO_SOURCE = "Liverpool Echo - LFC (VERIFY)"
+
 TEAM_KEYWORDS = [
     "liverpool", "salah", "mohamed salah",
     "real betis", "betis",
@@ -141,7 +155,13 @@ TEAM_KEYWORDS = [
     "republic of ireland", "ireland national team", "boys in green",
     "league of ireland", "fai ",
 ]
-MAX_SPORT_ITEMS = 8
+PL_KEYWORDS = ["premier league"]
+CL_KEYWORDS = ["champions league"]
+MAX_SPORT_ITEMS = 8      # cap on team/player news after curation
+MAX_ECHO_ITEMS = 4       # of which, at most this many can be from the Echo
+MAX_PL_ITEMS = 3         # general Premier League storylines (not team-specific)
+MAX_CL_ITEMS = 3         # general Champions League storylines
+MAX_CIES_ITEMS = 3       # CIES posts are rare - just show what's recent, no curation needed
 
 # --- Fixtures / results, all via TheSportsDB (free, no signup) ---
 # Team and league IDs are looked up by name at runtime, not hardcoded.
@@ -260,12 +280,68 @@ def get_league_day_matches(league_id, date_str):
     return [event_str(e) for e in (data.get("events") or [])]
 
 
+def get_current_season_str(today):
+    """TheSportsDB season strings look like '2026-2027'. English football
+    seasons run Aug-May, so treat July as the rollover point."""
+    return f"{today.year}-{today.year + 1}" if today.month >= 7 else f"{today.year - 1}-{today.year}"
+
+
+def get_league_position(team_search_name, league_id, season):
+    data = tsdb_get("lookuptable.php", {"l": league_id, "s": season})
+    for row in data.get("table") or []:
+        if team_search_name.lower() in (row.get("strTeam") or "").lower():
+            return row
+    return None
+
+
+def get_next_fixtures_summary(team_id, team_search_name, n=3):
+    data = tsdb_get("eventsnext.php", {"id": team_id})
+    events = (data.get("events") or [])[:n]
+    out = []
+    for e in events:
+        home, away = e.get("strHomeTeam", ""), e.get("strAwayTeam", "")
+        if team_search_name.lower() in home.lower():
+            out.append(f"{away} (H)")
+        else:
+            out.append(f"{home} (A)")
+    return out
+
+
+def build_liverpool_snapshot(today_dublin, liverpool_team_id, pl_league_id):
+    if not liverpool_team_id or not pl_league_id:
+        return None
+    season = get_current_season_str(today_dublin)
+    row = get_league_position("Liverpool", pl_league_id, season)
+    if not row:
+        print("  [warn] TheSportsDB: no Liverpool row in PL table (season may not have started, or wrong season string)", file=sys.stderr)
+        return None
+    next_fixtures = get_next_fixtures_summary(liverpool_team_id, "Liverpool", 3)
+    pos, pts, played = row.get("intRank", "?"), row.get("intPoints", "?"), row.get("intPlayed", "?")
+    line = f"Liverpool: {pos}{_ordinal_suffix(pos)} in the Premier League, {pts}pts from {played} played"
+    if next_fixtures:
+        line += " \u2014 next: " + ", ".join(next_fixtures)
+    return line
+
+
+def _ordinal_suffix(n):
+    try:
+        n = int(n)
+    except (ValueError, TypeError):
+        return ""
+    if 10 <= n % 100 <= 20:
+        return "th"
+    return {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+
+
 def build_fixtures_data(today_dublin, yesterday_dublin):
     today_str, yesterday_str = today_dublin.isoformat(), yesterday_dublin.isoformat()
 
     fixtures_today, results_yesterday = [], []
+    liverpool_team_id = None
     for name, search_name in TEAM_SEARCH_NAMES.items():
         team_id = find_team_id(search_name)
+        if name == "Liverpool FC":
+            liverpool_team_id = team_id
         if not team_id:
             print(f"  [warn] TheSportsDB: could not find team id for {name}", file=sys.stderr)
             continue
@@ -273,8 +349,11 @@ def build_fixtures_data(today_dublin, yesterday_dublin):
         results_yesterday.extend(get_team_result_yesterday(team_id, yesterday_str))
 
     full_matchday = {}
+    pl_league_id = None
     for name, search_name in LEAGUE_SEARCH_NAMES.items():
         league_id = find_league_id(search_name)
+        if name == "Premier League":
+            pl_league_id = league_id
         if not league_id:
             print(f"  [warn] TheSportsDB: could not find league id for {name}", file=sys.stderr)
             continue
@@ -282,10 +361,13 @@ def build_fixtures_data(today_dublin, yesterday_dublin):
         if matches:
             full_matchday[name] = matches
 
+    liverpool_snapshot = build_liverpool_snapshot(today_dublin, liverpool_team_id, pl_league_id)
+
     return {
         "fixtures_today": fixtures_today,
         "results_yesterday": results_yesterday,
         "full_matchday": full_matchday,
+        "liverpool_snapshot": liverpool_snapshot,
     }
 
 # ---------------------------------------------------------------------------
@@ -367,6 +449,41 @@ def mark_seen(items, seen, today_str):
 
 def prune_seen(seen, cutoff_date_str):
     return {k: v for k, v in seen.items() if v >= cutoff_date_str}
+
+# ---------------------------------------------------------------------------
+# WEEKLY DIGEST HISTORY
+# ---------------------------------------------------------------------------
+
+def load_weekly_history(path):
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+
+def save_weekly_history(history, path):
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(history, f, indent=2)
+    except Exception as exc:
+        print(f"  [warn] could not save weekly history file: {exc}", file=sys.stderr)
+
+
+def append_today_to_history(history, today_str, top_stories):
+    entry = {
+        "date": today_str,
+        "stories": [
+            {"title": it["title"], "category": it.get("category", ""), "why_it_matters": it.get("breakdown", {}).get("why_it_matters", "")}
+            for it in top_stories
+        ],
+    }
+    history.append(entry)
+    return history
+
+
+def prune_history(history, cutoff_date_str):
+    return [e for e in history if e["date"] >= cutoff_date_str]
 
 # ---------------------------------------------------------------------------
 # CLAUDE
@@ -522,14 +639,17 @@ def build_news_sections(all_news_raw):
 
 # --- Sport ---
 
-def select_top_sport_items(items, limit):
+def curate_sport_items(items, limit, context_description):
+    """Generic Claude curation for a pool of football news items - used for
+    both team/player news and general competition storylines, distinguished
+    by context_description."""
+    if not items:
+        return []
     if len(items) <= limit:
         return items
     listing = "\n".join(f"{i}. [{it['source']}] {it['title']} — {it['summary'][:200]}" for i, it in enumerate(items))
-    prompt = f"""From this list of football news items (already filtered to Liverpool, Real Betis,
-Cork City FC, Troy Parrott, Mohamed Salah, and the Republic of Ireland national team), pick the
-{limit} most genuinely newsworthy for a fan's morning briefing: match reports, confirmed team
-news, injuries, results, significant transfer developments. Skip speculative transfer gossip,
+    prompt = f"""From this list of football news items ({context_description}), pick the {limit}
+most genuinely newsworthy for a fan's morning briefing. Skip speculative transfer gossip,
 opinion/ranking pieces, minor youth-team news, and duplicates.
 
 {listing}
@@ -543,8 +663,21 @@ Return ONLY a JSON array of the chosen indices, e.g. [0, 3, 5]. No markdown fenc
         if chosen:
             return chosen
     except Exception as exc:
-        print(f"  [warn] sport curation failed, falling back to first N: {exc}", file=sys.stderr)
+        print(f"  [warn] sport curation failed ({context_description}), falling back to first N: {exc}", file=sys.stderr)
     return items[:limit]
+
+
+def cap_source_count(items, source_name, max_count):
+    """Keeps at most max_count items from a given source, preserving order
+    and keeping everything from other sources untouched."""
+    out, count = [], 0
+    for it in items:
+        if it["source"] == source_name:
+            if count >= max_count:
+                continue
+            count += 1
+        out.append(it)
+    return out
 
 
 def blurb_for_sport_item(item):
@@ -607,12 +740,43 @@ your entire response must be valid JSON starting with [ and ending with ].
         print(f"  [warn] bulletin generation failed: {exc}", file=sys.stderr)
     return []
 
+
+def write_weekly_digest(history):
+    """Recaps the past week's Top Stories (score 9-10 items) already on file.
+    Called BEFORE today's own top stories are appended to history, so it
+    reads as a lead-in to today rather than repeating today's Top Stories."""
+    lines = []
+    for entry in history:
+        for s in entry["stories"]:
+            lines.append(f"- ({entry['date']}) [{s.get('category', '')}] {s['title']}: {s.get('why_it_matters', '')}")
+    if not lines:
+        return []
+    prompt = f"""Write a 5-8 bullet "This Week" digest recapping the most significant stories from the
+past week, for a personal newspaper-style newsletter. Base it ONLY on the information below - no
+outside facts, no invented developments. Where several days touched the same ongoing story,
+synthesize into one bullet rather than repeating it - don't just restate every headline verbatim.
+
+{chr(10).join(lines)}
+
+Return ONLY a JSON array of 5-8 strings. No markdown fences, no preamble, no explanation - your
+entire response must be valid JSON starting with [ and ending with ].
+"""
+    try:
+        raw = call_claude(prompt, max_tokens=800)
+        digest = json.loads(extract_json(raw))
+        if isinstance(digest, list) and digest:
+            return digest
+    except Exception as exc:
+        print(f"  [warn] weekly digest generation failed: {exc}", file=sys.stderr)
+    return []
+
 # ---------------------------------------------------------------------------
 # RENDERING
 # ---------------------------------------------------------------------------
 
-def render_html(bulletin, top_stories, category_sections, worth_knowing, sport_items, fixtures_data,
-                 edition_date, weather_line=None, econ_events=None):
+def render_html(bulletin, top_stories, category_sections, worth_knowing,
+                 team_sport_items, pl_sport_items, cl_sport_items, cies_items,
+                 fixtures_data, edition_date, weather_line=None, econ_events=None, weekly_digest=None):
 
     def section_header(text, size="16px"):
         return f"""<div style="font-family:Georgia,serif;font-size:{size};font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">{text}</div>"""
@@ -659,7 +823,9 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing, sport_i
         """
 
     # --- Fixtures & Results: enlarged, prominent, right below the bulletin ---
+    liverpool_snapshot_html = f"""<div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:12px;">{fixtures_data.get('liverpool_snapshot')}</div>""" if fixtures_data.get("liverpool_snapshot") else ""
     fixtures_inner = f"""
+      {liverpool_snapshot_html}
       <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
       {list_block(fixtures_data['fixtures_today'], "No Liverpool, Real Betis, or Cork City fixtures today.", font_size="15px")}
     """
@@ -693,6 +859,15 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing, sport_i
     # --- Top stories ---
     top_html = "".join(full_story_block(it) for it in top_stories) or "<p style='color:#777;'>Nothing cleared the must-know bar today.</p>"
 
+    # --- Weekly digest (Sundays only, when there's history to recap) ---
+    weekly_html = ""
+    if weekly_digest:
+        digest_items = "".join(f"<li style='margin-bottom:8px;'>{b}</li>" for b in weekly_digest)
+        weekly_html = f"""
+        {section_header("\U0001F4CA This Week", size="18px")}
+        <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.5;color:#333;padding-left:20px;margin:0 0 16px;">{digest_items}</ul>
+        """
+
     # --- Category sections ---
     category_html = ""
     for cat in CATEGORIES:
@@ -707,9 +882,20 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing, sport_i
     worth_html = list_block(worth_lines, "Nothing minor worth flagging today.")
 
     # --- Sport news (team news, not fixtures) ---
-    sport_html = "".join(
-        blurb_story_block(it["title"], it["source"], it.get("blurb", it["summary"][:300]), it["link"]) for it in sport_items
-    ) or "<p style='color:#777;'>Nothing new on Liverpool, Real Betis, Cork City, Troy Parrott, or the Boys in Green today.</p>"
+    def sport_group(items, empty_msg):
+        return "".join(
+            blurb_story_block(it["title"], it["source"], it.get("blurb", it["summary"][:300]), it["link"]) for it in items
+        ) or f"<p style='color:#777;'>{empty_msg}</p>"
+
+    team_sport_html = sport_group(team_sport_items, "Nothing new on Liverpool, Real Betis, Cork City, Troy Parrott, or the Boys in Green today.")
+    pl_sport_html = sport_group(pl_sport_items, "No notable general Premier League storylines today.")
+    cl_sport_html = sport_group(cl_sport_items, "No notable general Champions League storylines today.")
+    cies_block = ""
+    if cies_items:
+        cies_block = f"""
+        <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">CIES Football Observatory</div>
+        {sport_group(cies_items, "")}
+        """
 
     return f"""<!DOCTYPE html>
 <html><body style="margin:0;padding:0;background:#f2efe9;">
@@ -727,14 +913,25 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing, sport_i
   {section_header(TOP_LABEL, size="18px")}
   {top_html}
 
+  {weekly_html}
+
   {category_html}
 
   {section_header(WORTH_KNOWING_LABEL)}
   {worth_html}
 
   {section_header("\U0001F3C6 Sport")}
-  {sport_html}
 
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:10px;">Your Teams &amp; Players</div>
+  {team_sport_html}
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Premier League</div>
+  {pl_sport_html}
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Champions League</div>
+  {cl_sport_html}
+
+  {cies_block}
   <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
     Generated automatically. Headlines and teasers only - click through for full articles.
   </div>
@@ -780,6 +977,12 @@ def main():
     seen = load_seen_state(SEEN_STORIES_PATH)
     print(f"  {len(seen)} previously-sent stories on file")
 
+    print("Loading weekly digest history...")
+    weekly_history = load_weekly_history(WEEKLY_HISTORY_PATH)
+    is_sunday = today_dublin.weekday() == 6
+    weekly_digest = write_weekly_digest(weekly_history) if is_sunday else []
+    print(f"  {'Sunday - ' if is_sunday else ''}digest has {len(weekly_digest)} bullets from {len(weekly_history)} days of history")
+
     print("Fetching Ireland feeds...")
     ireland_raw = collect(IRELAND_FEEDS, cutoff)
     print("Fetching world feeds...")
@@ -792,9 +995,17 @@ def main():
 
     print("Fetching sport feeds...")
     sport_raw = collect(SPORT_FEEDS, cutoff)
-    sport_filtered = filter_by_keywords(sport_raw, TEAM_KEYWORDS)
-    sport_filtered = filter_unseen(sport_filtered, seen)
-    print(f"  {len(sport_filtered)} sport items matched your keywords (after dedupe)")
+    sport_raw = filter_unseen(sport_raw, seen)
+
+    non_echo_raw = [it for it in sport_raw if it["source"] != LIVERPOOL_ECHO_SOURCE]
+    team_candidates = filter_by_keywords(sport_raw, TEAM_KEYWORDS)
+    pl_candidates = filter_by_keywords(non_echo_raw, PL_KEYWORDS)
+    cl_candidates = filter_by_keywords(non_echo_raw, CL_KEYWORDS)
+    print(f"  {len(team_candidates)} team/player items, {len(pl_candidates)} general PL, {len(cl_candidates)} general CL (after dedupe)")
+
+    print("Fetching CIES Football Observatory...")
+    cies_raw = collect(CIES_FEEDS, cutoff)
+    cies_raw = filter_unseen(cies_raw, seen)[:MAX_CIES_ITEMS]
 
     print("Fetching fixtures & results...")
     fixtures_data = build_fixtures_data(today_dublin, yesterday_dublin)
@@ -813,31 +1024,45 @@ def main():
         print(f"  {cat}: {len(category_sections[cat])}")
 
     print("Curating sport items with Claude...")
-    sport_curated = select_top_sport_items(sport_filtered, MAX_SPORT_ITEMS)
-    print(f"  kept {len(sport_curated)} of {len(sport_filtered)} sport items")
+    team_curated = curate_sport_items(team_candidates, MAX_SPORT_ITEMS,
+                                       "already filtered to Liverpool, Real Betis, Cork City FC, Troy Parrott, Mohamed Salah, and the Republic of Ireland national team")
+    team_curated = cap_source_count(team_curated, LIVERPOOL_ECHO_SOURCE, MAX_ECHO_ITEMS)
+    pl_curated = curate_sport_items(pl_candidates, MAX_PL_ITEMS, "general Premier League storylines, not tied to one club")
+    cl_curated = curate_sport_items(cl_candidates, MAX_CL_ITEMS, "general Champions League storylines, not tied to one club")
+    print(f"  kept {len(team_curated)} team items (Echo capped at {MAX_ECHO_ITEMS}), {len(pl_curated)} PL, {len(cl_curated)} CL")
 
     print("Writing sport blurbs...")
-    for it in sport_curated:
+    for it in team_curated + pl_curated + cl_curated + cies_raw:
         it["blurb"] = blurb_for_sport_item(it)
 
+    all_sport_items = team_curated + pl_curated + cl_curated + cies_raw
+
     print("Writing today's bulletin...")
-    bulletin = write_bulletin(top_stories, category_sections, sport_curated, fixtures_data)
+    bulletin = write_bulletin(top_stories, category_sections, all_sport_items, fixtures_data)
     print(f"  bulletin has {len(bulletin)} bullets")
 
-    html = render_html(bulletin, top_stories, category_sections, worth_knowing, sport_curated,
-                        fixtures_data, edition_date, weather_line, econ_events)
+    html = render_html(bulletin, top_stories, category_sections, worth_knowing,
+                        team_curated, pl_curated, cl_curated, cies_raw,
+                        fixtures_data, edition_date, weather_line, econ_events, weekly_digest)
 
     print("Sending email...")
     send_email(html, subject=f"Morning Brief — {edition_date}")
     print("Done.")
 
     print("Updating dedupe state...")
-    shown_items = top_stories + [it for items in category_sections.values() for it in items] + worth_knowing + sport_curated
+    shown_items = top_stories + [it for items in category_sections.values() for it in items] + worth_knowing + all_sport_items
     mark_seen(shown_items, seen, today_dublin.isoformat())
     cutoff_date_str = (today_dublin - dt.timedelta(days=SEEN_RETENTION_DAYS)).isoformat()
     seen = prune_seen(seen, cutoff_date_str)
     save_seen_state(seen, SEEN_STORIES_PATH)
     print(f"  {len(seen)} stories now on file")
+
+    print("Updating weekly digest history...")
+    weekly_history = append_today_to_history(weekly_history, today_dublin.isoformat(), top_stories)
+    history_cutoff = (today_dublin - dt.timedelta(days=WEEKLY_HISTORY_RETENTION_DAYS)).isoformat()
+    weekly_history = prune_history(weekly_history, history_cutoff)
+    save_weekly_history(weekly_history, WEEKLY_HISTORY_PATH)
+    print(f"  {len(weekly_history)} days now on file")
 
 
 if __name__ == "__main__":
