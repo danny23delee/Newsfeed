@@ -2,13 +2,14 @@
 """
 Personal morning newsletter generator.
 
-Pulls RSS feeds (finance/politics, split Ireland vs rest of world), filters
-sport items to the teams/players you care about and curates them down to
-the genuinely newsworthy ones, fetches today's fixtures and yesterday's
-results for Liverpool / Real Betis / Cork City FC (plus full Premier League
-and Champions League matchdays) via TheSportsDB, uses Claude to write short
-blurbs, rank the most impactful stories, and write a top bulletin, then
-renders an HTML "newspaper" page and emails it to you.
+Pulls RSS feeds (Ireland + world + technology), has Claude score every story
+1-10 and assign it a category (Ireland / Business / Politics / Technology /
+World), then gives full "what happened / why it matters / watch next"
+treatment to anything score 6+ and a bare headline to anything score 4-5.
+Also pulls football fixtures/results (Liverpool, Real Betis, Cork City FC,
+plus full PL/Champions League matchdays) via TheSportsDB, and separately
+curates + blurbs sport news for the teams/players you follow. Writes a
+top "Today's Bulletin", renders an HTML newspaper page, and emails it.
 
 IMPORTANT: this never fetches or reproduces full paywalled article text
 (FT, The Athletic, etc). It only ever uses what the RSS feed itself
@@ -39,13 +40,13 @@ LOOKBACK_HOURS = 30
 DUBLIN = ZoneInfo("Europe/Dublin")
 CLAUDE_MODEL = "claude-sonnet-4-5"
 
-# Finance / politics feeds, split so they're ranked and rendered separately.
-# FT and BBC URLs are verified working RSS feeds as of writing.
-# TheJournal.ie is marked VERIFY - confirm with the PowerShell check in
-# README.md; if it 404s try "https://www.thejournal.ie/rss/" instead.
+# News feeds. Category (Ireland/Business/Politics/Technology/World) is
+# decided by Claude from content, not by which feed a story came from - so
+# these groupings just control which feeds get fetched, not where a story
+# ends up.
 IRELAND_FEEDS = {
-    "TheJournal.ie": "https://www.thejournal.ie/feed/",
-     "RTE - News": "https://www.rte.ie/feeds/rss/?index=/news",
+    "TheJournal.ie (VERIFY)": "https://www.thejournal.ie/feed/",
+    "RTE - News":             "https://www.rte.ie/feeds/rss/?index=/news",
 }
 WORLD_FEEDS = {
     "FT - World":     "https://www.ft.com/rss/home/international",
@@ -54,12 +55,31 @@ WORLD_FEEDS = {
     "BBC - Business": "http://feeds.bbci.co.uk/news/business/rss.xml",
     "BBC - Politics": "http://feeds.bbci.co.uk/news/politics/rss.xml",
 }
-MAX_IRELAND_STORIES = 6
-MAX_WORLD_STORIES = 8
+TECH_FEEDS = {
+    "BBC - Technology": "http://feeds.bbci.co.uk/news/technology/rss.xml",
+}
 
-# General sport feeds, filtered by keyword then curated down by Claude -
-# these feeds (especially club-tag feeds like the Echo's) carry a lot of
-# volume, most of it not worth your morning.
+CATEGORIES = ["Ireland", "Business", "Politics", "Technology", "World"]
+CATEGORY_DISPLAY = {
+    "Ireland":     "\U0001F1EE\U0001F1EA Ireland",
+    "Business":    "\U0001F4B7 Business & Markets",
+    "Politics":    "\U0001F3DB\uFE0F Politics",
+    "Technology":  "\U0001F916 Technology",
+    "World":       "\U0001F30D World",
+}
+TOP_LABEL = "\U0001F534 Top Stories"
+WORTH_KNOWING_LABEL = "\U0001F440 Worth Knowing"
+
+# Scoring thresholds, per your rubric: 10 must-know, 8-9 very important,
+# 6-7 interesting, 4-5 minor, 1-3 ignore.
+SCORE_TOP_THRESHOLD = 9        # >= this -> Top Stories, full treatment
+SCORE_CATEGORY_THRESHOLD = 6   # >= this (and below top) -> category section, full treatment
+SCORE_WORTH_KNOWING_THRESHOLD = 4  # >= this (and below category) -> headline only
+MAX_TOP_STORIES = 5
+MAX_PER_CATEGORY = 4
+MAX_WORTH_KNOWING = 6
+
+# General sport feeds, filtered by keyword then curated down by Claude.
 SPORT_FEEDS = {
     "BBC - Football":                 "http://feeds.bbci.co.uk/sport/football/rss.xml",
     "Sky Sports - Football": "https://www.skysports.com/rss/12040",
@@ -75,10 +95,8 @@ TEAM_KEYWORDS = [
 ]
 MAX_SPORT_ITEMS = 8
 
-# --- Fixtures / results, all via TheSportsDB ---
-# Free, no signup, shared public test key "3". Team and league IDs are
-# looked up by name at runtime (not hardcoded) so there's nothing here to
-# get wrong or need re-verifying if TheSportsDB's internal IDs change.
+# --- Fixtures / results, all via TheSportsDB (free, no signup) ---
+# Team and league IDs are looked up by name at runtime, not hardcoded.
 THESPORTSDB_BASE = "https://www.thesportsdb.com/api/v1/json/3"
 TEAM_SEARCH_NAMES = {
     "Liverpool FC": "Liverpool",
@@ -240,7 +258,7 @@ def call_claude(prompt, max_tokens=2000):
             "max_tokens": max_tokens,
             "messages": [{"role": "user", "content": prompt}],
         },
-        timeout=60,
+        timeout=90,
     )
     resp.raise_for_status()
     data = resp.json()
@@ -260,46 +278,123 @@ def extract_json(raw):
         raw = raw[start:end + 1]
     return raw.strip()
 
+# --- News: score + categorize, then full "why it matters" breakdown ---
 
-def rank_stories(items, limit, region_label):
+def score_and_categorize(items):
+    """Assigns every item a category and a 1-10 importance score."""
     if not items:
-        return []
+        return
     listing = "\n".join(
-        f"{i}. [{it['source']}] {it['title']} — {it['summary'][:300]}"
-        for i, it in enumerate(items)
+        f"{it['_gid']}. [{it['source']}] {it['title']} — {it['summary'][:250]}"
+        for it in items
     )
-    prompt = f"""You're curating the "{region_label}" section of a personal morning newsletter for a
-data analyst in Ireland who wants genuinely impactful financial and political news.
+    categories_str = ", ".join(CATEGORIES)
+    prompt = f"""You're triaging stories for a personal morning newsletter for a data analyst in
+Ireland. For each story below, assign:
+- "category": exactly one of [{categories_str}] (Ireland = specifically about Ireland; World =
+  international/geopolitical news not fitting the other categories)
+- "score": importance 1-10, using this rubric: 10 = must know, 8-9 = very important,
+  6-7 = interesting, 4-5 = minor, 1-3 = ignore (routine/trivial/celebrity/duplicate coverage)
 
-Candidate headlines with source teaser text:
-
+Stories:
 {listing}
 
-Pick the {limit} most impactful stories (skip celebrity/soft news and duplicates). For each,
-write a neutral 2-sentence blurb based ONLY on the teaser text given - do not invent details.
-Return ONLY a JSON array, no markdown fences, no preamble, no explanation:
-
-[{{"index": <int index from list above>, "blurb": "<2 sentence summary>"}}]
+Return ONLY a JSON array covering every story above, no markdown fences, no preamble:
+[{{"id": <id>, "category": "<category>", "score": <int>}}]
 """
-    raw = call_claude(prompt, max_tokens=3000)
+    raw = call_claude(prompt, max_tokens=4000)
+    by_id = {it["_gid"]: it for it in items}
     try:
-        picks = json.loads(extract_json(raw))
-    except json.JSONDecodeError:
-        print(f"  [warn] could not parse {region_label} ranking JSON, falling back to first N", file=sys.stderr)
-        return [{"item": it, "blurb": it["summary"][:280]} for it in items[:limit]]
+        results = json.loads(extract_json(raw))
+        for r in results:
+            item = by_id.get(r.get("id"))
+            if item and r.get("category") in CATEGORIES and isinstance(r.get("score"), int):
+                item["category"] = r["category"]
+                item["score"] = r["score"]
+    except Exception as exc:
+        print(f"  [warn] scoring/categorization failed: {exc}", file=sys.stderr)
+    # anything Claude didn't return a valid result for gets dropped later
+    # (no category/score set -> excluded by the filtering step)
 
-    out = []
-    for p in picks:
-        idx = p.get("index")
-        if idx is not None and 0 <= idx < len(items):
-            out.append({"item": items[idx], "blurb": p.get("blurb", items[idx]["summary"][:280])})
-    return out
 
+def get_why_it_matters(items):
+    """Full 3-part breakdown for the stories that made the cut (score >= 6)."""
+    if not items:
+        return
+    listing = "\n".join(
+        f"{it['_gid']}. [{it['category']}] {it['title']} — {it['summary'][:300]}"
+        for it in items
+    )
+    prompt = f"""For each story below, based ONLY on the teaser text given (never invent facts or
+figures not present here), write:
+- "what_happened": 1-2 plain sentences on what happened
+- "why_it_matters": 1 sentence on why it matters
+- "watch_next": 1 sentence on what to watch for next
+
+Stories:
+{listing}
+
+Return ONLY a JSON array covering every story above, no markdown fences, no preamble:
+[{{"id": <id>, "what_happened": "...", "why_it_matters": "...", "watch_next": "..."}}]
+"""
+    raw = call_claude(prompt, max_tokens=4000)
+    by_id = {it["_gid"]: it for it in items}
+    try:
+        results = json.loads(extract_json(raw))
+        for r in results:
+            item = by_id.get(r.get("id"))
+            if item:
+                item["breakdown"] = {
+                    "what_happened": r.get("what_happened", ""),
+                    "why_it_matters": r.get("why_it_matters", ""),
+                    "watch_next": r.get("watch_next", ""),
+                }
+    except Exception as exc:
+        print(f"  [warn] why-it-matters generation failed: {exc}", file=sys.stderr)
+        for it in items:
+            it["breakdown"] = {"what_happened": it["summary"][:280], "why_it_matters": "", "watch_next": ""}
+
+
+def build_news_sections(all_news_raw):
+    """Scores/categorizes everything, splits into top/category/worth-knowing,
+    and fetches the full breakdown for anything that needs one."""
+    for i, it in enumerate(all_news_raw):
+        it["_gid"] = i
+
+    print(f"  scoring & categorizing {len(all_news_raw)} stories...")
+    score_and_categorize(all_news_raw)
+
+    scored = [it for it in all_news_raw if "score" in it]
+    print(f"  {len(scored)}/{len(all_news_raw)} stories scored successfully")
+
+    scored.sort(key=lambda it: it["score"], reverse=True)
+
+    top_stories = [it for it in scored if it["score"] >= SCORE_TOP_THRESHOLD][:MAX_TOP_STORIES]
+    used_gids = {it["_gid"] for it in top_stories}
+
+    category_sections = {cat: [] for cat in CATEGORIES}
+    worth_knowing = []
+    for it in scored:
+        if it["_gid"] in used_gids:
+            continue
+        if it["score"] >= SCORE_CATEGORY_THRESHOLD:
+            if len(category_sections[it["category"]]) < MAX_PER_CATEGORY:
+                category_sections[it["category"]].append(it)
+                used_gids.add(it["_gid"])
+        elif it["score"] >= SCORE_WORTH_KNOWING_THRESHOLD:
+            if len(worth_knowing) < MAX_WORTH_KNOWING:
+                worth_knowing.append(it)
+                used_gids.add(it["_gid"])
+
+    needs_breakdown = top_stories + [it for items in category_sections.values() for it in items]
+    print(f"  writing 'why it matters' for {len(needs_breakdown)} stories...")
+    get_why_it_matters(needs_breakdown)
+
+    return top_stories, category_sections, worth_knowing
+
+# --- Sport ---
 
 def select_top_sport_items(items, limit):
-    """Curate down to the genuinely newsworthy items - drops transfer gossip,
-    opinion pieces, and minor/youth-team filler that keyword filtering alone
-    lets through from broad club-tag feeds."""
     if len(items) <= limit:
         return items
     listing = "\n".join(f"{i}. [{it['source']}] {it['title']} — {it['summary'][:200]}" for i, it in enumerate(items))
@@ -340,25 +435,27 @@ Return only the sentence, nothing else.
     except Exception:
         return item["title"]
 
+# --- Bulletin ---
 
-def write_bulletin(ireland_stories, world_stories, sport_items, fixtures_data):
-    def fmt(stories):
-        return "\n".join(f"- {s['item']['title']}: {s['blurb']}" for s in stories) or "(none)"
+def write_bulletin(top_stories, category_sections, sport_items, fixtures_data):
+    def fmt_full(items):
+        return "\n".join(f"- {it['title']}: {it.get('breakdown', {}).get('why_it_matters', it['summary'][:150])}" for it in items) or "(none)"
 
+    all_category_items = [it for items in category_sections.values() for it in items]
     sport_lines = "\n".join(f"- {it['title']}: {it.get('blurb', it['summary'][:200])}" for it in sport_items) or "(no team news today)"
     fixtures_lines = "\n".join(fixtures_data["fixtures_today"]) or "(no fixtures today)"
     results_lines = "\n".join(fixtures_data["results_yesterday"]) or "(no results yesterday)"
 
     prompt = f"""Write a 3-5 bullet "Today's Bulletin" for the top of a personal morning newspaper-style
 newsletter, in a punchy front-page tone. Base it ONLY on the information below - no outside facts,
-no invented numbers. Pick the single most noteworthy item from each relevant area; skip an area if
-nothing in it is genuinely noteworthy.
+no invented numbers. Pick the single most noteworthy item overall; skip an area if nothing in it
+is genuinely noteworthy.
 
-IRELAND NEWS:
-{fmt(ireland_stories)}
+TOP STORIES:
+{fmt_full(top_stories)}
 
-WORLD NEWS:
-{fmt(world_stories)}
+OTHER NOTABLE NEWS:
+{fmt_full(all_category_items)}
 
 SPORT NEWS:
 {sport_lines}
@@ -386,8 +483,27 @@ your entire response must be valid JSON starting with [ and ending with ].
 # RENDERING
 # ---------------------------------------------------------------------------
 
-def render_html(bulletin, ireland_stories, world_stories, sport_items, fixtures_data, edition_date):
-    def story_block(title, source, blurb, link):
+def render_html(bulletin, top_stories, category_sections, worth_knowing, sport_items, fixtures_data, edition_date):
+
+    def section_header(text, size="16px"):
+        return f"""<div style="font-family:Georgia,serif;font-size:{size};font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">{text}</div>"""
+
+    def full_story_block(it):
+        b = it.get("breakdown", {})
+        return f"""
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">{it['title']}</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">{it['source']}</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">
+            <div style="margin-bottom:6px;"><b>What happened:</b> {b.get('what_happened','')}</div>
+            <div style="margin-bottom:6px;"><b>Why it matters:</b> {b.get('why_it_matters','')}</div>
+            <div><b>Watch next:</b> {b.get('watch_next','')}</div>
+          </div>
+          <a href="{it['link']}" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        """
+
+    def blurb_story_block(title, source, blurb, link):
         return f"""
         <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
           <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">{title}</div>
@@ -397,15 +513,13 @@ def render_html(bulletin, ireland_stories, world_stories, sport_items, fixtures_
         </div>
         """
 
-    def section_header(text):
-        return f"""<div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">{text}</div>"""
-
-    def list_block(lines, empty_msg):
+    def list_block(lines, empty_msg, font_size="14px"):
         if not lines:
-            return f"<p style='color:#777;font-family:Georgia,serif;font-size:14px;'>{empty_msg}</p>"
-        items_html = "".join(f"<li style='margin-bottom:4px;'>{line}</li>" for line in lines)
-        return f"<ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:20px;margin:0 0 16px;'>{items_html}</ul>"
+            return f"<p style='color:#777;font-family:Georgia,serif;font-size:{font_size};'>{empty_msg}</p>"
+        items_html = "".join(f"<li style='margin-bottom:6px;'>{line}</li>" for line in lines)
+        return f"<ul style='font-family:Georgia,serif;font-size:{font_size};color:#333;padding-left:22px;margin:0 0 16px;'>{items_html}</ul>"
 
+    # --- Bulletin banner ---
     bulletin_html = ""
     if bulletin:
         bullet_items = "".join(f"<li style='margin-bottom:6px;'>{b}</li>" for b in bulletin)
@@ -416,25 +530,45 @@ def render_html(bulletin, ireland_stories, world_stories, sport_items, fixtures_
         </div>
         """
 
-    ireland_html = "".join(
-        story_block(s["item"]["title"], s["item"]["source"], s["blurb"], s["item"]["link"]) for s in ireland_stories
-    ) or "<p style='color:#777;'>No stories cleared the bar today.</p>"
-
-    world_html = "".join(
-        story_block(s["item"]["title"], s["item"]["source"], s["blurb"], s["item"]["link"]) for s in world_stories
-    ) or "<p style='color:#777;'>No stories cleared the bar today.</p>"
-
-    sport_html = "".join(
-        story_block(it["title"], it["source"], it.get("blurb", it["summary"][:300]), it["link"]) for it in sport_items
-    ) or "<p style='color:#777;'>Nothing new on Liverpool, Real Betis, Cork City, Troy Parrott, or the Boys in Green today.</p>"
-
-    fixtures_html = list_block(fixtures_data["fixtures_today"], "No Liverpool, Real Betis, or Cork City fixtures today.")
-    results_html = list_block(fixtures_data["results_yesterday"], "No results from yesterday.")
-
-    matchday_html = ""
+    # --- Fixtures & Results: enlarged, prominent, right below the bulletin ---
+    fixtures_inner = f"""
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
+      {list_block(fixtures_data['fixtures_today'], "No Liverpool, Real Betis, or Cork City fixtures today.", font_size="15px")}
+    """
     for comp_name, lines in fixtures_data["full_matchday"].items():
-        matchday_html += f"<div style='font-weight:700;font-family:Georgia,serif;font-size:14px;margin-top:10px;'>{comp_name} - full matchday</div>"
-        matchday_html += list_block(lines, "")
+        fixtures_inner += f"<div style='font-weight:700;font-family:Georgia,serif;font-size:15px;margin-top:8px;'>{comp_name} — full matchday</div>"
+        fixtures_inner += list_block(lines, "", font_size="15px")
+    fixtures_inner += f"""
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-top:14px;margin-bottom:6px;">Yesterday's Results</div>
+      {list_block(fixtures_data['results_yesterday'], "No results from yesterday.", font_size="15px")}
+    """
+    fixtures_html = f"""
+    <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;background:#faf8f4;">
+      <div style="font-family:Georgia,serif;font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">\u26bd Fixtures &amp; Results</div>
+      {fixtures_inner}
+    </div>
+    """
+
+    # --- Top stories ---
+    top_html = "".join(full_story_block(it) for it in top_stories) or "<p style='color:#777;'>Nothing cleared the must-know bar today.</p>"
+
+    # --- Category sections ---
+    category_html = ""
+    for cat in CATEGORIES:
+        items = category_sections.get(cat, [])
+        if not items:
+            continue
+        category_html += section_header(CATEGORY_DISPLAY[cat])
+        category_html += "".join(full_story_block(it) for it in items)
+
+    # --- Worth knowing ---
+    worth_lines = [f"<a href='{it['link']}' style='color:#333;text-decoration:none;'>{it['title']}</a> <span style='color:#999;font-size:12px;'>({it['source']})</span>" for it in worth_knowing]
+    worth_html = list_block(worth_lines, "Nothing minor worth flagging today.")
+
+    # --- Sport news (team news, not fixtures) ---
+    sport_html = "".join(
+        blurb_story_block(it["title"], it["source"], it.get("blurb", it["summary"][:300]), it["link"]) for it in sport_items
+    ) or "<p style='color:#777;'>Nothing new on Liverpool, Real Betis, Cork City, Troy Parrott, or the Boys in Green today.</p>"
 
     return f"""<!DOCTYPE html>
 <html><body style="margin:0;padding:0;background:#f2efe9;">
@@ -445,23 +579,18 @@ def render_html(bulletin, ireland_stories, world_stories, sport_items, fixtures_
   </div>
 
   {bulletin_html}
-
-  {section_header("Ireland")}
-  {ireland_html}
-
-  {section_header("Rest of World")}
-  {world_html}
-
-  {section_header("Sport")}
-
-  <div style="font-weight:700;font-family:Georgia,serif;font-size:14px;">Today's Fixtures</div>
   {fixtures_html}
-  {matchday_html}
 
-  <div style="font-weight:700;font-family:Georgia,serif;font-size:14px;margin-top:14px;">Yesterday's Results</div>
-  {results_html}
+  {section_header(TOP_LABEL, size="18px")}
+  {top_html}
 
-  <div style="margin-top:16px;">{sport_html}</div>
+  {category_html}
+
+  {section_header(WORTH_KNOWING_LABEL)}
+  {worth_html}
+
+  {section_header("\U0001F3C6 Sport")}
+  {sport_html}
 
   <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
     Generated automatically. Headlines and teasers only - click through for full articles.
@@ -506,9 +635,12 @@ def main():
 
     print("Fetching Ireland feeds...")
     ireland_raw = collect(IRELAND_FEEDS, cutoff)
-
     print("Fetching world feeds...")
     world_raw = collect(WORLD_FEEDS, cutoff)
+    print("Fetching technology feeds...")
+    tech_raw = collect(TECH_FEEDS, cutoff)
+    all_news_raw = ireland_raw + world_raw + tech_raw
+    print(f"  {len(all_news_raw)} total news items collected")
 
     print("Fetching sport feeds...")
     sport_raw = collect(SPORT_FEEDS, cutoff)
@@ -518,11 +650,11 @@ def main():
     print("Fetching fixtures & results...")
     fixtures_data = build_fixtures_data(today_dublin, yesterday_dublin)
 
-    print("Ranking Ireland stories with Claude...")
-    ireland_ranked = rank_stories(ireland_raw, MAX_IRELAND_STORIES, "Ireland")
-
-    print("Ranking world stories with Claude...")
-    world_ranked = rank_stories(world_raw, MAX_WORLD_STORIES, "Rest of World")
+    print("Scoring, categorizing, and writing breakdowns for news...")
+    top_stories, category_sections, worth_knowing = build_news_sections(all_news_raw)
+    print(f"  Top: {len(top_stories)} | Worth knowing: {len(worth_knowing)}")
+    for cat in CATEGORIES:
+        print(f"  {cat}: {len(category_sections[cat])}")
 
     print("Curating sport items with Claude...")
     sport_curated = select_top_sport_items(sport_filtered, MAX_SPORT_ITEMS)
@@ -533,10 +665,10 @@ def main():
         it["blurb"] = blurb_for_sport_item(it)
 
     print("Writing today's bulletin...")
-    bulletin = write_bulletin(ireland_ranked, world_ranked, sport_curated, fixtures_data)
+    bulletin = write_bulletin(top_stories, category_sections, sport_curated, fixtures_data)
     print(f"  bulletin has {len(bulletin)} bullets")
 
-    html = render_html(bulletin, ireland_ranked, world_ranked, sport_curated, fixtures_data, edition_date)
+    html = render_html(bulletin, top_stories, category_sections, worth_knowing, sport_curated, fixtures_data, edition_date)
 
     print("Sending email...")
     send_email(html, subject=f"Morning Brief — {edition_date}")
