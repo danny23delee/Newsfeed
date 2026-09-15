@@ -44,7 +44,8 @@ CLAUDE_MODEL = "claude-sonnet-4-5"
 # TheJournal.ie is marked VERIFY - confirm with the PowerShell check in
 # README.md; if it 404s try "https://www.thejournal.ie/rss/" instead.
 IRELAND_FEEDS = {
-    "TheJournal.ie (VERIFY)": "https://www.thejournal.ie/feed/",
+    "TheJournal.ie": "https://www.thejournal.ie/feed/",
+     "RTE - News": "https://www.rte.ie/feeds/rss/?index=/news",
 }
 WORLD_FEEDS = {
     "FT - World":     "https://www.ft.com/rss/home/international",
@@ -61,8 +62,8 @@ MAX_WORLD_STORIES = 8
 # volume, most of it not worth your morning.
 SPORT_FEEDS = {
     "BBC - Football":                 "http://feeds.bbci.co.uk/sport/football/rss.xml",
-    "Sky Sports - Football (VERIFY)": "https://www.skysports.com/rss/12040",
-    "Liverpool Echo - LFC (VERIFY)":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
+    "Sky Sports - Football": "https://www.skysports.com/rss/12040",
+    "Liverpool Echo - LFC":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
 }
 TEAM_KEYWORDS = [
     "liverpool", "salah", "mohamed salah",
