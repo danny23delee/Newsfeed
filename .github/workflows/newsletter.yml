@@ -12,6 +12,9 @@ on:
     - cron: "30 6 * * *"
   workflow_dispatch: {}   # lets you trigger it manually from the Actions tab to test
 
+permissions:
+  contents: write   # needed so the job can commit seen_stories.json back to the repo
+
 jobs:
   send-newsletter:
     runs-on: ubuntu-latest
@@ -35,3 +38,11 @@ jobs:
           TO_EMAIL: ${{ secrets.TO_EMAIL }}
           FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
         run: python newsletter.py
+
+      - name: Persist dedupe state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add seen_stories.json
+          git diff --cached --quiet || git commit -m "Update seen stories state"
+          git push
