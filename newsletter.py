@@ -97,7 +97,7 @@ ECON_EVENTS_HORIZON_DAYS = 10  # show events within this many days
 # these groupings just control which feeds get fetched, not where a story
 # ends up.
 IRELAND_FEEDS = {
-    "TheJournal.ie (VERIFY)": "https://www.thejournal.ie/feed/",
+    "TheJournal.ie": "https://www.thejournal.ie/feed/",
     "RTE - News":             "https://www.rte.ie/feeds/rss/?index=/news",
 }
 WORLD_FEEDS = {
@@ -134,8 +134,8 @@ MAX_WORTH_KNOWING = 6
 # General sport feeds, filtered by keyword then curated down by Claude.
 SPORT_FEEDS = {
     "BBC - Football":                 "http://feeds.bbci.co.uk/sport/football/rss.xml",
-    "Sky Sports - Football (VERIFY)": "https://www.skysports.com/rss/12040",
-    "Liverpool Echo - LFC (VERIFY)":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
+    "Sky Sports - Football": "https://www.skysports.com/rss/12040",
+    "Liverpool Echo - LFC ":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
 }
 # CIES Football Observatory - genuinely free/public research posts, not
 # paywalled. Disabled for now: the guessed RSS URL 404s and the real one
