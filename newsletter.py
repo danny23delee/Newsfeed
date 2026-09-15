@@ -49,7 +49,7 @@ FINANCE_POLITICS_FEEDS = {
     "BBC - Business":    "http://feeds.bbci.co.uk/news/business/rss.xml",
     "BBC - Politics":    "http://feeds.bbci.co.uk/news/politics/rss.xml",
     "RTE - News":        "https://www.rte.ie/feeds/rss/?index=/news",
-    "TheJournal.ie":  "https://www.thejournal.ie/feed/",,
+    "TheJournal.ie":  "https://www.thejournal.ie/feed/",
 }
 
 # Sport feeds we scan and then filter down to your teams/players.
