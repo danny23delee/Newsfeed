@@ -48,8 +48,8 @@ FINANCE_POLITICS_FEEDS = {
     "BBC - World":       "http://feeds.bbci.co.uk/news/world/rss.xml",
     "BBC - Business":    "http://feeds.bbci.co.uk/news/business/rss.xml",
     "BBC - Politics":    "http://feeds.bbci.co.uk/news/politics/rss.xml",
-    "RTE - News (VERIFY)":        "https://www.rte.ie/feeds/rss/?index=/news",
-    "Irish Times (VERIFY)":       "https://www.irishtimes.com/rss/",
+    "RTE - News":        "https://www.rte.ie/feeds/rss/?index=/news",
+    "TheJournal.ie":  "https://www.thejournal.ie/feed/",,
 }
 
 # Sport feeds we scan and then filter down to your teams/players.
@@ -57,9 +57,9 @@ FINANCE_POLITICS_FEEDS = {
 # keyword below does the real work.
 SPORT_FEEDS = {
     "BBC - Football":            "http://feeds.bbci.co.uk/sport/football/rss.xml",
-    "RTE - Sport (VERIFY)":      "https://www.rte.ie/feeds/rss/?index=/sport",
-    "Sky Sports - Football (VERIFY)": "https://www.skysports.com/rss/12040",
-    "Liverpool Echo - LFC (VERIFY)":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
+    "RTE - Sport":      "https://www.rte.ie/feeds/rss/?index=/sport",
+    "Sky Sports - Football": "https://www.skysports.com/rss/12040",
+    "Liverpool Echo - LFC":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
 }
 
 # Case-insensitive keywords used to pull sport items relevant to you out
