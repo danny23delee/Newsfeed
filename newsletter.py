@@ -2,18 +2,20 @@
 """
 Personal morning newsletter generator.
 
-Pulls RSS feeds (finance/politics + sport), filters sport items to the
-teams/players you care about, uses Claude to write short blurbs and to
-rank the most impactful finance/political stories, renders an HTML
-"newspaper" page, and emails it to you.
+Pulls RSS feeds (finance/politics, split Ireland vs rest of world), filters
+sport items to the teams/players you care about, fetches today's fixtures
+and yesterday's results for Liverpool / Real Betis / Cork City FC (plus full
+Premier League and Champions League matchdays when applicable), uses Claude
+to write short blurbs, rank the most impactful stories, and write a top
+bulletin, then renders an HTML "newspaper" page and emails it to you.
 
 IMPORTANT: this never fetches or reproduces full paywalled article text
 (FT, The Athletic, etc). It only ever uses what the RSS feed itself
 publishes (headline + short teaser) and links out to the original for
-the rest. That's a hard legal/ToS line — don't change that part.
+the rest. That's a hard legal/ToS line - don't change that part.
 
 Run with: python newsletter.py
-Required env vars are listed in the CONFIG section below and in README.md.
+Required env vars are listed in README.md.
 """
 
 import os
@@ -21,6 +23,7 @@ import sys
 import json
 import smtplib
 import datetime as dt
+from zoneinfo import ZoneInfo
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -31,56 +34,68 @@ import requests
 # CONFIG
 # ---------------------------------------------------------------------------
 
-# How far back to look for stories, in hours. Run daily -> 30 gives a little
-# overlap margin so nothing published just before midnight gets missed.
 LOOKBACK_HOURS = 30
+DUBLIN = ZoneInfo("Europe/Dublin")
+CLAUDE_MODEL = "claude-sonnet-4-5"
 
-# Finance / politics feeds — international + Ireland.
-# FT and BBC URLs below are verified working RSS feeds as of writing.
-# The Irish Times / RTE ones are marked VERIFY: RSS URLs on these sites
-# change occasionally, so before relying on this, open each URL in a
-# browser once and confirm it returns XML, not an error page. If a feed
-# breaks, view-source on the section's homepage and search for
-# <link rel="alternate" type="application/rss+xml"> to find the new one.
-FINANCE_POLITICS_FEEDS = {
-    "FT - World":        "https://www.ft.com/rss/home/international",
-    "FT - UK":           "https://www.ft.com/rss/home/uk",
-    "BBC - World":       "http://feeds.bbci.co.uk/news/world/rss.xml",
-    "BBC - Business":    "http://feeds.bbci.co.uk/news/business/rss.xml",
-    "BBC - Politics":    "http://feeds.bbci.co.uk/news/politics/rss.xml",
-    "RTE - News":        "https://www.rte.ie/feeds/rss/?index=/news",
-    "TheJournal.ie":  "https://www.thejournal.ie/feed/",
+# Finance / politics feeds, split so they can be ranked and rendered
+# separately. FT and BBC URLs are verified working RSS feeds as of writing.
+# TheJournal.ie is marked VERIFY - confirm with the PowerShell check in
+# README.md; if it 404s try "https://www.thejournal.ie/rss/" instead.
+IRELAND_FEEDS = {
+    "TheJournal.ie (VERIFY)": "https://www.thejournal.ie/feed/",
 }
+WORLD_FEEDS = {
+    "FT - World":     "https://www.ft.com/rss/home/international",
+    "FT - UK":        "https://www.ft.com/rss/home/uk",
+    "BBC - World":    "http://feeds.bbci.co.uk/news/world/rss.xml",
+    "BBC - Business": "http://feeds.bbci.co.uk/news/business/rss.xml",
+    "BBC - Politics": "http://feeds.bbci.co.uk/news/politics/rss.xml",
+}
+MAX_IRELAND_STORIES = 6
+MAX_WORLD_STORIES = 8
 
-# Sport feeds we scan and then filter down to your teams/players.
-# These are general football feeds, not team-specific, so filtering by
-# keyword below does the real work.
+# General sport feeds, filtered down to your teams/players by keyword.
 SPORT_FEEDS = {
-    "BBC - Football":            "http://feeds.bbci.co.uk/sport/football/rss.xml",
-    "RTE - Sport":      "https://www.rte.ie/feeds/rss/?index=/sport",
-    "Sky Sports - Football": "https://www.skysports.com/rss/12040",
-    "Liverpool Echo - LFC":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
+    "BBC - Football":                 "http://feeds.bbci.co.uk/sport/football/rss.xml",
+    "Sky Sports - Football (VERIFY)": "https://www.skysports.com/rss/12040",
+    "Liverpool Echo - LFC (VERIFY)":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
 }
-
-# Case-insensitive keywords used to pull sport items relevant to you out
-# of the general feeds above. Add/remove freely.
 TEAM_KEYWORDS = [
     "liverpool", "salah", "mohamed salah",
+    "real betis", "betis",
     "cork city",
     "troy parrott",
     "republic of ireland", "ireland national team", "boys in green",
     "league of ireland", "fai ",
 ]
 
-MAX_FINANCE_STORIES = 10   # how many finance/politics stories to keep after ranking
-CLAUDE_MODEL = "claude-sonnet-4-5"  # swap if you want a different model
+# --- Fixtures / results ---
+# football-data.org: free tier, needs a free API key (FOOTBALL_DATA_API_KEY env var).
+# Known team IDs on football-data.org's v4 API - verify once via:
+#   curl -H "X-Auth-Token: YOUR_KEY" https://api.football-data.org/v4/teams/64
+# (should return Liverpool FC). If it doesn't, look the ID up at
+# https://www.football-data.org/ and update below.
+FOOTBALL_DATA_BASE = "https://api.football-data.org/v4"
+FOOTBALL_DATA_TEAMS = {
+    "Liverpool FC": 64,
+    "Real Betis": 90,
+}
+FOOTBALL_DATA_FULL_DAY_COMPETITIONS = {
+    "PL": "Premier League",
+    "CL": "Champions League",
+}
+
+# TheSportsDB: free, no signup, shared public test key "3". Good enough for
+# a personal daily lookup; not guaranteed enterprise-grade uptime.
+THESPORTSDB_BASE = "https://www.thesportsdb.com/api/v1/json/3"
+CORK_CITY_SEARCH_NAME = "Cork City"
 
 # ---------------------------------------------------------------------------
-# FETCHING
+# RSS FETCHING
 # ---------------------------------------------------------------------------
 
 def fetch_feed(name, url, cutoff):
-    """Return recent entries from one RSS feed as plain dicts."""
     items = []
     try:
         parsed = feedparser.parse(url)
@@ -126,7 +141,118 @@ def filter_by_keywords(items, keywords):
     return out
 
 # ---------------------------------------------------------------------------
-# CLAUDE: ranking + blurb writing
+# FIXTURES & RESULTS
+# ---------------------------------------------------------------------------
+
+def fd_get(path, params, api_key):
+    try:
+        resp = requests.get(
+            f"{FOOTBALL_DATA_BASE}{path}",
+            headers={"X-Auth-Token": api_key},
+            params=params,
+            timeout=30,
+        )
+        if resp.status_code != 200:
+            print(f"  [warn] football-data.org {path}: HTTP {resp.status_code}", file=sys.stderr)
+            return []
+        return resp.json().get("matches", [])
+    except Exception as exc:
+        print(f"  [warn] football-data.org {path}: {exc}", file=sys.stderr)
+        return []
+
+
+def fd_match_summary(m):
+    home = m["homeTeam"]["name"]
+    away = m["awayTeam"]["name"]
+    comp = m["competition"]["name"]
+    utc = dt.datetime.fromisoformat(m["utcDate"].replace("Z", "+00:00"))
+    local_time = utc.astimezone(DUBLIN).strftime("%H:%M")
+    status = m["status"]
+    if status == "FINISHED":
+        score = m.get("score", {}).get("fullTime", {})
+        return f"{home} {score.get('home', '?')} - {score.get('away', '?')} {away}  ({comp})"
+    return f"{home} v {away} — {local_time} Irish time  ({comp})"
+
+
+def get_team_fixtures_and_results(api_key, today, yesterday):
+    """Returns (today_fixtures, yesterday_results) for the named teams."""
+    fixtures, results = [], []
+    for name, team_id in FOOTBALL_DATA_TEAMS.items():
+        today_matches = fd_get(f"/teams/{team_id}/matches",
+                                {"dateFrom": today, "dateTo": today}, api_key)
+        fixtures.extend(today_matches)
+        yesterday_matches = fd_get(f"/teams/{team_id}/matches",
+                                    {"dateFrom": yesterday, "dateTo": yesterday}, api_key)
+        results.extend([m for m in yesterday_matches if m["status"] == "FINISHED"])
+    return fixtures, results
+
+
+def get_full_matchday(api_key, date):
+    """Returns {competition name: [matches]} for PL/CL matches on the given date."""
+    out = {}
+    for code, name in FOOTBALL_DATA_FULL_DAY_COMPETITIONS.items():
+        matches = fd_get(f"/competitions/{code}/matches", {"dateFrom": date, "dateTo": date}, api_key)
+        if matches:
+            out[name] = matches
+    return out
+
+
+def get_cork_city_fixtures_and_results(today, yesterday):
+    fixtures, results = [], []
+    try:
+        r = requests.get(f"{THESPORTSDB_BASE}/searchteams.php",
+                          params={"t": CORK_CITY_SEARCH_NAME}, timeout=30)
+        teams = (r.json() or {}).get("teams") or []
+        if not teams:
+            print("  [warn] TheSportsDB: Cork City team not found", file=sys.stderr)
+            return fixtures, results
+        team_id = teams[0]["idTeam"]
+
+        r = requests.get(f"{THESPORTSDB_BASE}/eventsnext.php", params={"id": team_id}, timeout=30)
+        for e in (r.json() or {}).get("events") or []:
+            if e.get("dateEvent") == today:
+                fixtures.append(f"{e['strHomeTeam']} v {e['strAwayTeam']} — {e.get('strTime', '')} ({e.get('strLeague', '')})")
+
+        r = requests.get(f"{THESPORTSDB_BASE}/eventslast.php", params={"id": team_id}, timeout=30)
+        for e in (r.json() or {}).get("results") or []:
+            if e.get("dateEvent") == yesterday:
+                results.append(f"{e['strHomeTeam']} {e.get('intHomeScore', '?')} - {e.get('intAwayScore', '?')} {e['strAwayTeam']} ({e.get('strLeague', '')})")
+    except Exception as exc:
+        print(f"  [warn] TheSportsDB: {exc}", file=sys.stderr)
+    return fixtures, results
+
+
+def build_fixtures_data(today_dublin, yesterday_dublin):
+    """Gathers all fixture/result data. Skips football-data.org gracefully if no key set."""
+    api_key = os.environ.get("FOOTBALL_DATA_API_KEY")
+    today_str, yesterday_str = today_dublin.isoformat(), yesterday_dublin.isoformat()
+
+    team_fixtures_text, team_results_text = [], []
+    full_matchday_text = {}
+
+    if api_key:
+        fixtures, results = get_team_fixtures_and_results(api_key, today_str, yesterday_str)
+        team_fixtures_text.extend(fd_match_summary(m) for m in fixtures)
+        team_results_text.extend(fd_match_summary(m) for m in results)
+
+        matchday = get_full_matchday(api_key, today_str)
+        for comp_name, matches in matchday.items():
+            full_matchday_text[comp_name] = [fd_match_summary(m) for m in matches]
+    else:
+        print("  [warn] FOOTBALL_DATA_API_KEY not set - skipping Liverpool/Betis/PL/CL fixtures", file=sys.stderr)
+
+    cork_fixtures, cork_results = get_cork_city_fixtures_and_results(today_str, yesterday_str)
+    team_fixtures_text.extend(cork_fixtures)
+    team_results_text.extend(cork_results)
+
+    return {
+        "fixtures_today": team_fixtures_text,
+        "results_yesterday": team_results_text,
+        "full_matchday": full_matchday_text,
+    }
+
+# ---------------------------------------------------------------------------
+# CLAUDE
 # ---------------------------------------------------------------------------
 
 def call_claude(prompt, max_tokens=2000):
@@ -150,33 +276,31 @@ def call_claude(prompt, max_tokens=2000):
     return "".join(b.get("text", "") for b in data.get("content", []) if b.get("type") == "text")
 
 
-def rank_finance_stories(items, limit):
-    """Ask Claude to pick the most impactful stories and return them with blurbs."""
+def rank_stories(items, limit, region_label):
     if not items:
         return []
     listing = "\n".join(
         f"{i}. [{it['source']}] {it['title']} — {it['summary'][:300]}"
         for i, it in enumerate(items)
     )
-    prompt = f"""You're curating a personal morning newsletter for a data analyst in Ireland who
-wants the most genuinely impactful financial and political news, international and Irish.
+    prompt = f"""You're curating the "{region_label}" section of a personal morning newsletter for a
+data analyst in Ireland who wants genuinely impactful financial and political news.
 
-Here are today's candidate headlines with their source teaser text:
+Candidate headlines with source teaser text:
 
 {listing}
 
-Pick the {limit} most impactful stories (skip celebrity/soft news, duplicate stories, and pure
-sports/entertainment). For each, write a neutral 2-sentence blurb based ONLY on the teaser text
-given above — do not invent details not present in the teaser. Return ONLY valid JSON, no markdown
-fences, no preamble, in this exact shape:
+Pick the {limit} most impactful stories (skip celebrity/soft news and duplicates). For each,
+write a neutral 2-sentence blurb based ONLY on the teaser text given - do not invent details.
+Return ONLY valid JSON, no markdown fences, no preamble:
 
-[{{"index": <int index from the numbered list above>, "blurb": "<2 sentence summary>"}}]
+[{{"index": <int index from list above>, "blurb": "<2 sentence summary>"}}]
 """
     raw = call_claude(prompt, max_tokens=3000)
     try:
         picks = json.loads(raw)
     except json.JSONDecodeError:
-        print("  [warn] could not parse ranking JSON, falling back to first N items", file=sys.stderr)
+        print(f"  [warn] could not parse {region_label} ranking JSON, falling back to first N", file=sys.stderr)
         return [{"item": it, "blurb": it["summary"][:280]} for it in items[:limit]]
 
     out = []
@@ -188,8 +312,6 @@ fences, no preamble, in this exact shape:
 
 
 def blurb_for_sport_item(item):
-    """If the RSS teaser is already substantial, use it as-is. Otherwise ask Claude
-    for a short blurb based only on the title + teaser (never fetches full text)."""
     if len(item["summary"]) > 120:
         return item["summary"][:400]
     prompt = f"""Write one short, neutral sentence (max 30 words) summarizing this football news
@@ -205,11 +327,51 @@ Return only the sentence, nothing else.
     except Exception:
         return item["title"]
 
+
+def write_bulletin(ireland_stories, world_stories, sport_items, fixtures_data):
+    def fmt(stories):
+        return "\n".join(f"- {s['item']['title']}: {s['blurb']}" for s in stories) or "(none)"
+
+    sport_lines = "\n".join(f"- {it['title']}: {it.get('blurb', it['summary'][:200])}" for it in sport_items) or "(no team news today)"
+    fixtures_lines = "\n".join(fixtures_data["fixtures_today"]) or "(no fixtures today)"
+    results_lines = "\n".join(fixtures_data["results_yesterday"]) or "(no results yesterday)"
+
+    prompt = f"""Write a 3-5 bullet "Today's Bulletin" for the top of a personal morning newspaper-style
+newsletter, in a punchy front-page tone. Base it ONLY on the information below - no outside facts,
+no invented numbers. Pick the single most noteworthy item from each relevant area; skip an area if
+nothing in it is genuinely noteworthy.
+
+IRELAND NEWS:
+{fmt(ireland_stories)}
+
+WORLD NEWS:
+{fmt(world_stories)}
+
+SPORT NEWS:
+{sport_lines}
+
+TODAY'S FIXTURES:
+{fixtures_lines}
+
+YESTERDAY'S RESULTS:
+{results_lines}
+
+Return ONLY a JSON array of 3-5 short strings, no markdown fences, no preamble.
+"""
+    try:
+        raw = call_claude(prompt, max_tokens=600)
+        bullets = json.loads(raw)
+        if isinstance(bullets, list) and bullets:
+            return bullets
+    except Exception as exc:
+        print(f"  [warn] bulletin generation failed: {exc}", file=sys.stderr)
+    return []
+
 # ---------------------------------------------------------------------------
 # RENDERING
 # ---------------------------------------------------------------------------
 
-def render_html(finance_stories, sport_items, edition_date):
+def render_html(bulletin, ireland_stories, world_stories, sport_items, fixtures_data, edition_date):
     def story_block(title, source, blurb, link):
         return f"""
         <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
@@ -220,15 +382,44 @@ def render_html(finance_stories, sport_items, edition_date):
         </div>
         """
 
-    finance_html = "".join(
-        story_block(s["item"]["title"], s["item"]["source"], s["blurb"], s["item"]["link"])
-        for s in finance_stories
+    def section_header(text):
+        return f"""<div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">{text}</div>"""
+
+    def list_block(lines, empty_msg):
+        if not lines:
+            return f"<p style='color:#777;font-family:Georgia,serif;font-size:14px;'>{empty_msg}</p>"
+        items_html = "".join(f"<li style='margin-bottom:4px;'>{line}</li>" for line in lines)
+        return f"<ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:20px;margin:0 0 16px;'>{items_html}</ul>"
+
+    bulletin_html = ""
+    if bulletin:
+        bullet_items = "".join(f"<li style='margin-bottom:6px;'>{b}</li>" for b in bulletin)
+        bulletin_html = f"""
+        <div style="background:#111;color:#fff;padding:14px 18px;margin-bottom:22px;">
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Today's Bulletin</div>
+          <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.4;padding-left:18px;margin:0;">{bullet_items}</ul>
+        </div>
+        """
+
+    ireland_html = "".join(
+        story_block(s["item"]["title"], s["item"]["source"], s["blurb"], s["item"]["link"]) for s in ireland_stories
+    ) or "<p style='color:#777;'>No stories cleared the bar today.</p>"
+
+    world_html = "".join(
+        story_block(s["item"]["title"], s["item"]["source"], s["blurb"], s["item"]["link"]) for s in world_stories
     ) or "<p style='color:#777;'>No stories cleared the bar today.</p>"
 
     sport_html = "".join(
-        story_block(it["title"], it["source"], it.get("blurb", it["summary"][:300]), it["link"])
-        for it in sport_items
-    ) or "<p style='color:#777;'>Nothing new on Liverpool, Cork City, Troy Parrott, Salah, or the Boys in Green today.</p>"
+        story_block(it["title"], it["source"], it.get("blurb", it["summary"][:300]), it["link"]) for it in sport_items
+    ) or "<p style='color:#777;'>Nothing new on Liverpool, Real Betis, Cork City, Troy Parrott, or the Boys in Green today.</p>"
+
+    fixtures_html = list_block(fixtures_data["fixtures_today"], "No Liverpool, Real Betis, or Cork City fixtures today.")
+    results_html = list_block(fixtures_data["results_yesterday"], "No results from yesterday.")
+
+    matchday_html = ""
+    for comp_name, lines in fixtures_data["full_matchday"].items():
+        matchday_html += f"<div style='font-weight:700;font-family:Georgia,serif;font-size:14px;margin-top:10px;'>{comp_name} - full matchday</div>"
+        matchday_html += list_block(lines, "")
 
     return f"""<!DOCTYPE html>
 <html><body style="margin:0;padding:0;background:#f2efe9;">
@@ -238,18 +429,27 @@ def render_html(finance_stories, sport_items, edition_date):
     <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">{edition_date}</div>
   </div>
 
-  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin-bottom:12px;padding-bottom:4px;">
-    Finance &amp; Politics — Ireland &amp; World
-  </div>
-  {finance_html}
+  {bulletin_html}
 
-  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">
-    Liverpool &middot; Salah &middot; Cork City &middot; Troy Parrott &middot; Boys in Green
-  </div>
-  {sport_html}
+  {section_header("Ireland")}
+  {ireland_html}
+
+  {section_header("Rest of World")}
+  {world_html}
+
+  {section_header("Sport")}
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:14px;">Today's Fixtures</div>
+  {fixtures_html}
+  {matchday_html}
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:14px;margin-top:14px;">Yesterday's Results</div>
+  {results_html}
+
+  <div style="margin-top:16px;">{sport_html}</div>
 
   <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
-    Generated automatically. Headlines and teasers only — click through for full articles.
+    Generated automatically. Headlines and teasers only - click through for full articles.
   </div>
 </div>
 </body></html>"""
@@ -282,26 +482,41 @@ def send_email(html_body, subject):
 # ---------------------------------------------------------------------------
 
 def main():
-    now = dt.datetime.now(dt.timezone.utc)
-    cutoff = now - dt.timedelta(hours=LOOKBACK_HOURS)
-    edition_date = now.strftime("%A %d %B %Y")
+    now_utc = dt.datetime.now(dt.timezone.utc)
+    cutoff = now_utc - dt.timedelta(hours=LOOKBACK_HOURS)
+    now_dublin = now_utc.astimezone(DUBLIN)
+    today_dublin = now_dublin.date()
+    yesterday_dublin = today_dublin - dt.timedelta(days=1)
+    edition_date = now_dublin.strftime("%A %d %B %Y")
 
-    print("Fetching finance/politics feeds...")
-    finance_raw = collect(FINANCE_POLITICS_FEEDS, cutoff)
+    print("Fetching Ireland feeds...")
+    ireland_raw = collect(IRELAND_FEEDS, cutoff)
+
+    print("Fetching world feeds...")
+    world_raw = collect(WORLD_FEEDS, cutoff)
 
     print("Fetching sport feeds...")
     sport_raw = collect(SPORT_FEEDS, cutoff)
     sport_filtered = filter_by_keywords(sport_raw, TEAM_KEYWORDS)
     print(f"  {len(sport_filtered)} sport items matched your keywords")
 
-    print("Ranking finance/politics stories with Claude...")
-    finance_ranked = rank_finance_stories(finance_raw, MAX_FINANCE_STORIES)
+    print("Fetching fixtures & results...")
+    fixtures_data = build_fixtures_data(today_dublin, yesterday_dublin)
+
+    print("Ranking Ireland stories with Claude...")
+    ireland_ranked = rank_stories(ireland_raw, MAX_IRELAND_STORIES, "Ireland")
+
+    print("Ranking world stories with Claude...")
+    world_ranked = rank_stories(world_raw, MAX_WORLD_STORIES, "Rest of World")
 
     print("Writing sport blurbs...")
     for it in sport_filtered:
         it["blurb"] = blurb_for_sport_item(it)
 
-    html = render_html(finance_ranked, sport_filtered, edition_date)
+    print("Writing today's bulletin...")
+    bulletin = write_bulletin(ireland_ranked, world_ranked, sport_filtered, fixtures_data)
+
+    html = render_html(bulletin, ireland_ranked, world_ranked, sport_filtered, fixtures_data, edition_date)
 
     print("Sending email...")
     send_email(html, subject=f"Morning Brief — {edition_date}")
