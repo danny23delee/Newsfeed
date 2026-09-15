@@ -21,6 +21,7 @@ Required env vars are listed in README.md.
 """
 
 import os
+import re
 import sys
 import json
 import smtplib
@@ -96,7 +97,7 @@ ECON_EVENTS_HORIZON_DAYS = 10  # show events within this many days
 # these groupings just control which feeds get fetched, not where a story
 # ends up.
 IRELAND_FEEDS = {
-    "TheJournal.ie": "https://www.thejournal.ie/feed/",
+    "TheJournal.ie (VERIFY)": "https://www.thejournal.ie/feed/",
     "RTE - News":             "https://www.rte.ie/feeds/rss/?index=/news",
 }
 WORLD_FEEDS = {
@@ -133,8 +134,8 @@ MAX_WORTH_KNOWING = 6
 # General sport feeds, filtered by keyword then curated down by Claude.
 SPORT_FEEDS = {
     "BBC - Football":                 "http://feeds.bbci.co.uk/sport/football/rss.xml",
-    "Sky Sports - Football": "https://www.skysports.com/rss/12040",
-    "Liverpool Echo - LFC":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
+    "Sky Sports - Football (VERIFY)": "https://www.skysports.com/rss/12040",
+    "Liverpool Echo - LFC (VERIFY)":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
 }
 # CIES Football Observatory - genuinely free/public research posts, not
 # paywalled. Disabled for now: the guessed RSS URL 404s and the real one
@@ -174,6 +175,25 @@ TEAM_SEARCH_NAMES = {
 LEAGUE_SEARCH_NAMES = {
     "Premier League": "English Premier League",
     "Champions League": "UEFA Champions League",
+}
+
+# Teams to show a "position + next fixture" snapshot for, and to compute a
+# form guide (last 5 results) for. Liverpool/Real Betis/Cork City IDs are
+# already looked up for fixtures/results above - these reuse them.
+SNAPSHOT_TEAMS = [
+    {"key": "Liverpool FC",  "display": "Liverpool",              "league_search": "English Premier League",  "league_display": "the Premier League"},
+    {"key": "Real Betis",    "display": "Real Betis (Troy Parrott)", "league_search": "Spanish La Liga",       "league_display": "La Liga"},
+    {"key": "Cork City FC",  "display": "Cork City",              "league_search": "League of Ireland",       "league_display": "the League of Ireland Premier Division"},
+]
+IRELAND_TEAM_SEARCH = "Republic of Ireland"
+
+# --- Betting odds (The Odds API, free tier - 500 credits/month, needs a
+# free key at the-odds-api.com; ODDS_API_KEY env var). Optional: skipped
+# gracefully if the key isn't set. ---
+ODDS_API_BASE = "https://api.the-odds-api.com/v4"
+ODDS_SPORT_KEYS = {
+    "Liverpool FC": "soccer_epl",
+    "Real Betis": "soccer_spain_la_liga",
 }
 
 # ---------------------------------------------------------------------------
@@ -223,6 +243,28 @@ def filter_by_keywords(items, keywords):
         blob = (it["title"] + " " + it["summary"]).lower()
         if any(k in blob for k in kws):
             out.append(it)
+    return out
+
+
+def normalize_title(title):
+    return re.sub(r"[^a-z0-9]+", " ", title.lower()).strip()
+
+
+def dedupe_by_title_and_link(items):
+    """Collapses the same story appearing under multiple feeds (very common
+    with FT's World vs UK feeds carrying an identical headline under
+    different URLs) - keeps the first occurrence encountered."""
+    seen_links, seen_titles, out = set(), set(), []
+    for it in items:
+        link = it.get("link", "")
+        title_key = normalize_title(it.get("title", ""))
+        if (link and link in seen_links) or (title_key and title_key in seen_titles):
+            continue
+        if link:
+            seen_links.add(link)
+        if title_key:
+            seen_titles.add(title_key)
+        out.append(it)
     return out
 
 # ---------------------------------------------------------------------------
@@ -307,22 +349,6 @@ def get_next_fixtures_summary(team_id, team_search_name, n=3):
     return out
 
 
-def build_liverpool_snapshot(today_dublin, liverpool_team_id, pl_league_id):
-    if not liverpool_team_id or not pl_league_id:
-        return None
-    season = get_current_season_str(today_dublin)
-    row = get_league_position("Liverpool", pl_league_id, season)
-    if not row:
-        print("  [warn] TheSportsDB: no Liverpool row in PL table (season may not have started, or wrong season string)", file=sys.stderr)
-        return None
-    next_fixtures = get_next_fixtures_summary(liverpool_team_id, "Liverpool", 3)
-    pos, pts, played = row.get("intRank", "?"), row.get("intPoints", "?"), row.get("intPlayed", "?")
-    line = f"Liverpool: {pos}{_ordinal_suffix(pos)} in the Premier League, {pts}pts from {played} played"
-    if next_fixtures:
-        line += " \u2014 next: " + ", ".join(next_fixtures)
-    return line
-
-
 def _ordinal_suffix(n):
     try:
         n = int(n)
@@ -337,11 +363,10 @@ def build_fixtures_data(today_dublin, yesterday_dublin):
     today_str, yesterday_str = today_dublin.isoformat(), yesterday_dublin.isoformat()
 
     fixtures_today, results_yesterday = [], []
-    liverpool_team_id = None
+    team_ids = {}
     for name, search_name in TEAM_SEARCH_NAMES.items():
         team_id = find_team_id(search_name)
-        if name == "Liverpool FC":
-            liverpool_team_id = team_id
+        team_ids[name] = team_id
         if not team_id:
             print(f"  [warn] TheSportsDB: could not find team id for {name}", file=sys.stderr)
             continue
@@ -349,11 +374,10 @@ def build_fixtures_data(today_dublin, yesterday_dublin):
         results_yesterday.extend(get_team_result_yesterday(team_id, yesterday_str))
 
     full_matchday = {}
-    pl_league_id = None
+    league_ids = {}
     for name, search_name in LEAGUE_SEARCH_NAMES.items():
         league_id = find_league_id(search_name)
-        if name == "Premier League":
-            pl_league_id = league_id
+        league_ids[name] = league_id
         if not league_id:
             print(f"  [warn] TheSportsDB: could not find league id for {name}", file=sys.stderr)
             continue
@@ -361,13 +385,56 @@ def build_fixtures_data(today_dublin, yesterday_dublin):
         if matches:
             full_matchday[name] = matches
 
-    liverpool_snapshot = build_liverpool_snapshot(today_dublin, liverpool_team_id, pl_league_id)
+    # --- Position + next-fixture snapshots, and form guides ---
+    snapshots, form_guides = [], []
+    season = get_current_season_str(today_dublin)
+    for cfg in SNAPSHOT_TEAMS:
+        team_id = team_ids.get(cfg["key"])
+        if not team_id:
+            continue
+        # Reuse the Premier League id already looked up above where possible;
+        # otherwise (La Liga, League of Ireland) look it up fresh.
+        league_id = league_ids.get("Premier League") if cfg["league_search"] == "English Premier League" else find_league_id(cfg["league_search"])
+        team_search_name = TEAM_SEARCH_NAMES[cfg["key"]]
+
+        if league_id:
+            row = get_league_position(team_search_name, league_id, season)
+            if row:
+                next_fixtures = get_next_fixtures_summary(team_id, team_search_name, 3)
+                pos, pts, played = row.get("intRank", "?"), row.get("intPoints", "?"), row.get("intPlayed", "?")
+                line = f"{cfg['display']}: {pos}{_ordinal_suffix(pos)} in {cfg['league_display']}, {pts}pts from {played} played"
+                if next_fixtures:
+                    line += " \u2014 next: " + ", ".join(next_fixtures)
+                snapshots.append(line)
+            else:
+                print(f"  [warn] TheSportsDB: no {cfg['display']} row in {cfg['league_display']} table (season {season})", file=sys.stderr)
+
+        form = get_form_guide(team_id, team_search_name)
+        if form:
+            form_guides.append(f"{cfg['display']}: {form}")
+
+    ireland_next_fixture = get_next_fixture_line("Ireland", IRELAND_TEAM_SEARCH)
+
+    # --- Betting odds (optional - only if ODDS_API_KEY is set) ---
+    odds_lines = []
+    odds_api_key = os.environ.get("ODDS_API_KEY")
+    if odds_api_key:
+        for name, sport_key in ODDS_SPORT_KEYS.items():
+            team_search_name = TEAM_SEARCH_NAMES[name]
+            line = get_odds_for_team(sport_key, team_search_name, odds_api_key)
+            if line:
+                odds_lines.append(line)
+    else:
+        print("  [warn] ODDS_API_KEY not set - skipping betting odds snapshot", file=sys.stderr)
 
     return {
         "fixtures_today": fixtures_today,
         "results_yesterday": results_yesterday,
         "full_matchday": full_matchday,
-        "liverpool_snapshot": liverpool_snapshot,
+        "snapshots": snapshots,
+        "form_guides": form_guides,
+        "ireland_next_fixture": ireland_next_fixture,
+        "odds_lines": odds_lines,
     }
 
 # ---------------------------------------------------------------------------
@@ -484,6 +551,75 @@ def append_today_to_history(history, today_str, top_stories):
 
 def prune_history(history, cutoff_date_str):
     return [e for e in history if e["date"] >= cutoff_date_str]
+
+def get_form_guide(team_id, team_search_name):
+    """Last 5 results as a 'W D L W W' string, oldest to most recent."""
+    data = tsdb_get("eventslast.php", {"id": team_id})
+    events = data.get("results") or []
+    form = []
+    for e in events:
+        home, away = e.get("strHomeTeam", ""), e.get("strAwayTeam", "")
+        try:
+            hs, as_ = int(e.get("intHomeScore")), int(e.get("intAwayScore"))
+        except (TypeError, ValueError):
+            continue
+        is_home = team_search_name.lower() in home.lower()
+        team_score, opp_score = (hs, as_) if is_home else (as_, hs)
+        if team_score > opp_score:
+            form.append("W")
+        elif team_score < opp_score:
+            form.append("L")
+        else:
+            form.append("D")
+    form.reverse()  # eventslast returns most-recent-first; flip to chronological
+    return " ".join(form) if form else None
+
+
+def get_next_fixture_line(display_name, team_search_name):
+    """A single 'next match' line - used for Ireland, which has no club league table."""
+    team_id = find_team_id(team_search_name)
+    if not team_id:
+        return None
+    data = tsdb_get("eventsnext.php", {"id": team_id})
+    events = data.get("events") or []
+    if not events:
+        return None
+    e = events[0]
+    home, away = e.get("strHomeTeam", "?"), e.get("strAwayTeam", "?")
+    is_home = team_search_name.lower() in home.lower()
+    opp, venue = (away, "H") if is_home else (home, "A")
+    date_str, time_str, league = e.get("dateEvent", ""), e.get("strTime", ""), e.get("strLeague", "")
+    return f"{display_name} next: {opp} ({venue}) \u2014 {date_str} {time_str} UTC ({league})"
+
+
+def get_odds_for_team(sport_key, team_search_name, api_key):
+    """Match-winner (h2h) odds for the team's next fixture in that competition,
+    from whichever bookmaker the API returns first - illustrative, not a
+    recommendation to bet, just informational."""
+    try:
+        r = requests.get(
+            f"{ODDS_API_BASE}/sports/{sport_key}/odds",
+            params={"apiKey": api_key, "regions": "uk", "markets": "h2h", "oddsFormat": "decimal"},
+            timeout=20,
+        )
+        if r.status_code != 200:
+            print(f"  [warn] Odds API {sport_key}: HTTP {r.status_code}", file=sys.stderr)
+            return None
+        for ev in r.json():
+            home, away = ev.get("home_team", ""), ev.get("away_team", "")
+            if team_search_name.lower() not in home.lower() and team_search_name.lower() not in away.lower():
+                continue
+            bookmakers = ev.get("bookmakers") or []
+            if not bookmakers:
+                continue
+            market = next((m for m in bookmakers[0].get("markets", []) if m["key"] == "h2h"), None)
+            if not market:
+                continue
+            prices = ", ".join(f"{o['name']} {o['price']}" for o in market["outcomes"])
+            return f"{home} v {away}: {prices} (via {bookmakers[0].get('title', 'bookmaker')})"
+    except Exception as exc:
+        print(f"  [warn] Odds API {sport_key}: {exc}", file=sys.stderr)
+    return None
 
 # ---------------------------------------------------------------------------
 # CLAUDE
@@ -823,9 +959,22 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing,
         """
 
     # --- Fixtures & Results: enlarged, prominent, right below the bulletin ---
-    liverpool_snapshot_html = f"""<div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:12px;">{fixtures_data.get('liverpool_snapshot')}</div>""" if fixtures_data.get("liverpool_snapshot") else ""
+    snapshot_lines = list(fixtures_data.get("snapshots") or [])
+    if fixtures_data.get("ireland_next_fixture"):
+        snapshot_lines.append(fixtures_data["ireland_next_fixture"])
+    snapshots_html = "".join(f"<div style='font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:6px;'>{line}</div>" for line in snapshot_lines)
+
+    form_html = ""
+    if fixtures_data.get("form_guides"):
+        form_lines = "".join(f"<li style='margin-bottom:4px;'>{line}</li>" for line in fixtures_data["form_guides"])
+        form_html = f"""
+        <div style="font-weight:700;font-family:Georgia,serif;font-size:14px;margin-top:8px;">Form Guide (oldest \u2192 most recent)</div>
+        <ul style="font-family:Georgia,serif;font-size:14px;color:#333;padding-left:20px;margin:4px 0 12px;">{form_lines}</ul>
+        """
+
     fixtures_inner = f"""
-      {liverpool_snapshot_html}
+      {snapshots_html}
+      {form_html}
       <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
       {list_block(fixtures_data['fixtures_today'], "No Liverpool, Real Betis, or Cork City fixtures today.", font_size="15px")}
     """
@@ -842,6 +991,16 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing,
       {fixtures_inner}
     </div>
     """
+
+    # --- Betting odds (optional, informational only) ---
+    odds_html = ""
+    if fixtures_data.get("odds_lines"):
+        odds_html = f"""
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">\U0001F4B7 Betting Odds (informational only)</div>
+          {list_block(fixtures_data["odds_lines"], "", font_size="13px")}
+        </div>
+        """
 
     # --- Economic calendar ---
     econ_html = ""
@@ -908,6 +1067,7 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing,
 
   {bulletin_html}
   {fixtures_html}
+  {odds_html}
   {econ_html}
 
   {section_header(TOP_LABEL, size="18px")}
@@ -990,8 +1150,9 @@ def main():
     print("Fetching technology feeds...")
     tech_raw = collect(TECH_FEEDS, cutoff)
     all_news_raw = ireland_raw + world_raw + tech_raw
+    all_news_raw = dedupe_by_title_and_link(all_news_raw)
     all_news_raw = filter_unseen(all_news_raw, seen)
-    print(f"  {len(all_news_raw)} total news items collected (after dedupe)")
+    print(f"  {len(all_news_raw)} total news items collected (after cross-feed dedupe and seen-filter)")
 
     print("Fetching sport feeds...")
     sport_raw = collect(SPORT_FEEDS, cutoff)
