@@ -31,13 +31,8 @@ jobs:
       - name: Run newsletter script
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          SMTP_HOST: ${{ secrets.SMTP_HOST }}
-          SMTP_PORT: ${{ secrets.SMTP_PORT }}
-          SMTP_USER: ${{ secrets.SMTP_USER }}
-          SMTP_PASS: ${{ secrets.SMTP_PASS }}
-          TO_EMAIL: ${{ secrets.TO_EMAIL }}
-          FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          VERIFY_WORKER_URL: ${{ secrets.VERIFY_WORKER_URL }}
         run: python newsletter.py
 
       - name: Persist state and publish page
