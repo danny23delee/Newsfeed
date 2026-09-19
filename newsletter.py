@@ -47,6 +47,16 @@ SEEN_STORIES_PATH = "seen_stories.json"
 SEEN_RETENTION_DAYS = 5  # comfortably longer than LOOKBACK_HOURS so a story
                           # can't reappear across two consecutive runs
 
+# --- Hosted page (GitHub Pages) ---
+# The script writes each day's edition into docs/, which GitHub Pages serves
+# when configured (repo Settings -> Pages -> Deploy from branch -> main,
+# folder /docs). docs/index.html is always today's edition; past editions
+# are kept under docs/archive/ and linked from the bottom of the page.
+PAGES_DIR = "docs"
+PAGES_ARCHIVE_DIR = "docs/archive"
+PAGES_ARCHIVE_INDEX_PATH = "docs/archive_index.json"
+PAGES_ARCHIVE_RETENTION_DAYS = 30
+
 WEEKLY_HISTORY_PATH = "weekly_history.json"
 WEEKLY_HISTORY_RETENTION_DAYS = 8  # a little over a week, so Sunday always has a full week on file
 
@@ -112,6 +122,7 @@ TECH_FEEDS = {
 }
 
 CATEGORIES = ["Ireland", "Business", "Politics", "Technology", "World"]
+SOURCE_PRIORITY = ["RTE", "FT", "BBC", "TheJournal.ie"]  # first match wins when the same story appears from multiple outlets
 CATEGORY_DISPLAY = {
     "Ireland":     "\U0001F1EE\U0001F1EA Ireland",
     "Business":    "\U0001F4B7 Business & Markets",
@@ -173,6 +184,7 @@ MAX_ECHO_ITEMS = 4       # of which, at most this many can be from the Echo
 MAX_PL_ITEMS = 3         # general Premier League storylines (not team-specific)
 MAX_CL_ITEMS = 3         # general Champions League storylines
 MAX_CIES_ITEMS = 3       # CIES posts are rare - just show what's recent, no curation needed
+SPORT_EXCLUDE_KEYWORDS = ["wsl", "women's super league"]  # excluded from every sport pool below
 
 # --- Fixtures / results, all via TheSportsDB (free, no signup) ---
 # Team and league IDs are looked up by name at runtime, not hardcoded.
@@ -261,6 +273,11 @@ def filter_by_keywords(items, keywords):
         if any(k in blob for k in kws):
             out.append(it)
     return out
+
+
+def exclude_by_keywords(items, keywords):
+    kws = [k.lower() for k in keywords]
+    return [it for it in items if not any(k in (it["title"] + " " + it["summary"]).lower() for k in kws)]
 
 
 def normalize_title(title):
@@ -381,7 +398,8 @@ def build_fixtures_data(today_dublin, yesterday_dublin):
     odds_lines = []
     odds_api_key = os.environ.get("ODDS_API_KEY")
     if odds_api_key:
-        for name, sport_key in ODDS_SPORT_KEYS.items():
+        sport_keys = resolve_odds_sport_keys(odds_api_key)
+        for name, sport_key in sport_keys.items():
             odds_dict = get_odds_for_team(sport_key, TEAM_SEARCH_NAMES[name], odds_api_key)
             if odds_dict:
                 odds_lines.append(f"{odds_dict['home']} v {odds_dict['away']}: {odds_dict['prices']} (via {odds_dict['bookmaker']})")
@@ -476,6 +494,68 @@ def prune_seen(seen, cutoff_date_str):
     return {k: v for k, v in seen.items() if v >= cutoff_date_str}
 
 # ---------------------------------------------------------------------------
+# HOSTED PAGE (GitHub Pages)
+# ---------------------------------------------------------------------------
+
+def load_archive_index(path):
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+
+def save_archive_index(dates, path):
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(dates, f, indent=2)
+    except Exception as exc:
+        print(f"  [warn] could not save archive index: {exc}", file=sys.stderr)
+
+
+def build_archive_links_html(dates):
+    if not dates:
+        return ""
+    links = "".join(
+        f"<li style='margin-bottom:4px;'><a href='archive/{d}.html' style='color:#8b0000;text-decoration:none;'>{d}</a></li>"
+        for d in reversed(dates)
+    )
+    return f"""
+    <div style="max-width:640px;margin:24px auto 0;padding:16px 24px;border-top:1px solid #ccc;">
+      <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;text-transform:uppercase;margin-bottom:8px;">Past Editions</div>
+      <ul style="font-family:Georgia,serif;font-size:13px;color:#333;padding-left:18px;margin:0;">{links}</ul>
+    </div>
+    """
+
+
+def publish_to_pages(html, today_str):
+    """Writes today's edition to docs/index.html (what the Pages URL shows)
+    and archives a dated copy under docs/archive/, with a rolling list of
+    past editions linked at the bottom of index.html. Best-effort - a
+    failure here doesn't stop the email from sending."""
+    try:
+        os.makedirs(PAGES_ARCHIVE_DIR, exist_ok=True)
+
+        archive_dates = load_archive_index(PAGES_ARCHIVE_INDEX_PATH)
+        if today_str not in archive_dates:
+            archive_dates.append(today_str)
+        cutoff = (dt.date.fromisoformat(today_str) - dt.timedelta(days=PAGES_ARCHIVE_RETENTION_DAYS)).isoformat()
+        archive_dates = [d for d in archive_dates if d >= cutoff]
+
+        with open(os.path.join(PAGES_ARCHIVE_DIR, f"{today_str}.html"), "w", encoding="utf-8") as f:
+            f.write(html)
+
+        archive_html = build_archive_links_html(archive_dates)
+        index_html = html.replace("</body></html>", archive_html + "</body></html>")
+        with open(os.path.join(PAGES_DIR, "index.html"), "w", encoding="utf-8") as f:
+            f.write(index_html)
+
+        save_archive_index(archive_dates, PAGES_ARCHIVE_INDEX_PATH)
+        print(f"  Published to {PAGES_DIR}/index.html, archived as {PAGES_ARCHIVE_DIR}/{today_str}.html ({len(archive_dates)} editions on file)")
+    except Exception as exc:
+        print(f"  [warn] publish_to_pages failed: {exc}", file=sys.stderr)
+
+# ---------------------------------------------------------------------------
 # WEEKLY DIGEST HISTORY
 # ---------------------------------------------------------------------------
 
@@ -509,6 +589,35 @@ def append_today_to_history(history, today_str, top_stories):
 
 def prune_history(history, cutoff_date_str):
     return [e for e in history if e["date"] >= cutoff_date_str]
+
+
+def resolve_odds_sport_keys(api_key):
+    """Looks up the current sport_key for EPL and La Liga from the API's own
+    /v4/sports listing (this endpoint doesn't cost any quota), rather than
+    relying on a hardcoded guess that could be stale or wrong. Falls back to
+    the static ODDS_SPORT_KEYS guesses if the lookup itself fails."""
+    try:
+        r = requests.get(f"{ODDS_API_BASE}/sports", params={"apiKey": api_key}, timeout=20)
+        if r.status_code != 200:
+            print(f"  [warn] Odds API /sports: HTTP {r.status_code} - {r.text[:200]}", file=sys.stderr)
+            return dict(ODDS_SPORT_KEYS)
+        sports = r.json()
+        resolved = {}
+        for s in sports:
+            title = (s.get("title") or "").lower()
+            if title == "epl":
+                resolved["Liverpool FC"] = s["key"]
+            elif "la liga" in title and "segunda" not in title:
+                resolved["Real Betis"] = s["key"]
+        for name, fallback_key in ODDS_SPORT_KEYS.items():
+            if name not in resolved:
+                print(f"  [warn] Odds API: could not resolve a current sport_key for {name} from /v4/sports, falling back to guess '{fallback_key}'", file=sys.stderr)
+                resolved[name] = fallback_key
+        print(f"  Odds API sport keys resolved: {resolved}")
+        return resolved
+    except Exception as exc:
+        print(f"  [warn] Odds API /sports lookup failed ({exc}), using static guesses", file=sys.stderr)
+        return dict(ODDS_SPORT_KEYS)
 
 
 def get_odds_for_team(sport_key, team_search_name, api_key):
@@ -587,7 +696,9 @@ def extract_json(raw):
 # --- News: score + categorize, then full "why it matters" breakdown ---
 
 def score_and_categorize(items):
-    """Assigns every item a category and a 1-10 importance score."""
+    """Assigns every item a category and a 1-10 importance score. Also
+    consolidates cross-outlet duplicates (the same underlying story reported
+    separately by RTE/FT/BBC/TheJournal.ie) down to one entry each."""
     if not items:
         return
     listing = "\n".join(
@@ -595,17 +706,29 @@ def score_and_categorize(items):
         for it in items
     )
     categories_str = ", ".join(CATEGORIES)
+    priority_str = " > ".join(SOURCE_PRIORITY)
     prompt = f"""You're triaging stories for a personal morning newsletter for a data analyst in
-Ireland. For each story below, assign:
+Ireland.
+
+IMPORTANT - duplicate stories: several of these items may report the exact same underlying news
+event from different outlets (e.g. the same government announcement or deal covered separately by
+RTE, FT, BBC, and TheJournal.ie, often with different headlines and wording). Identify these
+clusters and INCLUDE ONLY ONE item per underlying story in your output - the rest of that cluster
+must be left OUT of the returned array entirely, not scored, not included. When choosing which one
+to keep, prefer sources in this order: {priority_str}. Only treat items as duplicates when they
+clearly describe the same specific event, not just the same general topic.
+
+For each story you keep, assign:
 - "category": exactly one of [{categories_str}] (Ireland = specifically about Ireland; World =
   international/geopolitical news not fitting the other categories)
 - "score": importance 1-10, using this rubric: 10 = must know, 8-9 = very important,
-  6-7 = interesting, 4-5 = minor, 1-3 = ignore (routine/trivial/celebrity/duplicate coverage)
+  6-7 = interesting, 4-5 = minor, 1-3 = ignore (routine/trivial/celebrity coverage)
 
 Stories:
 {listing}
 
-Return ONLY a JSON array covering every story above, no markdown fences, no preamble:
+Return ONLY a JSON array covering every story you're keeping (fewer entries than the input list is
+expected and correct, once duplicates are removed), no markdown fences, no preamble:
 [{{"id": <id>, "category": "<category>", "score": <int>}}]
 """
     raw = call_claude(prompt, max_tokens=4000)
@@ -1077,6 +1200,7 @@ def main():
     print("Fetching sport feeds...")
     sport_raw = collect(SPORT_FEEDS, cutoff)
     sport_raw = filter_unseen(sport_raw, seen)
+    sport_raw = exclude_by_keywords(sport_raw, SPORT_EXCLUDE_KEYWORDS)
 
     non_echo_raw = [it for it in sport_raw if it["source"] != LIVERPOOL_ECHO_SOURCE]
     team_candidates = filter_by_keywords(sport_raw, TEAM_KEYWORDS)
@@ -1087,6 +1211,7 @@ def main():
     print("Fetching other-sports feeds...")
     other_sports_raw = collect(OTHER_SPORTS_FEEDS, cutoff)
     other_sports_raw = filter_unseen(other_sports_raw, seen)
+    other_sports_raw = exclude_by_keywords(other_sports_raw, SPORT_EXCLUDE_KEYWORDS)
     football_keywords = TEAM_KEYWORDS + PL_KEYWORDS + CL_KEYWORDS + ["football", "soccer"]
     other_sports_candidates = [it for it in other_sports_raw if it not in filter_by_keywords(other_sports_raw, football_keywords)]
     print(f"  {len(other_sports_candidates)} non-football items (from {len(other_sports_raw)} fetched)")
@@ -1133,6 +1258,9 @@ def main():
     html = render_html(bulletin, top_stories, category_sections, worth_knowing,
                         team_curated, pl_curated, cl_curated, other_sports_curated, cies_raw,
                         fixtures_data, edition_date, weather_line, econ_events, weekly_digest)
+
+    print("Publishing to GitHub Pages...")
+    publish_to_pages(html, today_dublin.isoformat())
 
     print("Sending email...")
     send_email(html, subject=f"Morning Brief — {edition_date}")
