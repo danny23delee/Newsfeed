@@ -207,10 +207,22 @@ FEED_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 
 def fetch_feed(name, url, cutoff):
     items = []
     try:
-        parsed = feedparser.parse(url, request_headers={"User-Agent": FEED_USER_AGENT})
+        resp = requests.get(
+            url,
+            headers={
+                "User-Agent": FEED_USER_AGENT,
+                "Accept": "application/rss+xml, application/xml, text/xml, */*",
+                "Accept-Language": "en-GB,en;q=0.9",
+            },
+            timeout=25,
+        )
+        if resp.status_code != 200:
+            print(f"  [warn] {name}: HTTP {resp.status_code} fetching {url}", file=sys.stderr)
+            return items
+        parsed = feedparser.parse(resp.content)
         if parsed.bozo and not parsed.entries:
-            status = getattr(parsed, "status", "unknown")
-            print(f"  [warn] {name}: could not parse feed (HTTP status: {status}, url: {url})", file=sys.stderr)
+            reason = getattr(parsed, "bozo_exception", "unknown parse error")
+            print(f"  [warn] {name}: fetched OK (HTTP {resp.status_code}) but could not parse as a feed ({reason})", file=sys.stderr)
             return items
         for e in parsed.entries:
             published = None
