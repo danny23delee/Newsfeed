@@ -13,7 +13,7 @@ on:
   workflow_dispatch: {}   # lets you trigger it manually from the Actions tab to test
 
 permissions:
-  contents: write   # needed so the job can commit seen_stories.json back to the repo
+  contents: write   # needed so the job can commit seen_stories.json, the weekly digest history, and docs/ (the hosted page) back to the repo
 
 jobs:
   send-newsletter:
@@ -37,12 +37,13 @@ jobs:
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           TO_EMAIL: ${{ secrets.TO_EMAIL }}
           FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python newsletter.py
 
-      - name: Persist dedupe state
+      - name: Persist state and publish page
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add seen_stories.json
-          git diff --cached --quiet || git commit -m "Update seen stories state"
+          git add seen_stories.json weekly_history.json docs/
+          git diff --cached --quiet || git commit -m "Update newsletter state and published page"
           git push
