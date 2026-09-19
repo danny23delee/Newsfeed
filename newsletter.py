@@ -24,11 +24,8 @@ import os
 import re
 import sys
 import json
-import smtplib
 import datetime as dt
 from zoneinfo import ZoneInfo
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 import feedparser
 import requests
@@ -107,7 +104,7 @@ ECON_EVENTS_HORIZON_DAYS = 10  # show events within this many days
 # these groupings just control which feeds get fetched, not where a story
 # ends up.
 IRELAND_FEEDS = {
-    "TheJournal.ie": "https://www.thejournal.ie/feed/",
+    "TheJournal.ie (VERIFY)": "https://www.thejournal.ie/feed/",
     "RTE - News":             "https://www.rte.ie/feeds/rss/?index=/news",
 }
 WORLD_FEEDS = {
@@ -146,7 +143,7 @@ MAX_WORTH_KNOWING = 6
 SPORT_FEEDS = {
     "BBC - Football":                 "http://feeds.bbci.co.uk/sport/football/rss.xml",
     "Sky Sports - Football":          "https://www.skysports.com/rss/11095",
-    "Liverpool Echo - LFC":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
+    "Liverpool Echo - LFC (VERIFY)":  "https://www.liverpoolecho.co.uk/all-about/liverpool-fc/?service=rss",
 }
 # CIES Football Observatory - genuinely free/public research posts, not
 # paywalled. Disabled for now: the guessed RSS URL 404s and the real one
@@ -960,7 +957,8 @@ entire response must be valid JSON starting with [ and ending with ].
 
 def render_html(bulletin, top_stories, category_sections, worth_knowing,
                  team_sport_items, pl_sport_items, cl_sport_items, other_sport_items, cies_items,
-                 fixtures_data, edition_date, weather_line=None, econ_events=None, weekly_digest=None):
+                 fixtures_data, edition_date, weather_line=None, econ_events=None, weekly_digest=None,
+                 verify_worker_url=None):
 
     def section_header(text, size="16px"):
         return f"""<div style="font-family:Georgia,serif;font-size:{size};font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">{text}</div>"""
@@ -1095,6 +1093,48 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing,
         {sport_group(cies_items, "")}
         """
 
+    verify_html = ""
+    if verify_worker_url:
+        verify_html = f"""
+        <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">\U0001F50E Verify a Claim</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#555;margin-bottom:10px;">Heard something on TikTok or elsewhere? Check it against real news sources.</div>
+          <div style="display:flex;gap:8px;">
+            <input id="verify-input" type="text" placeholder="e.g. Did the government really ban X?" style="flex:1;padding:8px;font-family:Georgia,serif;font-size:14px;border:1px solid #999;box-sizing:border-box;" />
+            <button id="verify-btn" style="padding:8px 16px;font-family:Georgia,serif;font-weight:700;background:#111;color:#fff;border:none;cursor:pointer;white-space:nowrap;">Check</button>
+          </div>
+          <div id="verify-result" style="margin-top:12px;font-family:Georgia,serif;font-size:14px;color:#333;white-space:pre-wrap;line-height:1.5;"></div>
+        </div>
+        <script>
+        (function() {{
+          var btn = document.getElementById('verify-btn');
+          var input = document.getElementById('verify-input');
+          var result = document.getElementById('verify-result');
+          function runCheck() {{
+            var query = input.value.trim();
+            if (!query) return;
+            result.textContent = 'Checking...';
+            btn.disabled = true;
+            fetch({json.dumps(verify_worker_url)}, {{
+              method: 'POST',
+              headers: {{'Content-Type': 'application/json'}},
+              body: JSON.stringify({{query: query}})
+            }})
+              .then(function(r) {{ return r.json(); }})
+              .then(function(data) {{
+                result.textContent = data.error ? ('Error: ' + data.error) : data.result;
+              }})
+              .catch(function(e) {{
+                result.textContent = 'Something went wrong: ' + e;
+              }})
+              .finally(function() {{ btn.disabled = false; }});
+          }}
+          btn.addEventListener('click', runCheck);
+          input.addEventListener('keydown', function(e) {{ if (e.key === 'Enter') runCheck(); }});
+        }})();
+        </script>
+        """
+
     return f"""<!DOCTYPE html>
 <html><body style="margin:0;padding:0;background:#f2efe9;">
 <div style="max-width:640px;margin:0 auto;background:#fff;padding:28px 24px;">
@@ -1104,6 +1144,7 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing,
     {weather_html}
   </div>
 
+  {verify_html}
   {bulletin_html}
   {fixtures_html}
   {odds_html}
@@ -1140,29 +1181,6 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing,
   </div>
 </div>
 </body></html>"""
-
-# ---------------------------------------------------------------------------
-# EMAIL
-# ---------------------------------------------------------------------------
-
-def send_email(html_body, subject):
-    smtp_host = os.environ["SMTP_HOST"]
-    smtp_port = int(os.environ.get("SMTP_PORT", "587"))
-    smtp_user = os.environ["SMTP_USER"]
-    smtp_pass = os.environ["SMTP_PASS"]
-    to_addr = os.environ["TO_EMAIL"]
-    from_addr = os.environ.get("FROM_EMAIL", smtp_user)
-
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = subject
-    msg["From"] = from_addr
-    msg["To"] = to_addr
-    msg.attach(MIMEText(html_body, "html"))
-
-    with smtplib.SMTP(smtp_host, smtp_port) as server:
-        server.starttls()
-        server.login(smtp_user, smtp_pass)
-        server.sendmail(from_addr, [to_addr], msg.as_string())
 
 # ---------------------------------------------------------------------------
 # MAIN
@@ -1257,14 +1275,11 @@ def main():
 
     html = render_html(bulletin, top_stories, category_sections, worth_knowing,
                         team_curated, pl_curated, cl_curated, other_sports_curated, cies_raw,
-                        fixtures_data, edition_date, weather_line, econ_events, weekly_digest)
+                        fixtures_data, edition_date, weather_line, econ_events, weekly_digest,
+                        verify_worker_url=os.environ.get("VERIFY_WORKER_URL"))
 
     print("Publishing to GitHub Pages...")
     publish_to_pages(html, today_dublin.isoformat())
-
-    print("Sending email...")
-    send_email(html, subject=f"Morning Brief — {edition_date}")
-    print("Done.")
 
     print("Updating dedupe state...")
     shown_items = top_stories + [it for items in category_sections.values() for it in items] + worth_knowing + all_sport_items
@@ -1280,6 +1295,7 @@ def main():
     weekly_history = prune_history(weekly_history, history_cutoff)
     save_weekly_history(weekly_history, WEEKLY_HISTORY_PATH)
     print(f"  {len(weekly_history)} days now on file")
+    print("Done.")
 
 
 if __name__ == "__main__":
