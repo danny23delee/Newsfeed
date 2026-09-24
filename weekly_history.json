@@ -40,5 +40,25 @@
   {
     "date": "2026-09-23",
     "stories": []
+  },
+  {
+    "date": "2026-09-24",
+    "stories": [
+      {
+        "title": "Iranian president accuses US of 'terrorism' for assassinating Ayatollah Ali Khamenei",
+        "category": "World",
+        "why_it_matters": "The assassination of Iran's former supreme leader represents a major escalation in US-Iran tensions with potentially severe geopolitical consequences."
+      },
+      {
+        "title": "US and China extend trade truce as Trump welcomes Xi",
+        "category": "World",
+        "why_it_matters": "The extension provides temporary relief from trade tensions between the world's two largest economies."
+      },
+      {
+        "title": "Russia could attack Nato country within months, Denmark warns",
+        "category": "World",
+        "why_it_matters": "A Russian attack on a NATO member could trigger Article 5 and draw the alliance into direct conflict with Russia."
+      }
+    ]
   }
 ]
