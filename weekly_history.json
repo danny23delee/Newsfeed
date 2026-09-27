@@ -68,5 +68,15 @@
   {
     "date": "2026-09-26",
     "stories": []
+  },
+  {
+    "date": "2026-09-27",
+    "stories": [
+      {
+        "title": "Iran insists on diplomatic solution as Trump rejects plan",
+        "category": "World",
+        "why_it_matters": "The rejection of Iran's diplomatic proposal signals continued tensions that could affect global oil shipping through the strategic Strait of Hormuz."
+      }
+    ]
   }
 ]
