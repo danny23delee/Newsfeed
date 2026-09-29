@@ -1,15 +1,5 @@
 [
   {
-    "date": "2026-09-20",
-    "stories": [
-      {
-        "title": "US fears rapid escalation in Mideast after Houthis attack Riyadh",
-        "category": "World",
-        "why_it_matters": "The attack represents a significant escalation in regional tensions that required immediate presidential attention."
-      }
-    ]
-  },
-  {
     "date": "2026-09-21",
     "stories": []
   },
@@ -68,5 +58,9 @@
         "why_it_matters": "This workplace fatality highlights ongoing concerns about industrial safety standards and worker protection."
       }
     ]
+  },
+  {
+    "date": "2026-09-29",
+    "stories": []
   }
 ]
