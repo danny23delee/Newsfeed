@@ -1,9 +1,5 @@
 [
   {
-    "date": "2026-09-21",
-    "stories": []
-  },
-  {
     "date": "2026-09-22",
     "stories": []
   },
@@ -62,5 +58,15 @@
   {
     "date": "2026-09-29",
     "stories": []
+  },
+  {
+    "date": "2026-09-30",
+    "stories": [
+      {
+        "title": "Burnham not ruling out going 'all the way' to rejoin EU",
+        "category": "Politics",
+        "why_it_matters": "This represents a significant potential shift in UK policy regarding its relationship with the EU after Brexit."
+      }
+    ]
   }
 ]
