@@ -1,9 +1,5 @@
 [
   {
-    "date": "2026-09-22",
-    "stories": []
-  },
-  {
     "date": "2026-09-23",
     "stories": []
   },
@@ -68,5 +64,9 @@
         "why_it_matters": "This represents a significant potential shift in UK policy regarding its relationship with the EU after Brexit."
       }
     ]
+  },
+  {
+    "date": "2026-10-01",
+    "stories": []
   }
 ]
