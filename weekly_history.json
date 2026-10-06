@@ -1,15 +1,5 @@
 [
   {
-    "date": "2026-09-27",
-    "stories": [
-      {
-        "title": "Iran insists on diplomatic solution as Trump rejects plan",
-        "category": "World",
-        "why_it_matters": "The rejection of Iran's diplomatic proposal signals continued tensions that could affect global oil shipping through the strategic Strait of Hormuz."
-      }
-    ]
-  },
-  {
     "date": "2026-09-28",
     "stories": [
       {
@@ -63,5 +53,15 @@
   {
     "date": "2026-10-05",
     "stories": []
+  },
+  {
+    "date": "2026-10-06",
+    "stories": [
+      {
+        "title": "Cut to carbon tax, higher income tax entry point rises",
+        "category": "Ireland",
+        "why_it_matters": "This reduces the tax burden on households for heating costs and allows middle-income earners to keep more of their income before paying higher tax rates."
+      }
+    ]
   }
 ]
