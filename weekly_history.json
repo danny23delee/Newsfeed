@@ -1,15 +1,5 @@
 [
   {
-    "date": "2026-09-28",
-    "stories": [
-      {
-        "title": "Man and woman killed in workplace incident in Co Offaly",
-        "category": "Ireland",
-        "why_it_matters": "This workplace fatality highlights ongoing concerns about industrial safety standards and worker protection."
-      }
-    ]
-  },
-  {
     "date": "2026-09-29",
     "stories": []
   },
@@ -61,6 +51,16 @@
         "title": "Cut to carbon tax, higher income tax entry point rises",
         "category": "Ireland",
         "why_it_matters": "This reduces the tax burden on households for heating costs and allows middle-income earners to keep more of their income before paying higher tax rates."
+      }
+    ]
+  },
+  {
+    "date": "2026-10-07",
+    "stories": [
+      {
+        "title": "Budget 2027: All you need to know",
+        "category": "Ireland",
+        "why_it_matters": "This is the biggest budget in Irish state history, indicating significant government spending and policy changes across multiple sectors."
       }
     ]
   }
