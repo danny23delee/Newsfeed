@@ -1,9 +1,5 @@
 [
   {
-    "date": "2026-09-29",
-    "stories": []
-  },
-  {
     "date": "2026-09-30",
     "stories": [
       {
@@ -63,5 +59,9 @@
         "why_it_matters": "This is the biggest budget in Irish state history, indicating significant government spending and policy changes across multiple sectors."
       }
     ]
+  },
+  {
+    "date": "2026-10-08",
+    "stories": []
   }
 ]
