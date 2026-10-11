@@ -1,20 +1,5 @@
 [
   {
-    "date": "2026-10-02",
-    "stories": [
-      {
-        "title": "US economy adds just 29,000 jobs in September as hiring slows sharply",
-        "category": "Business",
-        "why_it_matters": "The sharp hiring slowdown signals potential economic weakness and could influence the Federal Reserve's monetary policy decisions."
-      },
-      {
-        "title": "Putin has told military leaders to abandon rules of war, Zelenskyy says",
-        "category": "World",
-        "why_it_matters": "The abandonment of rules of war signals potential escalation in the brutality of the conflict and violations of international humanitarian law."
-      }
-    ]
-  },
-  {
     "date": "2026-10-03",
     "stories": []
   },
@@ -61,5 +46,15 @@
   {
     "date": "2026-10-10",
     "stories": []
+  },
+  {
+    "date": "2026-10-11",
+    "stories": [
+      {
+        "title": "12 killed in Riyadh attack with Irish man among injured",
+        "category": "World",
+        "why_it_matters": "This represents a significant escalation in attacks on civilian infrastructure in Saudi Arabia's capital city."
+      }
+    ]
   }
 ]
