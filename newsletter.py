@@ -1095,6 +1095,11 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing,
 
     verify_html = ""
     if verify_worker_url:
+        verify_worker_url = verify_worker_url.strip()
+        # A bare host (no scheme) would be treated by the browser as a path
+        # relative to the Pages site and return an HTML 404 page.
+        if not verify_worker_url.startswith(("http://", "https://")):
+            verify_worker_url = "https://" + verify_worker_url
         verify_html = f"""
         <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;">
           <div style="font-family:Georgia,serif;font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">\U0001F50E Verify a Claim</div>
@@ -1120,7 +1125,12 @@ def render_html(bulletin, top_stories, category_sections, worth_knowing,
               headers: {{'Content-Type': 'application/json'}},
               body: JSON.stringify({{query: query}})
             }})
-              .then(function(r) {{ return r.json(); }})
+              .then(function(r) {{
+                return r.text().then(function(t) {{
+                  try {{ return JSON.parse(t); }}
+                  catch (e) {{ throw new Error('Verification service returned an unexpected response (HTTP ' + r.status + '). Check the VERIFY_WORKER_URL setting.'); }}
+                }});
+              }})
               .then(function(data) {{
                 result.textContent = data.error ? ('Error: ' + data.error) : data.result;
               }})

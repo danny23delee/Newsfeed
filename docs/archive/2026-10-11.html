@@ -27,7 +27,7 @@
             if (!query) return;
             result.textContent = 'Checking...';
             btn.disabled = true;
-            fetch("newslette-verify.daniel04delee.workers.dev", {
+            fetch("https://newslette-verify.daniel04delee.workers.dev", {
               method: 'POST',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({query: query})
