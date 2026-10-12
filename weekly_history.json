@@ -1,9 +1,5 @@
 [
   {
-    "date": "2026-10-03",
-    "stories": []
-  },
-  {
     "date": "2026-10-04",
     "stories": []
   },
@@ -54,6 +50,16 @@
         "title": "12 killed in Riyadh attack with Irish man among injured",
         "category": "World",
         "why_it_matters": "This represents a significant escalation in attacks on civilian infrastructure in Saudi Arabia's capital city."
+      }
+    ]
+  },
+  {
+    "date": "2026-10-12",
+    "stories": [
+      {
+        "title": "Trump announces 'energy ceasefire' between Russia and Ukraine",
+        "category": "World",
+        "why_it_matters": "This represents a potential de-escalation in the ongoing conflict between Russia and Ukraine, specifically concerning energy-related hostilities."
       }
     ]
   }
