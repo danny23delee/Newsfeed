@@ -1,9 +1,5 @@
 [
   {
-    "date": "2026-10-04",
-    "stories": []
-  },
-  {
     "date": "2026-10-05",
     "stories": []
   },
@@ -60,6 +56,21 @@
         "title": "Trump announces 'energy ceasefire' between Russia and Ukraine",
         "category": "World",
         "why_it_matters": "This represents a potential de-escalation in the ongoing conflict between Russia and Ukraine, specifically concerning energy-related hostilities."
+      }
+    ]
+  },
+  {
+    "date": "2026-10-13",
+    "stories": [
+      {
+        "title": "Murder investigation after four die in arson attack",
+        "category": "Ireland",
+        "why_it_matters": "This represents a tragic multiple fatality incident that authorities are treating as a deliberate criminal act."
+      },
+      {
+        "title": "National strike action to go ahead despite Govt plea",
+        "category": "Ireland",
+        "why_it_matters": "The strike will disrupt public services as negotiations between unions and government have failed to reach agreement."
       }
     ]
   }
