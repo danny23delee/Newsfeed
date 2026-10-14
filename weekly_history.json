@@ -1,9 +1,5 @@
 [
   {
-    "date": "2026-10-05",
-    "stories": []
-  },
-  {
     "date": "2026-10-06",
     "stories": [
       {
@@ -71,6 +67,21 @@
         "title": "National strike action to go ahead despite Govt plea",
         "category": "Ireland",
         "why_it_matters": "The strike will disrupt public services as negotiations between unions and government have failed to reach agreement."
+      }
+    ]
+  },
+  {
+    "date": "2026-10-14",
+    "stories": [
+      {
+        "title": "Garda\u00ed believe local drugs gang were behind attack that killed four family members in Waterford",
+        "category": "Ireland",
+        "why_it_matters": "This represents a serious escalation in gang violence targeting families in Ireland."
+      },
+      {
+        "title": "Taoiseach says government is 'open to negotiations' to resolve public pay row",
+        "category": "Ireland",
+        "why_it_matters": "The strike disrupts public services and indicates significant discontent among public sector workers over pay conditions."
       }
     ]
   }
