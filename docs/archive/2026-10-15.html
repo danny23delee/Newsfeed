@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f2efe9;">
+<div style="max-width:640px;margin:0 auto;background:#fff;padding:28px 24px;">
+  <div style="text-align:center;border-bottom:4px double #111;padding-bottom:10px;margin-bottom:18px;">
+    <div style="font-family:Georgia,serif;font-size:30px;font-weight:900;letter-spacing:0.02em;">THE MORNING BRIEF</div>
+    <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Thursday 15 October 2026</div>
+    <div style="text-align:center;font-family:Georgia,serif;font-size:13px;color:#555;margin-top:6px;">Dublin today: Moderate rain, 11–17°C, 100% chance of rain</div>
+  </div>
+
+  
+        <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">🔎 Verify a Claim</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#555;margin-bottom:10px;">Heard something on TikTok or elsewhere? Check it against real news sources.</div>
+          <div style="display:flex;gap:8px;">
+            <input id="verify-input" type="text" placeholder="e.g. Did the government really ban X?" style="flex:1;padding:8px;font-family:Georgia,serif;font-size:14px;border:1px solid #999;box-sizing:border-box;" />
+            <button id="verify-btn" style="padding:8px 16px;font-family:Georgia,serif;font-weight:700;background:#111;color:#fff;border:none;cursor:pointer;white-space:nowrap;">Check</button>
+          </div>
+          <div id="verify-result" style="margin-top:12px;font-family:Georgia,serif;font-size:14px;color:#333;white-space:pre-wrap;line-height:1.5;"></div>
+        </div>
+        <script>
+        (function() {
+          var btn = document.getElementById('verify-btn');
+          var input = document.getElementById('verify-input');
+          var result = document.getElementById('verify-result');
+          function runCheck() {
+            var query = input.value.trim();
+            if (!query) return;
+            result.textContent = 'Checking...';
+            btn.disabled = true;
+            fetch("newslette-verify.daniel04delee.workers.dev", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({query: query})
+            })
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                result.textContent = data.error ? ('Error: ' + data.error) : data.result;
+              })
+              .catch(function(e) {
+                result.textContent = 'Something went wrong: ' + e;
+              })
+              .finally(function() { btn.disabled = false; });
+          }
+          btn.addEventListener('click', runCheck);
+          input.addEventListener('keydown', function(e) { if (e.key === 'Enter') runCheck(); });
+        })();
+        </script>
+        
+  
+        <div style="background:#111;color:#fff;padding:14px 18px;margin-bottom:22px;">
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Today's Bulletin</div>
+          <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.4;padding-left:18px;margin:0;"><li style='margin-bottom:6px;'>Former DUP leader Jeffrey Donaldson sentenced to 15 years for multiple child sex offences—a seismic moment for Northern Irish politics and justice</li><li style='margin-bottom:6px;'>Zelenskyy defies Trump as Ukraine resumes strikes on Russian refineries; intelligence cooperation breakdown threatens military capabilities</li><li style='margin-bottom:6px;'>Children fight for their lives after Waterford arson attack; perpetrators urged to surrender as community holds vigil</li><li style='margin-bottom:6px;'>Cancer survivors gain 'right to be forgotten' for mortgage insurance—removing major barrier to financial services and homeownership</li><li style='margin-bottom:6px;'>New 'zero-click' spyware can hack phones through targeted ads without victim taking any action</li></ul>
+        </div>
+        
+  
+    <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;background:#faf8f4;">
+      <div style="font-family:Georgia,serif;font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">⚽ Fixtures &amp; Results</div>
+      
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No Liverpool, Real Betis, or Cork City fixtures today.</p>
+    
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-top:14px;margin-bottom:6px;">Yesterday's Results</div>
+      <ul style='font-family:Georgia,serif;font-size:15px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Real Betis 3 - 2 Porto  (UEFA Champions League)</li></ul>
+    
+    </div>
+    
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">💷 Next Match Odds (informational only)</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Brentford v Liverpool: Brentford 2.3, Liverpool 2.8, Draw 3.75 (via Betfred (UK))</li></ul>
+        </div>
+        
+  
+
+  <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🔴 Top Stories</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Perpetrators of Waterford arson attack asked to hand themselves in, as vigil held for victims</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Perpetrators of an arson attack in Waterford are being asked to hand themselves in, while a vigil was held for the victims. Two children remain in critical condition at the hospital. The community is seeking justice for a serious crime that has left children fighting for their lives. Watch for whether the perpetrators surrender and updates on the children's medical condition.</div>
+          <a href="https://www.thejournal.ie/waterford-arson-attack-vigil-7193637-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Son says four were killed over someone else's drug debt</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A man, his wife, and two children were killed in a firebomb attack in Waterford. The son of the murdered man says the family was killed over someone else's €20,000 drugs debt. The attack reveals the deadly consequences of drug-related violence affecting innocent families. Watch for police investigation developments and potential arrests related to the drug debt.</div>
+          <a href="https://www.rte.ie/news/2026/1014/1595399-son-arson-victims-drug-debt/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Zelenskyy defies Trump as Ukraine resumes strikes on Russian refineries</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Ukrainian President Zelenskyy defied Trump by resuming strikes on Russian refineries and expressed anger in an FT interview about the dangerous withdrawal of US intelligence sharing. The breakdown in US-Ukraine intelligence cooperation could significantly impact Ukraine's military capabilities. Watch for further deterioration in US-Ukraine relations and the effectiveness of Ukraine's military operations without US intelligence.</div>
+          <a href="https://www.ft.com/content/4d79b52f-1f0d-4739-82ab-7ecfb4251326?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🇮🇪 Ireland</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Cancer survivors now have 'right to be forgotten' when seeking mortgage protection insurance</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Cancer survivors in Ireland now have the 'right to be forgotten' when seeking mortgage protection insurance. This right has been long sought by survivors, their families, and campaigners. This change removes a significant barrier for cancer survivors trying to access financial services and housing. Watch for how insurance companies implement this new right and its impact on cancer survivors' access to mortgages.</div>
+          <a href="https://www.thejournal.ie/right-to-be-forgotten-cancer-insurance-7193449-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Chambers 'absolutely' happy for pay to be dealt with first in talks with public sector unions</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Minister for Public Expenditure Chambers said he is absolutely happy for pay to be dealt with first in talks with public sector unions and is hopeful of finding a way forward very shortly. This signals potential progress in negotiations that could affect compensation for Ireland's entire public sector workforce. Watch for the outcome of the upcoming negotiations and any pay agreements reached with unions.</div>
+          <a href="https://www.thejournal.ie/public-sector-pay-4-7192725-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Over 100 jobs to go as Daktronics confirms Ennistymon plant closure</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Daktronics confirmed the closure of its Ennistymon plant, resulting in over 100 job losses. The company entered collective redundancy consultation in early September. The closure represents a significant economic blow to the local Ennistymon community with substantial job losses. Watch for the completion of redundancy consultations and potential support measures for affected workers.</div>
+          <a href="https://www.thejournal.ie/daktronics-ennistymon-closure-7193429-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Passenger cap may be taken into account for airport slots</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The EU Court of Justice ruled that the passenger cap at Dublin Airport may be considered when allocating airline slots, potentially causing airlines to lose previously used allocations. This ruling could significantly impact airline operations and capacity at Dublin Airport. Watch for how slot allocations change at Dublin Airport and which airlines may be affected.</div>
+          <a href="https://www.rte.ie/news/business/2026/1015/1595480-dublin-airport-passenger-cap-ruling/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">💷 Business & Markets</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Global stocks sell-off deepens as chipmakers tumble</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Global stocks experienced a deepening sell-off as chipmakers tumbled, with European and Asian equities sliding. Investors are questioning the durability of the AI boom. The sell-off reflects growing market concerns about whether AI-driven growth can be sustained. Watch for further market volatility and whether chipmaker valuations stabilize or continue declining.</div>
+          <a href="https://www.ft.com/content/cf5f1209-da29-4ce1-b425-0e83818bf9ec?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">French debt worries spill into stocks, driving biggest underperformance since 2010</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - UK</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">French stocks are underperforming at their worst level since 2010 as investors demand large discounts due to troubled public finances and an upcoming presidential election. This reflects serious investor concerns about France's economic stability and political future. Watch for developments in France's fiscal situation and how the presidential election campaign affects market confidence.</div>
+          <a href="https://www.ft.com/content/69bfdf93-cbba-477c-9fb0-5978d1d4f506?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Inheritance tax toll is mounting on UK family companies</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - UK</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Inheritance tax changes made by Rachel Reeves in 2024 are increasingly affecting UK family companies, potentially constraining their expansion and employment plans and pushing them toward private equity buyers. The tax changes could fundamentally alter the UK business landscape by making family ownership less viable. Watch for increased private equity acquisitions of family businesses and potential policy adjustments.</div>
+          <a href="https://www.ft.com/content/ed713df4-92b3-45bc-9cf4-bb5c9ea72673?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏛️ Politics</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Former DUP leader Jeffrey Donaldson sentenced to 15 years for multiple child sex offences</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Former DUP leader Jeffrey Donaldson, aged 63, was sentenced to 15 years for multiple child sex offences. He was convicted in June of 18 offences, including rape, against two women when they were children. The conviction and sentencing of a prominent political leader for serious child sex crimes is a significant moment for Northern Irish politics and justice. Watch for any appeals and the long-term political impact on the DUP.</div>
+          <a href="https://www.thejournal.ie/jeffrey-donaldson-sentenced-court-7193988-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Reform UK councillors and candidates filmed making racist remarks</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - UK</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Undercover footage revealed Reform UK councillors and candidates making racist and graphic sexual comments, leading to several resignations. The party is now under fresh scrutiny. The revelations raise serious questions about vetting processes and the character of Reform UK's representatives. Watch for further fallout, additional resignations, and how Reform UK responds to the scandal.</div>
+          <a href="https://www.ft.com/content/317796f3-af18-4acb-a482-ec0bdd0edf45?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🤖 Technology</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">New ‘zero-click’ spyware hacked phones using targeted ads</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Citizen Lab researchers uncovered a new 'zero-click' spyware called 'AdFection,' developed in Israel, that hacks phones through targeted ads without requiring any victim interaction. This represents a significant escalation in surveillance capabilities, as victims can be infected without any action on their part. Watch for responses from tech companies and governments regarding this spyware and potential countermeasures.</div>
+          <a href="https://www.ft.com/content/b857f1ed-8af6-4d64-b059-912afee1c075?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Anthropic tells investors its quarterly revenue jumped 50%</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Anthropic reported to investors that its quarterly revenue jumped 50%. However, this rapid growth is slower than some had anticipated amid fears about the AI trade. The growth rate suggests AI market expansion may be moderating from earlier expectations. Watch for Anthropic's next quarter results and whether growth continues to slow.</div>
+          <a href="https://www.ft.com/content/11632d03-358c-454b-af95-d06d4072932b?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Chipmaker TSMC profits surge amid relentless AI demand</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">TSMC's profits surged in the third quarter, beating estimates with earnings of $23.6bn, driven by relentless AI demand. The strong results demonstrate continued robust demand for AI chips despite broader market concerns. Watch for TSMC's fourth quarter guidance and whether AI demand remains strong.</div>
+          <a href="https://www.ft.com/content/bf6808c6-ce2d-444f-86c9-a9b557b36a47?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">What if you could turn off your algorithm? Australia is about to try</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">New legislation is being tabled in Australia's parliament on Thursday to force big tech companies to allow users to switch off algorithms that send them recommended content. This could set a global precedent for giving users more control over their social media experiences. Watch for whether the legislation passes and how tech companies respond to the requirement.</div>
+          <a href="https://www.bbc.co.uk/news/videos/ck78pj2qy42po?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🌍 World</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">EU leaders to urge Zelenskyy to rein in criticism of Trump</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">EU leaders plan to urge Zelenskyy to rein in his criticism of Trump. The Ukrainian leader's comments about the US president have alarmed European capitals. European allies are concerned that Zelenskyy's criticism could further damage Ukraine's relationship with the US. Watch for whether Zelenskyy moderates his public statements about Trump and how this affects US-Ukraine relations.</div>
+          <a href="https://www.ft.com/content/fb2110b4-50d2-4ff9-9886-f7b42c5b4579?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">US floats unfreezing some Russian assets</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">US negotiators proposed unfreezing some Russian assets during a meeting in Miami, but European officials balked at the proposal from Donald Trump's team. The proposal signals a potential major shift in sanctions policy that could undermine Western unity on Russia. Watch for further developments in US-Europe negotiations and whether the proposal gains traction.</div>
+          <a href="https://www.ft.com/content/54353d3a-afed-4fec-985a-50f3dfb9be8e?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Musk says US government responsible after Ukrainian military access to Starlink satellites cut</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Ukrainian military access to Starlink satellites was cut, and Musk said the US government was responsible. He was responding to a post by Ukraine's former defence minister Mykhailo Fedorov. Loss of Starlink access could significantly hamper Ukrainian military communications and operations. Watch for whether Starlink access is restored and clarification on the US government's role in the decision.</div>
+          <a href="https://www.thejournal.ie/starlink-ukraine-military-elon-musk-7193795-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Seven missing after suspected drone strike in Black Sea</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Seven people are missing after a fire broke out on a vessel flying the San Marino flag in the Black Sea, in what Romania said was a suspected drone strike. This is the latest in a series of drone attacks in the Black Sea. The incident highlights the escalating danger to civilian shipping in the Black Sea due to ongoing military operations. Watch for updates on the missing people and whether the drone strike is confirmed and attributed.</div>
+          <a href="https://www.rte.ie/news/2026/1015/1595445-black-sea-shipping-attack/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">👀 Worth Knowing</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/derelict-property-tax-how-we-got-here-7192800-Oct2026/' style='color:#333;text-decoration:none;'>Is the new Derelict Property Tax designed to fail?</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/uisce-eireann-spend-average-of-e4k-on-media-training-before-every-oireachtas-committee-appearance-7193702-Oct2026/' style='color:#333;text-decoration:none;'>Uisce Éireann spend average of €4k on media training before every Oireachtas committee appearance</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/antonia-edgeworth-dublin-7193286-Oct2026/' style='color:#333;text-decoration:none;'>'A heart of gold': Tributes paid to former council worker found dead on Dublin street</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/dublin-street-cleaners-strike-7192724-Oct2026/' style='color:#333;text-decoration:none;'>Litter and rubbish build up on Dublin's streets during strike</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/primetime/2026/1015/1595420-market-for-peptides/' style='color:#333;text-decoration:none;'>Inside the growing market for peptides amid concerns over safety</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/2026/1015/1595479-katie-zacharia-donald-trump/' style='color:#333;text-decoration:none;'>Trump's new press secretary scrutinised over credentials</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li></ul>
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏆 Sport</div>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:10px;">Premier League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Substitutes steal the show as Arsenal score three against Lille</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Substitute Bukayo Saka scores one and sets up another to help Arsenal beat Lille 3-0 at the Emirates, as the Premier League champions made it two wins from two in the Champions League.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/cm207qv14442o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Southgate does not see return to Premier League management</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Former England manager Gareth Southgate says he does not see himself returning to club management in the Premier League.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c9kgj41jgm5go?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Set-piece sessions and finding fixes - how international break lifted Chelsea</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Chelsea utilized the three-week international break to work on set-pieces and tactical improvements, potentially benefiting more than other Premier League teams.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/ckwy4nj4842qo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Champions League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Man City show fight but fall short of fightback against slick PSG</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Defending champions Paris Saint-Germain make it two wins from two in this season's Champions League, after beating Manchester City 4-2 at the Etihad Stadium</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/cqp8gn9x801po?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Viking snatch draw against Bayern Munich in six-goal thriller</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Norwegian champions Viking score a 90th minute equaliser to snatch a 3-3 draw against six-time European champions Bayern Munich in the Champions League, securing one of the biggest results in the club's history.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/cw1m408z3yj5o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Tresoldi hat-trick fires Club Brugge to victory over Inter in seven-goal thriller</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Club Brugge's Nicolo Tresoldi scores a hat-trick as the Belgian side edge Inter Milan 4-3, extending Inter's Champions League losing run to four matches for the first time in their history.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/cqly0gnk4xkgo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Other Sports</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/rugby-league/articles/crn8w411gj1yo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Australia edge New Zealand in epic World Cup opener</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/cricket/articles/cw4g1k471gd7o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Crawley signs Kent extension after losing England deal</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/rugby-union/articles/c6j472xqk5kro?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Cokayne back as England face Canada threat in Toronto</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/cycling/videos/c3dxwkl8k728o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>China beat GB to women's team sprint gold</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li></ul>
+
+  
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Your Teams &amp; Players</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Why Souness rejected Barcelona when he left Liverpool</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Liverpool legend Graeme Souness reveals he rejected the chance to sign for Barcelona when he left the European champions.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/cm0j07pdw95eo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Barcola shines as Liverpool score six to beat LASK</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Bradley Barcola scores a hat-trick as Liverpool beat LASK 6-3 in Austria to make it two wins from two in the league phase of this season's Champions League.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/c68jzlwpk01zo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Brilliant Barcola scores first hat-trick to get lift-off at Liverpool</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Liverpool's summer signing Bradley Barcola scores his first senior hat-trick, and his first goals for Liverpool, as he helps his side beat LASK 6-3 in Austria to make it two wins from two in this season's Champions League.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/cmx237q7nl21o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Isco snatches late Betis win as they edge past Porto</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Isco scores an 84th minute penalty to help Real Betis snatch a late 3-2 win against Porto, giving them back to back wins at the start of this season's Champions League.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/cmn4e91e4dk7o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">On night of mayhem for Liverpool, Barcola arrives in style</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Bradley Barcola's form was the subject of pre-match questions before Liverpool faced LASK - but the France forward's Champions League hat-trick was the perfect answer.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c39wzg59x1yxo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Semenyo 'froze' after alleged racist abuse, court told</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">A Liverpool fan denies racially aggravated behaviour after Bournemouth player Semenyo allegedly "froze" following racist abuse during a 2025 match.</div>
+          <a href="https://www.bbc.co.uk/news/articles/cvlyd3z1g8d8o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Why Souness rejected Barcelona when he left Liverpool</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Liverpool legend Graeme Souness reveals he rejected the chance to sign for Barcelona when he left the European champions.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/cm0j07pdw95eo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Liverpool latest: Iraola provides update on key injured trio</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Liverpool manager Iraola has given an update on three injured players.</div>
+          <a href="https://www.skysports.com/football/live-blog/11095/13025501/liverpool-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
+    Generated automatically. Headlines and teasers only - click through for full articles.
+  </div>
+</div>
+</body></html>

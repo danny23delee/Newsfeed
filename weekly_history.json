@@ -1,15 +1,5 @@
 [
   {
-    "date": "2026-10-06",
-    "stories": [
-      {
-        "title": "Cut to carbon tax, higher income tax entry point rises",
-        "category": "Ireland",
-        "why_it_matters": "This reduces the tax burden on households for heating costs and allows middle-income earners to keep more of their income before paying higher tax rates."
-      }
-    ]
-  },
-  {
     "date": "2026-10-07",
     "stories": [
       {
@@ -82,6 +72,26 @@
         "title": "Taoiseach says government is 'open to negotiations' to resolve public pay row",
         "category": "Ireland",
         "why_it_matters": "The strike disrupts public services and indicates significant discontent among public sector workers over pay conditions."
+      }
+    ]
+  },
+  {
+    "date": "2026-10-15",
+    "stories": [
+      {
+        "title": "Perpetrators of Waterford arson attack asked to hand themselves in, as vigil held for victims",
+        "category": "Ireland",
+        "why_it_matters": "The community is seeking justice for a serious crime that has left children fighting for their lives."
+      },
+      {
+        "title": "Son says four were killed over someone else's drug debt",
+        "category": "Ireland",
+        "why_it_matters": "The attack reveals the deadly consequences of drug-related violence affecting innocent families."
+      },
+      {
+        "title": "Zelenskyy defies Trump as Ukraine resumes strikes on Russian refineries",
+        "category": "World",
+        "why_it_matters": "The breakdown in US-Ukraine intelligence cooperation could significantly impact Ukraine's military capabilities."
       }
     ]
   }
