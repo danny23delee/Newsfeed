@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f2efe9;">
+<div style="max-width:640px;margin:0 auto;background:#fff;padding:28px 24px;">
+  <div style="text-align:center;border-bottom:4px double #111;padding-bottom:10px;margin-bottom:18px;">
+    <div style="font-family:Georgia,serif;font-size:30px;font-weight:900;letter-spacing:0.02em;">THE MORNING BRIEF</div>
+    <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Friday 16 October 2026</div>
+    <div style="text-align:center;font-family:Georgia,serif;font-size:13px;color:#555;margin-top:6px;">Dublin today: Overcast, 8–13°C, 10% chance of rain</div>
+  </div>
+
+  
+        <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">🔎 Verify a Claim</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#555;margin-bottom:10px;">Heard something on TikTok or elsewhere? Check it against real news sources.</div>
+          <div style="display:flex;gap:8px;">
+            <input id="verify-input" type="text" placeholder="e.g. Did the government really ban X?" style="flex:1;padding:8px;font-family:Georgia,serif;font-size:14px;border:1px solid #999;box-sizing:border-box;" />
+            <button id="verify-btn" style="padding:8px 16px;font-family:Georgia,serif;font-weight:700;background:#111;color:#fff;border:none;cursor:pointer;white-space:nowrap;">Check</button>
+          </div>
+          <div id="verify-result" style="margin-top:12px;font-family:Georgia,serif;font-size:14px;color:#333;white-space:pre-wrap;line-height:1.5;"></div>
+        </div>
+        <script>
+        (function() {
+          var btn = document.getElementById('verify-btn');
+          var input = document.getElementById('verify-input');
+          var result = document.getElementById('verify-result');
+          function runCheck() {
+            var query = input.value.trim();
+            if (!query) return;
+            result.textContent = 'Checking...';
+            btn.disabled = true;
+            fetch("newslette-verify.daniel04delee.workers.dev", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({query: query})
+            })
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                result.textContent = data.error ? ('Error: ' + data.error) : data.result;
+              })
+              .catch(function(e) {
+                result.textContent = 'Something went wrong: ' + e;
+              })
+              .finally(function() { btn.disabled = false; });
+          }
+          btn.addEventListener('click', runCheck);
+          input.addEventListener('keydown', function(e) { if (e.key === 'Enter') runCheck(); });
+        })();
+        </script>
+        
+  
+        <div style="background:#111;color:#fff;padding:14px 18px;margin-bottom:22px;">
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Today's Bulletin</div>
+          <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.4;padding-left:18px;margin:0;"><li style='margin-bottom:6px;'>Former DUP leader Donaldson sentenced to 15 years for child sex abuse — party says he 'deserves every day' as major political figure falls</li><li style='margin-bottom:6px;'>Three children and teacher killed in mass shooting at Oregon primary school — another tragedy highlights ongoing US gun violence crisis</li><li style='margin-bottom:6px;'>Funeral details announced for Philip, Kim, Jayden and Callum English following deadly arson attack — Garda Commissioner expects more arrests</li><li style='margin-bottom:6px;'>Ukraine-US split deepens as Trump calls strikes on Russian refineries 'a disgrace' while EU vows to maintain sanctions despite American pivot</li><li style='margin-bottom:6px;'>300,000 public sector workers face potential second strike as Chambers remains 'hopeful' for breakthrough with unions</li></ul>
+        </div>
+        
+  
+    <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;background:#faf8f4;">
+      <div style="font-family:Georgia,serif;font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">⚽ Fixtures &amp; Results</div>
+      
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No Liverpool, Real Betis, or Cork City fixtures today.</p>
+    
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-top:14px;margin-bottom:6px;">Yesterday's Results</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No results from yesterday.</p>
+    
+    </div>
+    
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">💷 Next Match Odds (informational only)</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Brentford v Liverpool: Brentford 2.4, Liverpool 2.75, Draw 3.75 (via Betfred (UK))</li></ul>
+        </div>
+        
+  
+
+  <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🔴 Top Stories</div>
+  <p style='color:#777;'>Nothing cleared the must-know bar today.</p>
+
+  
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🇮🇪 Ireland</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Funeral details announced for Philip, Kim, Jayden and Callum English after deadly arson attack</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Funeral arrangements have been announced for Philip, Kim, Jayden and Callum English who died in an arson attack. A mass will be held at Sacred Heart Church at 1pm Monday, with burial following at Kilbarry Cemetery in Waterford. This marks the formal remembrance of four family members killed in a deadly arson attack. Watch for updates on the ongoing investigation into the arson attack that killed the family.</div>
+          <a href="https://www.thejournal.ie/english-family-funeral-waterford-7195098-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Chambers 'hopeful' for progress with public sector unions as potential second strike looms</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Chambers expressed hope for progress in negotiations with public sector unions following industrial action by around 300,000 public sector workers on Wednesday. A potential second strike is looming. The dispute affects 300,000 workers and could lead to further disruption if negotiations fail. Watch for whether negotiations prevent a second strike by public sector workers.</div>
+          <a href="https://www.thejournal.ie/public-sector-strike-ireland-jack-chambers-7194856-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Garda Commissioner expects more arrests over arson attack</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The Garda Commissioner stated that more arrests are expected in the investigation into the murders of a family of four in Waterford by arson attack. This indicates the investigation is ongoing and expanding beyond initial arrests. Watch for announcements of additional arrests in the Waterford arson murder case.</div>
+          <a href="https://www.rte.ie/news/2026/1016/1595588-waterford-fire-investigation/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Family of murdered garda Colm Horkan call for public inquiry</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The family of murdered garda Colm Horkan, who was shot by Stephen Silver, are calling for a public inquiry. This signals the family's demand for accountability and transparency in the circumstances surrounding the garda's death. Watch for the government's response to the call for a public inquiry into Colm Horkan's murder.</div>
+          <a href="https://www.thejournal.ie/colm-horkan-public-inquiry-7195014-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">💷 Business & Markets</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">US business leaders are waking up to the perils of plutopopulism</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">US business leaders are confronting the consequences of 'plutopopulism' as they face a president who, while cutting taxes and regulations, has also disrupted free trade and global alliances. This highlights the unintended consequences for business of supporting a populist presidency that undermines international economic relationships. Watch for how US businesses respond to continued trade disruptions and alliance tensions.</div>
+          <a href="https://www.ft.com/content/586218d3-6943-4690-8dd8-63dd329c781d" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Healey signals tax raid on banks in Budget</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Chancellor Healey has signaled upcoming tax increases on banks in the Budget, pointing to looming 'decisions' as the financial services sector prepares for higher levies. This indicates banks will face increased tax burdens that could affect their profitability and operations. Watch for the specific tax measures targeting banks announced in the Budget.</div>
+          <a href="https://www.ft.com/content/09e07278-8479-49bb-a145-51e5d93828a2?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Diesel prices: can US-Russia deal ease global pressure?</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Diesel prices have continued rising during September and October, exceeding €2.10 per litre this month. A US-Russia deal is being considered for its potential to ease global pressure. Rising diesel prices affect transportation costs and overall inflation across the economy. Watch for whether the US-Russia deal materializes and impacts diesel prices.</div>
+          <a href="https://www.rte.ie/news/business/2026/1016/1595535-diesel-prices-us-russia/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Treasuries head for best week since February as AI jitters halt bond rout</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Treasury bonds are heading for their best week since February as AI-related concerns prompted investors to seek safety in government debt. Borrowing costs have fallen back from decades-high levels. This reflects a shift in investor sentiment away from risk assets due to concerns about AI. Watch for whether AI concerns continue to drive demand for safe-haven assets.</div>
+          <a href="https://www.ft.com/content/4c4f03f4-f878-4bd6-8128-5be7e3bb8ca1?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏛️ Politics</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Former DUP leader Donaldson sentenced to 15 years in prison for child sex abuse</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Politics</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Former DUP leader Jeffrey Donaldson has been sentenced to 15 years in prison after being convicted of 18 counts of sex abuse, including one of rape, committed against two women when they were children. This represents a major fall from power for a prominent political leader convicted of serious child abuse crimes. Watch for the political impact on the DUP and Northern Ireland politics following Donaldson's sentencing.</div>
+          <a href="https://www.bbc.co.uk/news/articles/cwdr8grnykrlo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Donaldson 'deserves every day' of sentence, says DUP</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The Democratic Unionist Party stated that Jeffrey Donaldson 'deserves every day' of the lengthy prison sentence he must serve. This shows the DUP distancing itself from its former leader following his conviction. Watch for how the DUP rebuilds its leadership and reputation after this scandal.</div>
+          <a href="https://www.rte.ie/news/ireland/2026/1015/1595497-jeffrey-donaldson-sentencing-reax/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🤖 Technology</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">G7 economies plan simulated AI attacks on banks as cyber fears rise</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">G7 finance ministers have agreed to conduct tabletop drills simulating AI attacks on banks as cyber security fears increase. This reflects growing concerns about AI-enabled cyber threats to critical financial infrastructure. Watch for the results of these simulated exercises and any new security measures adopted.</div>
+          <a href="https://www.ft.com/content/ce1b9236-1e53-47f1-b1f9-443a9f430b0d?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">AI giant Anthropic woos potential investors ahead of stock market debut</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Business</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">AI giant Anthropic is courting potential investors ahead of a planned stock market debut. Some investors have expressed concerns about the high spending on AI infrastructure. This represents a major market test for AI companies amid questions about infrastructure costs and profitability. Watch for Anthropic's IPO pricing and investor reception given concerns about AI spending.</div>
+          <a href="https://www.bbc.co.uk/news/articles/cqzjx448vxkgo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Snapchat and Instagram grooming becoming 'easier'</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Technology</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Online grooming is increasing, with children as young as five being targeted on platforms like Snapchat and Instagram, prompting calls for reform. This highlights a growing child safety crisis on social media platforms requiring urgent regulatory action. Watch for regulatory reforms targeting social media platforms to address online grooming.</div>
+          <a href="https://www.bbc.co.uk/news/articles/cq33xd6j1dv5o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">GTA 6 - all you need to know about Rockstar's blockbuster game</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Technology</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A new launch trailer for Grand Theft Auto VI has been released, revealing more details about what is expected to be the biggest game of the year. This is a major entertainment release from Rockstar with significant commercial and cultural impact anticipated. Watch for the game's release date and early sales performance when it launches.</div>
+          <a href="https://www.bbc.co.uk/news/articles/c9q20djz4wno?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🌍 World</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Three children and a teacher killed in mass shooting at primary school in US state of Oregon</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Three children and a teacher were killed in a mass shooting at a primary school in Oregon. The attacker, a Bend resident, forced entry by shooting at locked doors. This represents another tragic school shooting highlighting ongoing gun violence and school safety concerns in the US. Watch for details on the attacker's motives and any policy responses to the school shooting.</div>
+          <a href="https://www.thejournal.ie/school-shooting-oregon-7195039-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">EU vows to maintain Russia sanctions after US pivot</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">European leaders have rallied around Volodymyr Zelenskyy and vowed to maintain Russia sanctions following Donald Trump's fuel deal with Moscow. This shows a split between US and EU policy on Russia amid concerns about weakening Western unity. Watch for whether the EU can sustain sanctions independently if US policy continues to shift.</div>
+          <a href="https://www.ft.com/content/ee6dfd48-fa31-4bde-9962-2f9f09c36798?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Ukraine strikes on Russia refineries 'a disgrace' - Trump</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">US President Donald Trump told Newsmax that Ukraine's resumption of strikes on Russian refineries is a 'disgrace' that keeps global energy prices elevated. This signals a significant shift in US support for Ukrainian military operations against Russian infrastructure. Watch for whether US criticism leads to pressure on Ukraine to halt refinery strikes.</div>
+          <a href="https://www.rte.ie/news/ukraine/2026/1016/1595586-ukraine-disgrace/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Israeli settlers burn olive trees in West Bank attack</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Dozens of masked militant Israeli settlers burned olive trees and threw rocks at Palestinians during a coordinated attack on a West Bank village's annual harvest. This represents escalating settler violence against Palestinians targeting their agricultural livelihood. Watch for international responses and whether Israeli authorities take action against the settlers involved.</div>
+          <a href="https://www.rte.ie/news/middle-east/2026/1016/1595635-west-bank/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">👀 Worth Knowing</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/russell-brand-trial-7195323-Oct2026/' style='color:#333;text-decoration:none;'>'Egotistical' Brand had a 'huge preoccupation' with sex, flatmate and colleague tells rape trial</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/garda-x-accounts-hacked-7195159-Oct2026/' style='color:#333;text-decoration:none;'>Gardaí regain control of social media accounts after they were hacked</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/cybersafekids-screen-time-children-7194507-Oct2026/' style='color:#333;text-decoration:none;'>One-fifth of eight to 12-year-olds fall asleep watching a screen</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/channel-tunnel-train-crash-7194969-Oct2026/' style='color:#333;text-decoration:none;'>Collision between bus and freight train near Channel Tunnel French entrance leaves 19 injured</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/trump-cancels-hasan-execution-livestream-7194808-Oct2026/' style='color:#333;text-decoration:none;'>Trump scraps plans to live stream firing squad execution of Fort Hood shooter</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/ireland/2026/1016/1595568-president-connolly-slovenia/' style='color:#333;text-decoration:none;'>Connolly says human rights must guide response to crises</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li></ul>
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏆 Sport</div>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:10px;">Premier League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">'Not about me' - Arbeloa dismisses future questions</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Fulham head coach Alvaro Arbeloa says the focus should not be on him as his side searches for a first Premier League win this season against Hull City this weekend.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c615jw414vypo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Does the Premier League 'Big Six' still exist?</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">For years the Premier League has had a defined 'Big Six', comprised of Arsenal, Chelsea, Liverpool, Manchester City, Manchester United and Tottenham Hotspur., but could this era be coming to an end?</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/ckj0lrjzjgqno?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">How to follow the Premier League on the BBC this weekend</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Our Ask Me Anything team explains how to follow matches from week seven of the Premier League season on the BBC this weekend.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/cp30ggvqj0do?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Champions League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Euro Leagues</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Barcelona and PSG are being considered as potential favorites in the Champions League competition.</div>
+          <a href="https://www.bbc.co.uk/sounds/play/p0pgz2sp?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Martinez apologises for outburst after Wilcox talks</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Manchester United defender Lisandro Martinez has issued an apology for his outburst after Tuesday's Champions League loss at Atletico Madrid.</div>
+          <a href="https://www.skysports.com/football/news/11095/13599725/lisandro-martinez-man-utd-defender-apologises-for-outburst-and-holds-talks-with-jason-wilcox-and-michael-carrick" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">'Top two - why not?' - Why Sangare turned down top clubs for Brentford</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Mamadou Sangare could have been playing Champions League football this week. After all, the signs point to him being an elite-level player.</div>
+          <a href="https://www.skysports.com/football/news/11095/13599149/mamadou-sangare-interview-brentford-midfielder-reveals-why-he-turned-down-top-clubs-in-europe-for-the-bees" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Other Sports</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/athletics/articles/crd6dj26v4e4o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>The Olympic sprinter now bedbound for 22 hours a day</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/tennis/articles/cmpwgq52y22zo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Kartal enjoys 'best week of career' after diving into deep end</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/rugby-league/videos/cmn4eqpvw1ppo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Australia clinch thrilling World Cup opener against New Zealand</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/tennis/articles/c8r4yzp2443go?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Serb player banned until 2050 for tennis match-fixing</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li></ul>
+
+  
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Your Teams &amp; Players</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Does the Premier League 'Big Six' still exist?</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">For years the Premier League has had a defined 'Big Six', comprised of Arsenal, Chelsea, Liverpool, Manchester City, Manchester United and Tottenham Hotspur., but could this era be coming to an end?</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/ckj0lrjzjgqno?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Kane poised to extend Bayern stay - Friday's gossip</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Harry Kane is close to signing a new deal at Bayern Munich, Arda Guler agrees a new contract with Real Madrid, Liverpool are leading the race for Bournemouth's Alex Scott, plus more.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c95ynkv552yvo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">PL Predictions: Back buzzing Brentford to sting Liverpool</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Our top tipster Lewis Jones, aka Jones Knows, provides his analysis and betting insight for a busy weekend of Premier League action.</div>
+          <a href="https://www.skysports.com/football/news/11095/13598732/premier-league-predictions-jones-knows-best-bets-brentford-vs-liverpool-leeds-vs-manchester-united-and-more" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
+    Generated automatically. Headlines and teasers only - click through for full articles.
+  </div>
+</div>
+</body></html>

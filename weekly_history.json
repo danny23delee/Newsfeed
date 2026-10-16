@@ -1,15 +1,5 @@
 [
   {
-    "date": "2026-10-07",
-    "stories": [
-      {
-        "title": "Budget 2027: All you need to know",
-        "category": "Ireland",
-        "why_it_matters": "This is the biggest budget in Irish state history, indicating significant government spending and policy changes across multiple sectors."
-      }
-    ]
-  },
-  {
     "date": "2026-10-08",
     "stories": []
   },
@@ -94,5 +84,9 @@
         "why_it_matters": "The breakdown in US-Ukraine intelligence cooperation could significantly impact Ukraine's military capabilities."
       }
     ]
+  },
+  {
+    "date": "2026-10-16",
+    "stories": []
   }
 ]
