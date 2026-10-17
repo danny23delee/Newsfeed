@@ -1,13 +1,5 @@
 [
   {
-    "date": "2026-10-08",
-    "stories": []
-  },
-  {
-    "date": "2026-10-08",
-    "stories": []
-  },
-  {
     "date": "2026-10-09",
     "stories": []
   },
@@ -88,5 +80,15 @@
   {
     "date": "2026-10-16",
     "stories": []
+  },
+  {
+    "date": "2026-10-17",
+    "stories": [
+      {
+        "title": "Trump lifts sweeping Russia sanctions as Zelenskyy appeals to EU for \u20ac70bn in aid",
+        "category": "World",
+        "why_it_matters": "The easing of sanctions on Russia further strains already tense relations with Ukraine, which is seeking significant financial support from European allies."
+      }
+    ]
   }
 ]
