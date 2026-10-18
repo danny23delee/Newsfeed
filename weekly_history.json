@@ -1,9 +1,5 @@
 [
   {
-    "date": "2026-10-09",
-    "stories": []
-  },
-  {
     "date": "2026-10-10",
     "stories": []
   },
@@ -90,5 +86,9 @@
         "why_it_matters": "The easing of sanctions on Russia further strains already tense relations with Ukraine, which is seeking significant financial support from European allies."
       }
     ]
+  },
+  {
+    "date": "2026-10-18",
+    "stories": []
   }
 ]

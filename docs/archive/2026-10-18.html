@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f2efe9;">
+<div style="max-width:640px;margin:0 auto;background:#fff;padding:28px 24px;">
+  <div style="text-align:center;border-bottom:4px double #111;padding-bottom:10px;margin-bottom:18px;">
+    <div style="font-family:Georgia,serif;font-size:30px;font-weight:900;letter-spacing:0.02em;">THE MORNING BRIEF</div>
+    <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Sunday 18 October 2026</div>
+    <div style="text-align:center;font-family:Georgia,serif;font-size:13px;color:#555;margin-top:6px;">Dublin today: Overcast, 7–12°C, 0% chance of rain</div>
+  </div>
+
+  
+        <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">🔎 Verify a Claim</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#555;margin-bottom:10px;">Heard something on TikTok or elsewhere? Check it against real news sources.</div>
+          <div style="display:flex;gap:8px;">
+            <input id="verify-input" type="text" placeholder="e.g. Did the government really ban X?" style="flex:1;padding:8px;font-family:Georgia,serif;font-size:14px;border:1px solid #999;box-sizing:border-box;" />
+            <button id="verify-btn" style="padding:8px 16px;font-family:Georgia,serif;font-weight:700;background:#111;color:#fff;border:none;cursor:pointer;white-space:nowrap;">Check</button>
+          </div>
+          <div id="verify-result" style="margin-top:12px;font-family:Georgia,serif;font-size:14px;color:#333;white-space:pre-wrap;line-height:1.5;"></div>
+        </div>
+        <script>
+        (function() {
+          var btn = document.getElementById('verify-btn');
+          var input = document.getElementById('verify-input');
+          var result = document.getElementById('verify-result');
+          function runCheck() {
+            var query = input.value.trim();
+            if (!query) return;
+            result.textContent = 'Checking...';
+            btn.disabled = true;
+            fetch("newslette-verify.daniel04delee.workers.dev", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({query: query})
+            })
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                result.textContent = data.error ? ('Error: ' + data.error) : data.result;
+              })
+              .catch(function(e) {
+                result.textContent = 'Something went wrong: ' + e;
+              })
+              .finally(function() { btn.disabled = false; });
+          }
+          btn.addEventListener('click', runCheck);
+          input.addEventListener('keydown', function(e) { if (e.key === 'Enter') runCheck(); });
+        })();
+        </script>
+        
+  
+        <div style="background:#111;color:#fff;padding:14px 18px;margin-bottom:22px;">
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Today's Bulletin</div>
+          <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.4;padding-left:18px;margin:0;"><li style='margin-bottom:6px;'>Four family members dead in Waterford arson attack as man and woman charged in connection with fatal incident</li><li style='margin-bottom:6px;'>Trump pauses Russia sanctions to 'analyse' impact as Ukraine faces bruising diplomatic and financial crisis</li><li style='margin-bottom:6px;'>Ireland's biggest landlord takeover threatens rent hikes as public sector pay talks begin</li><li style='margin-bottom:6px;'>$10 trillion AI infrastructure boom shows cracks as America's massive investment faces economic limitations</li><li style='margin-bottom:6px;'>Lara Gillespie wins world championship gold for Ireland for second consecutive season</li></ul>
+        </div>
+        
+  
+    <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;background:#faf8f4;">
+      <div style="font-family:Georgia,serif;font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">⚽ Fixtures &amp; Results</div>
+      
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No Liverpool, Real Betis, or Cork City fixtures today.</p>
+    
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-top:14px;margin-bottom:6px;">Yesterday's Results</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No results from yesterday.</p>
+    
+    </div>
+    
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">💷 Next Match Odds (informational only)</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Liverpool v Brighton and Hove Albion: Brighton and Hove Albion 3.25, Liverpool 2.08, Draw 3.7 (via Unibet (UK))</li></ul>
+        </div>
+        
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">📅 On The Calendar</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Federal Reserve (FOMC) rate decision — Wed 28 Oct (in 10 days)</li></ul>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🔴 Top Stories</div>
+  <p style='color:#777;'>Nothing cleared the must-know bar today.</p>
+
+  
+        <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">📊 This Week</div>
+        <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.5;color:#333;padding-left:20px;margin:0 0 16px;"><li style='margin-bottom:8px;'>A deadly attack in Riyadh killed 12 people and injured several others including an Irish citizen, marking a major escalation in attacks on civilian infrastructure in Saudi Arabia's capital.</li><li style='margin-bottom:8px;'>Trump announced an 'energy ceasefire' between Russia and Ukraine, but the agreement quickly unraveled as Zelenskyy defied the deal by resuming strikes on Russian refineries, leading to a breakdown in US-Ukraine intelligence cooperation and Trump's subsequent lifting of sweeping Russia sanctions.</li><li style='margin-bottom:8px;'>Four family members died in an arson attack in Waterford that Gardaí believe was carried out by a local drugs gang over someone else's drug debt, with the family's son revealing the victims were targeted by mistake; perpetrators have been asked to hand themselves in as the community holds vigils.</li><li style='margin-bottom:8px;'>Ukraine is seeking €70 billion in aid from the EU as relations with the US deteriorate over Zelenskyy's defiance of Trump's ceasefire agreement and the American president's decision to ease sanctions on Russia.</li><li style='margin-bottom:8px;'>A national strike over public sector pay is proceeding despite government pleas to call it off, though the Taoiseach says the government remains open to negotiations to resolve the dispute disrupting public services.</li></ul>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🇮🇪 Ireland</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Takeover of Ireland’s biggest landlord means rent hikes are likely on the cards</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">US investment firm Barings is set to acquire Ireland's largest private landlord. This takeover is expected to lead to rent increases. The acquisition could result in higher housing costs for tenants across Ireland's rental market. Watch for announcements of rent increases following the completion of the Barings acquisition.</div>
+          <a href="https://www.thejournal.ie/what-will-sale-of-ires-reit-mean-impact-rent-price-7195825-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Govt and unions prepare for formal talks on pay deal</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The Irish government and trade unions are preparing to begin formal negotiations on a new public sector pay deal. The outcome will determine compensation levels for Ireland's public sector workforce. Watch for the results of the formal negotiations and the terms of any agreed pay deal.</div>
+          <a href="https://www.rte.ie/news/ireland/2026/1018/1595801-public-sector-pay-deal/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Man, woman charged in connection with Waterford attack</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A man and woman have been charged in court in connection with an arson attack in Waterford that killed Philip English, Kim English, and their children Callum and Jayden. The case involves the deaths of four family members in a fatal arson attack. Watch for the court proceedings and trial outcome for the charged individuals.</div>
+          <a href="https://www.rte.ie/news/2026/1017/1595754-waterford-arson-attack/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Concerns around high unemployment rates among international graduates in Ireland</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Records show that a UCC business master's program consisting mainly of non-EU students had a 21% graduate unemployment rate in 2024. This has raised concerns about high unemployment among international graduates in Ireland. The high unemployment rate raises questions about the employment prospects and integration of international graduates in Ireland. Watch for policy responses or institutional changes to address international graduate unemployment.</div>
+          <a href="https://www.thejournal.ie/international-student-unemployment-ireland-7164175-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">💷 Business & Markets</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Global economy set for AI-driven surge, FT survey suggests</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A Financial Times survey of 94 economists suggests the global economy is set for an AI-driven surge. The benefits are expected to extend beyond the US and China. AI could drive significant global economic growth across multiple regions and countries. Watch for signs of AI-driven economic growth materializing in various global markets.</div>
+          <a href="https://www.ft.com/content/c6aeb3a1-1874-4947-8ffc-4d993301244a?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Accenture looks to sell Chinese operations for up to $1.5bn</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Accenture, the world's largest IT consultancy, is looking to sell its Chinese operations for up to $1.5 billion. The company's shares have fluctuated recently due to questions about AI's impact. The sale reflects strategic shifts at a major IT consultancy amid uncertainty about AI's business impact. Watch for the completion of the sale and how Accenture redirects its focus after divesting Chinese operations.</div>
+          <a href="https://www.ft.com/content/2dfdd513-26a6-4a10-9cae-5242eb4ee3ed?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏛️ Politics</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">The Trump administration has entered its utter shambles era</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The Trump administration is experiencing significant chaos, highlighted by a disastrous five-day period for the new press secretary. The dysfunction signals operational and communications challenges within the White House. Watch for further signs of instability or potential staff changes in the administration.</div>
+          <a href="https://www.ft.com/content/cf888c97-f01e-425b-ab3a-37e696612e8a?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Trump’s losing battle with green energy</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Despite President Trump's efforts to curb green energy, the Iran war and AI boom are strengthening the case for clean power. External factors are undermining the administration's anti-green energy agenda and may accelerate clean energy adoption. Watch for whether clean energy investments continue to grow despite administration opposition.</div>
+          <a href="https://www.ft.com/content/b263bbe1-cd0c-4508-9ec8-07cb8a9c2a02?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🤖 Technology</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">America’s $10tn AI infrastructure boom is starting to fray</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">America's $10 trillion AI infrastructure boom is encountering challenges as it meets the harsh economic realities of physical world constraints. The massive investment in AI infrastructure may face practical and economic limitations that could slow or reshape development. Watch for adjustments to AI infrastructure plans or scaling back of projected investments.</div>
+          <a href="https://www.ft.com/content/9ea5a37d-15c9-4d5b-94d6-719048c9cd3c?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Anthropic turns to lawyers to help AI agents strike deals</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Anthropic is working with lawyers to help AI agents conduct negotiations and strike deals. Tech companies are grappling with the rules governing machine-based negotiations on behalf of humans. The development raises important legal and regulatory questions about AI agents acting as human representatives in business dealings. Watch for emerging legal frameworks and regulations governing AI agent negotiations.</div>
+          <a href="https://www.ft.com/content/f7c26ac0-f5f2-443a-86b2-39d62f7920a9?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🌍 World</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">1,800 arrested amid clashes, looting in French protests</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Over 1,800 people were arrested in France following a day of demonstrations that descended into extreme violence, with clashes between protesters and police and incidents of looting. The widespread violence and arrests indicate significant social unrest and law enforcement challenges in France. Watch for further protests, government response measures, and whether tensions escalate or subside.</div>
+          <a href="https://www.rte.ie/news/europe/2026/1018/1595835-france-protest-clashes/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Trump paused Russia sanctions to 'analyse' impact - Rubio</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">US Secretary of State Marco Rubio stated that President Trump's waiver of sanctions and tariffs on Russia is a 60-day pause to analyze their impact on the global economy. The pause represents a significant shift in US policy toward Russia with potential global economic implications. Watch for the outcome of the 60-day review and whether sanctions are reimposed or permanently lifted.</div>
+          <a href="https://www.rte.ie/news/world/2026/1018/1595809-russia-sanctions-rubio/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Ukraine's bruising week at the hands of Trump and Putin</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">President Zelensky experienced his worst falling out with President Trump since an Oval Office incident 18 months earlier. Ukraine is also facing a serious financing problem for the coming year. The diplomatic rift and financial crisis threaten Ukraine's ability to sustain its defense and operations. Watch for attempts to repair US-Ukraine relations and Ukraine's efforts to secure alternative funding sources.</div>
+          <a href="https://www.rte.ie/news/analysis-and-comment/2026/1017/1595711-ukraine-russia-eu/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Russian claims of Ukraine territory advance 'an illusion'</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Ukraine has rejected Russia's claim to have captured more than 1,800 square kilometers of territory and nearly 100 settlements, including Dobropillia, since September 1. The disputed territorial claims reflect ongoing conflict and disagreement over the battlefield situation in Ukraine. Watch for independent verification of territorial control and further developments in the conflict.</div>
+          <a href="https://www.rte.ie/news/2026/1017/1595768-russian-claims-of-ukraine-territory-advance-an-illusion/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">👀 Worth Knowing</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/catholic-church-national-office-for-women-7196967-Oct2026/' style='color:#333;text-decoration:none;'>Majority of Catholic Church delegates reject proposal for national office for women</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/sport/cycling/2026/1018/1595837-gillespie-wins-second-world-title-with-gold-in-shanghai/' style='color:#333;text-decoration:none;'>Gillespie wins second world title with gold in Shanghai</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/middle-east/2026/1018/1595807-saudi-houthis/' style='color:#333;text-decoration:none;'>Saudi Arabia reports attacks as Egypt weighs sending aid</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.ft.com/content/9d2970fb-215f-4eff-8b68-59ef8589a7f6?syn-25a6b1a6=1' style='color:#333;text-decoration:none;'>She’s been tasked with overhauling Britain’s bureaucracy. Can Antonia Romeo succeed?</a> <span style='color:#999;font-size:12px;'>(FT - UK)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/news/articles/cmx2375zqwwwo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>There's a crackdown on sports piracy - but is it already out of control?</a> <span style='color:#999;font-size:12px;'>(BBC - Business)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/news/articles/cm2kezgd77qlo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Ending corridor care in hospitals for children will be a priority, says health secretary</a> <span style='color:#999;font-size:12px;'>(BBC - Politics)</span></li></ul>
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏆 Sport</div>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:10px;">Premier League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Boos and bananas on day of defiance at Man City</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Manchester City fans boo the Premier League anthem before watching their side move six points clear at the top of the table.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c9vgr6vj4mnyo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Haaland nets double as Man City go six points clear at the top</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Manchester City go six points clear at the top of the Premier League as Enzo Maresca's side record a seventh straight league victory with a 3-2 win over Ipswich at the Etihad.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/c6pwgx89djn2o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Liverpool come from behind to beat NINE-man Brentford</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Liverpool defeated Brentford in a Premier League match where the home side finished with nine men.</div>
+          <a href="https://www.skysports.com/watch/video/13600373/brentford-1-2-liverpool-premier-league-highlights" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Champions League</div>
+  <p style='color:#777;'>No notable general Champions League storylines today.</p>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Other Sports</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/boxing/articles/ck3r59ywz99ro?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>After Dubois' dominant win, what's next for heavyweight boxing?</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/cycling/videos/cjy56pk5wg54o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>'What a finish!' - Gillespie wins gold for Ireland</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/rugby-league/videos/cm70prd68l5jo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Tonga stun England in World Cup opener</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/tennis/articles/c9dr83p610vno?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Kartal reaches Wuhan final as dream week continues</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li></ul>
+
+  
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Your Teams &amp; Players</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Liverpool come from behind to beat nine-man Brentford</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Liverpool come from behind to beat Brentford 2-1 at the Gtech Community Stadium as the hosts finish with nine men after red cards for Yehor Yarmoliuk and  Vitaly Janelt.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/c65yn28p859wo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Lamine Yamal opens scoring as Barcelona beat Real Betis</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Lamine Yamal, Rodri, Gabriel Jesus, Eric Garcia and Dani Olmo all scored for Barcelona as they swept aside Real Betis in a seven-goal thriller to stay five points clear at the top of La Liga.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/cmewe0wq0wj1o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Liverpool players in 'delicate' situation with 'demanding' schedule - Iraola</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Andoni Iraola Liverpool's demanding schedule is putting his players in a "delicate situation" after Dominik Szoboszlai was forced off with a first-half injury during their 2-1 victory at Brentford.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/ckgelqlz37w3o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Isak clinches win for Liverpool over nine-man Brentford</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Alexander Isak scored on his return from injury as Liverpool fought back from a goal down to clinch a 2-1 victory over Brentford, who had Yehor Yarmoliuk and Vitaly Janelt sent off.</div>
+          <a href="https://www.skysports.com/football/brentford-vs-liverpool/report/559505" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
+    Generated automatically. Headlines and teasers only - click through for full articles.
+  </div>
+</div>
+</body></html>
