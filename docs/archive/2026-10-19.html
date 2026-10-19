@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f2efe9;">
+<div style="max-width:640px;margin:0 auto;background:#fff;padding:28px 24px;">
+  <div style="text-align:center;border-bottom:4px double #111;padding-bottom:10px;margin-bottom:18px;">
+    <div style="font-family:Georgia,serif;font-size:30px;font-weight:900;letter-spacing:0.02em;">THE MORNING BRIEF</div>
+    <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Monday 19 October 2026</div>
+    <div style="text-align:center;font-family:Georgia,serif;font-size:13px;color:#555;margin-top:6px;">Dublin today: Moderate drizzle, 7–13°C, 100% chance of rain</div>
+  </div>
+
+  
+        <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">🔎 Verify a Claim</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#555;margin-bottom:10px;">Heard something on TikTok or elsewhere? Check it against real news sources.</div>
+          <div style="display:flex;gap:8px;">
+            <input id="verify-input" type="text" placeholder="e.g. Did the government really ban X?" style="flex:1;padding:8px;font-family:Georgia,serif;font-size:14px;border:1px solid #999;box-sizing:border-box;" />
+            <button id="verify-btn" style="padding:8px 16px;font-family:Georgia,serif;font-weight:700;background:#111;color:#fff;border:none;cursor:pointer;white-space:nowrap;">Check</button>
+          </div>
+          <div id="verify-result" style="margin-top:12px;font-family:Georgia,serif;font-size:14px;color:#333;white-space:pre-wrap;line-height:1.5;"></div>
+        </div>
+        <script>
+        (function() {
+          var btn = document.getElementById('verify-btn');
+          var input = document.getElementById('verify-input');
+          var result = document.getElementById('verify-result');
+          function runCheck() {
+            var query = input.value.trim();
+            if (!query) return;
+            result.textContent = 'Checking...';
+            btn.disabled = true;
+            fetch("newslette-verify.daniel04delee.workers.dev", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({query: query})
+            })
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                result.textContent = data.error ? ('Error: ' + data.error) : data.result;
+              })
+              .catch(function(e) {
+                result.textContent = 'Something went wrong: ' + e;
+              })
+              .finally(function() { btn.disabled = false; });
+          }
+          btn.addEventListener('click', runCheck);
+          input.addEventListener('keydown', function(e) { if (e.key === 'Enter') runCheck(); });
+        })();
+        </script>
+        
+  
+        <div style="background:#111;color:#fff;padding:14px 18px;margin-bottom:22px;">
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Today's Bulletin</div>
+          <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.4;padding-left:18px;margin:0;"><li style='margin-bottom:6px;'>IRAN HARDLINERS CALL FOR NUCLEAR WEAPONS — Major escalation looming as regime signals shift toward weapons development, raising regional proliferation fears</li><li style='margin-bottom:6px;'>Trump suspends Russia sanctions to 'keep peace talks going' — Significant US policy shift could reshape leverage in ongoing negotiations</li><li style='margin-bottom:6px;'>Ukraine strikes deep into Russia, setting Saint Petersburg refinery ablaze — Escalation marks significant expansion of targets inside Russian territory</li><li style='margin-bottom:6px;'>3,000 homes a day see price cuts as housing market cools sharply — Widespread reductions signal mounting pressure on sellers nationwide</li><li style='margin-bottom:6px;'>French riots explode: half a million on streets after student fury over cost of living — Macron rejects minister's resignation as markets react negatively</li></ul>
+        </div>
+        
+  
+    <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;background:#faf8f4;">
+      <div style="font-family:Georgia,serif;font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">⚽ Fixtures &amp; Results</div>
+      
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No Liverpool, Real Betis, or Cork City fixtures today.</p>
+    
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-top:14px;margin-bottom:6px;">Yesterday's Results</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No results from yesterday.</p>
+    
+    </div>
+    
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">💷 Next Match Odds (informational only)</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Liverpool v Brighton and Hove Albion: Brighton and Hove Albion 3.2, Liverpool 2.1, Draw 3.7 (via Unibet (UK))</li></ul>
+        </div>
+        
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">📅 On The Calendar</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Federal Reserve (FOMC) rate decision — Wed 28 Oct (in 9 days)</li><li style='margin-bottom:6px;'>ECB Governing Council rate decision — Thu 29 Oct (in 10 days)</li></ul>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🔴 Top Stories</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Iranian hardliners say the time for nuclear weapons has come</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - UK</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Following the killing of Iran's supreme leader Ali Khamenei, who had prohibited the development of atomic bombs, Iranian hardliners are now calling for the country to weaponize its nuclear enrichment program. This represents a significant policy shift in Iran's nuclear stance. This could mark a major escalation in regional nuclear proliferation and international security concerns if Iran moves forward with developing nuclear weapons. Watch whether Iran's new leadership will formally authorize weaponization of the nuclear program and how international powers respond.</div>
+          <a href="https://www.ft.com/content/1f23e859-5e70-4d99-8f9b-56de3d0ae43e?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Trump says suspension of Russia sanctions is to keep peace negotiations going</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">US President Trump blocked numerous sanctions on Russia just two days before they were scheduled to take effect. He stated the suspension was intended to keep peace negotiations ongoing. This decision signals a significant shift in US policy toward Russia and could affect the leverage and dynamics of ongoing peace talks. Watch whether peace negotiations produce concrete results and how long the sanctions suspension remains in place.</div>
+          <a href="https://www.bbc.co.uk/news/articles/c9p8gz7zx4peo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🇮🇪 Ireland</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Government and unions head to Workplace relations Commission for public sector pay talks</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The Irish government and unions are heading to the Workplace Relations Commission for public sector pay negotiations. A second day of planned strike action scheduled for Wednesday has been suspended. The suspension of strike action suggests progress in negotiations that could avert significant disruption to public services. Watch the outcome of the Workplace Relations Commission talks and whether a pay agreement can be reached.</div>
+          <a href="https://www.thejournal.ie/public-sector-pay-talks-wrc-7197759-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Justice minister says today's escalation in criminal legal aid dispute 'unnecessary'</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Ireland's Justice Minister O'Callaghan has called today's escalation in the criminal legal aid dispute 'unnecessary' and has refused the latest request to meet with the Law Society president. The dispute over criminal legal aid continues to intensify. This escalation could disrupt the criminal justice system if legal aid providers withdraw services or take action. Watch whether the minister will eventually agree to meet with the Law Society and if the dispute can be resolved without further disruption.</div>
+          <a href="https://www.thejournal.ie/criminal-legal-aid-dispute-2-7197961-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Funeral of Waterford family killed in arson attack told 'act of total evil' left community devastated</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The funeral was held for a Waterford family—Philip and Kim English and their sons Callum and Jayden—who were killed in an arson attack. Fr Gerry Chestnutt described it as an 'act of total evil' that devastated the community. This tragic event highlights the devastating impact of violent crime on families and communities. Watch for developments in the criminal investigation and any arrests related to the arson attack.</div>
+          <a href="https://www.thejournal.ie/funeral-waterford-english-family-arson-attack-7197725-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Doctor behind controversial online ADHD clinic agrees not to practise medicine amid complaints</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The doctor behind the controversial Cloud Clinic online ADHD service has agreed not to practice medicine amid complaints. The Medical Council has ordered the clinic to promptly release patient records after patients struggled to access their records and prescriptions. This addresses patient safety concerns and access to medical records at a controversial online clinic that had been operating without proper oversight. Watch whether patients successfully receive their records and prescriptions, and if further regulatory action is taken against the clinic.</div>
+          <a href="https://www.thejournal.ie/dr-joe-mcandrew-7166816-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">💷 Business & Markets</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Grocery price inflation hits 4.69% in October</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Food prices across major supermarkets rose by 4.69% annually in the 12 weeks ending October 4. This represents the latest grocery price inflation figures for the sector. Rising food prices directly impact household budgets and cost of living pressures for consumers. Watch whether grocery inflation continues to rise or begins to stabilize in the coming months.</div>
+          <a href="https://www.rte.ie/news/business/2026/1019/1595958-worldpanel-by-numerator-supermarket-figures/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">China's growth accelerates as AI boom helps boost exports</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Business</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">China's economic growth has accelerated, helped by an AI boom that has boosted exports. However, exports are offsetting weak domestic spending, and the outlook is clouded by trade tensions and doubts about AI. China's growth trajectory affects global economic stability, and reliance on exports rather than domestic demand signals underlying economic weakness. Watch whether China can stimulate domestic consumption and how escalating trade tensions impact export-driven growth.</div>
+          <a href="https://www.bbc.co.uk/news/articles/cm5yn098xz8lo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Home sellers cut asking prices on 3,000 properties a day</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Business</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Property sellers are cutting asking prices on 3,000 properties daily, according to BBC data. This represents the highest level of price reductions in 15 years. Widespread price cuts indicate a significant cooling in the housing market and potential difficulties for sellers. Watch whether price cuts lead to increased transaction volumes or signal further market decline.</div>
+          <a href="https://www.bbc.co.uk/news/articles/c84g13z6xx4eo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏛️ Politics</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">PM says youth unemployment is a 'catastrophe and a moral failure'</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Politics</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The UK Prime Minister has called youth unemployment a 'catastrophe and a moral failure,' noting that one million young people are not in work or training. The PM warned this poses an 'economic catastrophe' for the country. High youth unemployment has long-term economic and social consequences, affecting productivity, tax revenues, and social cohesion. Watch for policy announcements aimed at addressing youth unemployment and training programs.</div>
+          <a href="https://www.bbc.co.uk/news/articles/cq0melgpre23o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🤖 Technology</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Anthropic commits 5% of shares to ‘public benefit’ fund</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">AI start-up Anthropic has committed 5% of its shares to a 'public benefit' fund. The move comes amid growing public backlash over AI safety and economic concerns. This represents an attempt to address public concerns about AI development and ensure some benefits are directed toward public good. Watch how the public benefit fund is structured and whether other AI companies follow suit with similar commitments.</div>
+          <a href="https://www.ft.com/content/3beab58d-4269-4722-b299-8fa5a93f5a52?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🌍 World</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Q&A: How student fury in France turned into riots, looting and half a million on the streets</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Student protests in France over school conditions and living costs have escalated into riots and looting, with around half a million people taking to the streets. Approximately 2,400 arrests were reported by Sunday night. The scale of unrest indicates deep dissatisfaction with educational conditions and cost of living among French youth, posing challenges to social order. Watch whether the French government offers concessions on student demands and if authorities can contain further violence.</div>
+          <a href="https://www.thejournal.ie/france-protests-schools-macron-explainer-7197893-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Zelensky says no early warning of latest Russian strikes</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Ukrainian President Volodymyr Zelensky stated that Ukraine did not receive early warning from international partners about incoming Russian ballistic strikes overnight. This represents a gap in intelligence sharing or warning systems. The lack of early warning could compromise Ukraine's ability to protect civilians and critical infrastructure from missile attacks. Watch whether Ukraine's partners improve early warning systems and coordination on incoming threats.</div>
+          <a href="https://www.rte.ie/news/ukraine/2026/1019/1595909-ukraine-russia/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Ukraine sets Saint Petersburg refinery ablaze in attack</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Ukraine conducted a large-scale drone attack on Saint Petersburg, setting ablaze an oil refinery and depot. Moscow confirmed the fires at these energy facilities. This represents a significant escalation in Ukraine's targeting of Russian energy infrastructure deep inside Russian territory. Watch for Russia's response to the attack and whether Ukraine continues to strike targets far from the front lines.</div>
+          <a href="https://www.rte.ie/news/ukraine/2026/1018/1595862-ukraine-russia-conflict/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Macron rejects interior minister’s resignation after French riots</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">French President Macron rejected his interior minister's resignation following French riots, even as authorities admitted police botched oversight of protests. Political recriminations are flying and bonds are falling. The rejection signals political instability and lack of accountability despite acknowledged failures in handling the protests, while financial markets are reacting negatively. Watch whether Macron's government can stabilize the situation and restore confidence, or if political pressure forces changes in leadership.</div>
+          <a href="https://www.ft.com/content/cc7e577a-db7a-4e12-9a42-443696b98ec5?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">👀 Worth Knowing</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/garda-car-chase-north-dublin-burglaries-7197702-Oct2026/' style='color:#333;text-decoration:none;'>Three arrested after M50 chase as gardaí target gang involved in north Dublin crime spree</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/romania-men-deported-convictions-bucharest-7197710-Oct2026/' style='color:#333;text-decoration:none;'>24 Romanian men with previous convictions deported on charter flight</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/vacant-property-refurbishment-grant-figures-7197117-Oct2026/' style='color:#333;text-decoration:none;'>Over 7,000 homes restored across Ireland this year with Donegal leading the way</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/emergency-booklet-72-hour-supplies-advice-ditched-7195386-Oct2026/' style='color:#333;text-decoration:none;'>Be Emergency Ready booklet dropped 72-hour advice after concerns it would make people anxious</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/eu-budget-cuts-ireland-7197336-Oct2026/' style='color:#333;text-decoration:none;'>Action Aid Ireland urges reversal of EU budget cuts with 'vulnerable communities' at risk</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/escooter-sean-canney-christmas-gift-7197157-Oct2026/' style='color:#333;text-decoration:none;'>'It's not a toy': minister urges parents not to buy e-scooters for children this Christmas</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li></ul>
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏆 Sport</div>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:10px;">Premier League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Shades of Barca and Beckham - Brighton aim to maintain superb start</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">With 23 goals in seven Premier League matches, including some stunning strikes, Brighton continue to delight their fans and get them dreaming of what might be.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/cmwyd05wj00do?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">'Maybe we became arrogant' - Sunderland struggles continue</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Sunderland defender Nordi Mukiele suggested the Black Cats may have become "arrogant" as last season's surprise package stutter in the Premier League this term.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c6073pmddk0ko?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Arsenal substitutes change game - Arteta</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Arsenal manager Mikel Arteta says their substitutes changed the game as they beat Nottingham Forest 1-0 in the Premier League.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/cqwyrkyyglzjo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Champions League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Haaland a doubt, Semenyo out - what are Man City's options?</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Manchester City coach Enzo Maresca explores his attacking options for Tuesday's Champions League game against AEK Athens.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c5djv21rkekwo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Other Sports</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.skysports.com/football/news/12040/13600890/sarina-wiegman-england-women-boss-signs-new-two-year-contract-extension-through-to-end-of-euro-2029' style='color:#333;text-decoration:none;'>England Women boss Wiegman signs new deal through to Euro 2029</a> <span style='color:#999;font-size:12px;'>(Sky Sports - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/tennis/articles/c68xz5lvnz0ro?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Inside British number one Kartal's remarkable comeback</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/rugby-union/articles/cwnv074l4nvyo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Wales great Evans to leave role as Lions chair</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.skysports.com/tennis/news/12040/13600883/elina-svitolina-announces-difficult-separation-from-husband-gael-monfils-after-five-years-of-marriage' style='color:#333;text-decoration:none;'>Svitolina announces 'difficult' separation from husband Monfils</a> <span style='color:#999;font-size:12px;'>(Sky Sports - News)</span></li></ul>
+
+  
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Your Teams &amp; Players</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Ramos could make La Liga return - Monday's gossip</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Sergio Ramos could make a surprise return to football in Madrid, Bournemouth put a high price on Alex Scott, and Florian Wirtz is staying at Liverpool.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/ckjrw11dv5xjo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
+    Generated automatically. Headlines and teasers only - click through for full articles.
+  </div>
+</div>
+</body></html>

@@ -1,9 +1,5 @@
 [
   {
-    "date": "2026-10-10",
-    "stories": []
-  },
-  {
     "date": "2026-10-11",
     "stories": [
       {
@@ -90,5 +86,20 @@
   {
     "date": "2026-10-18",
     "stories": []
+  },
+  {
+    "date": "2026-10-19",
+    "stories": [
+      {
+        "title": "Iranian hardliners say the time for nuclear weapons has come",
+        "category": "World",
+        "why_it_matters": "This could mark a major escalation in regional nuclear proliferation and international security concerns if Iran moves forward with developing nuclear weapons."
+      },
+      {
+        "title": "Trump says suspension of Russia sanctions is to keep peace negotiations going",
+        "category": "World",
+        "why_it_matters": "This decision signals a significant shift in US policy toward Russia and could affect the leverage and dynamics of ongoing peace talks."
+      }
+    ]
   }
 ]
