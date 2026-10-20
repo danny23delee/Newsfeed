@@ -1,15 +1,5 @@
 [
   {
-    "date": "2026-10-11",
-    "stories": [
-      {
-        "title": "12 killed in Riyadh attack with Irish man among injured",
-        "category": "World",
-        "why_it_matters": "This represents a significant escalation in attacks on civilian infrastructure in Saudi Arabia's capital city."
-      }
-    ]
-  },
-  {
     "date": "2026-10-12",
     "stories": [
       {
@@ -101,5 +91,9 @@
         "why_it_matters": "This decision signals a significant shift in US policy toward Russia and could affect the leverage and dynamics of ongoing peace talks."
       }
     ]
+  },
+  {
+    "date": "2026-10-20",
+    "stories": []
   }
 ]

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f2efe9;">
+<div style="max-width:640px;margin:0 auto;background:#fff;padding:28px 24px;">
+  <div style="text-align:center;border-bottom:4px double #111;padding-bottom:10px;margin-bottom:18px;">
+    <div style="font-family:Georgia,serif;font-size:30px;font-weight:900;letter-spacing:0.02em;">THE MORNING BRIEF</div>
+    <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Tuesday 20 October 2026</div>
+    <div style="text-align:center;font-family:Georgia,serif;font-size:13px;color:#555;margin-top:6px;">Dublin today: Moderate drizzle, 11–15°C, 44% chance of rain</div>
+  </div>
+
+  
+        <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">🔎 Verify a Claim</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#555;margin-bottom:10px;">Heard something on TikTok or elsewhere? Check it against real news sources.</div>
+          <div style="display:flex;gap:8px;">
+            <input id="verify-input" type="text" placeholder="e.g. Did the government really ban X?" style="flex:1;padding:8px;font-family:Georgia,serif;font-size:14px;border:1px solid #999;box-sizing:border-box;" />
+            <button id="verify-btn" style="padding:8px 16px;font-family:Georgia,serif;font-weight:700;background:#111;color:#fff;border:none;cursor:pointer;white-space:nowrap;">Check</button>
+          </div>
+          <div id="verify-result" style="margin-top:12px;font-family:Georgia,serif;font-size:14px;color:#333;white-space:pre-wrap;line-height:1.5;"></div>
+        </div>
+        <script>
+        (function() {
+          var btn = document.getElementById('verify-btn');
+          var input = document.getElementById('verify-input');
+          var result = document.getElementById('verify-result');
+          function runCheck() {
+            var query = input.value.trim();
+            if (!query) return;
+            result.textContent = 'Checking...';
+            btn.disabled = true;
+            fetch("newslette-verify.daniel04delee.workers.dev", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({query: query})
+            })
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                result.textContent = data.error ? ('Error: ' + data.error) : data.result;
+              })
+              .catch(function(e) {
+                result.textContent = 'Something went wrong: ' + e;
+              })
+              .finally(function() { btn.disabled = false; });
+          }
+          btn.addEventListener('click', runCheck);
+          input.addEventListener('keydown', function(e) { if (e.key === 'Enter') runCheck(); });
+        })();
+        </script>
+        
+  
+        <div style="background:#111;color:#fff;padding:14px 18px;margin-bottom:22px;">
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Today's Bulletin</div>
+          <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.4;padding-left:18px;margin:0;"><li style='margin-bottom:6px;'>Trump floats joint summit with Xi and Putin next month — potentially reshaping global nuclear diplomacy</li><li style='margin-bottom:6px;'>US bans Chinese AI firm DeepSeek from government systems as tech rivalry intensifies</li><li style='margin-bottom:6px;'>Dubai investment firm stops paying after promising 30% returns, leaving thousands of investors in lurch</li><li style='margin-bottom:6px;'>Four teenage boys charged over alleged rape of girl in south Dublin as tech's role in youth crimes draws scrutiny</li><li style='margin-bottom:6px;'>Iran war shifts global oil power to Americas in major energy realignment</li></ul>
+        </div>
+        
+  
+    <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;background:#faf8f4;">
+      <div style="font-family:Georgia,serif;font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">⚽ Fixtures &amp; Results</div>
+      
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No Liverpool, Real Betis, or Cork City fixtures today.</p>
+    
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-top:14px;margin-bottom:6px;">Yesterday's Results</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No results from yesterday.</p>
+    
+    </div>
+    
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">💷 Next Match Odds (informational only)</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Liverpool v Brighton and Hove Albion: Brighton and Hove Albion 3.1, Liverpool 2.15, Draw 3.7 (via Unibet (UK))</li></ul>
+        </div>
+        
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">📅 On The Calendar</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Federal Reserve (FOMC) rate decision — Wed 28 Oct (in 8 days)</li><li style='margin-bottom:6px;'>ECB Governing Council rate decision — Thu 29 Oct (in 9 days)</li></ul>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🔴 Top Stories</div>
+  <p style='color:#777;'>Nothing cleared the must-know bar today.</p>
+
+  
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🇮🇪 Ireland</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Four teenage boys charged over alleged rape and sexual assault of girl in south Dublin</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Four teenage boys were arrested at their homes and charged in connection with an alleged rape and sexual assault of a girl in south Dublin. The incident was allegedly recorded on video. This case highlights serious concerns about sexual violence among young people and the role of technology in documenting such crimes. Watch for court proceedings and any developments regarding the video evidence in the case.</div>
+          <a href="https://www.thejournal.ie/four-teenage-boys-charged-alleged-sexual-assault-girl-dublin-7198458-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Man arrested over gun murder of Paul ‘Bosco’ O’Connor in Co Cork</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A man was arrested in connection with the gun murder of Paul 'Bosco' O'Connor in County Cork. O'Connor's body was found on the banks of the river Blackwater. This arrest represents progress in investigating a gun-related homicide in Ireland. Watch for charging decisions and further details about the circumstances of the murder.</div>
+          <a href="https://www.thejournal.ie/cork-mallow-murder-7199096-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">‘Beneath the dignity of his office’: Solicitor rejects O’Callaghan’s suggestion rape cases were targeted</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Solicitor Eoghan O'Sullivan rejected the Taoiseach O'Callaghan's suggestion that striking solicitors deliberately targeted rape cases. The Taoiseach backed the minister's position. This dispute raises questions about the impact of solicitor strikes on sensitive criminal proceedings and access to justice in sexual assault cases. Watch for the resolution of the solicitor strike and any impact on the processing of rape cases.</div>
+          <a href="https://www.thejournal.ie/solicitor-jim-ocallaghan-strike-courts-backlash-7198843-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Scammers are booking a Dublin short-term let and advertising the rooms on Daft.ie</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Scammers are booking a Dublin short-term rental property on Booking.com and then fraudulently advertising individual rooms on Daft.ie to trick renters. Unsuspecting would-be renters are being targeted by this scheme. This scam exploits Dublin's housing crisis and tight rental market to defraud desperate renters. Watch for response measures from Booking.com and Daft.ie to prevent such fraudulent listings.</div>
+          <a href="https://www.thejournal.ie/dublin-rental-scam-crumlin-7169876-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">💷 Business & Markets</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">AI debt worries spark surge in default insurance trading</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Trading volumes of credit default swaps linked to major tech companies have surged as investors seek protection against potential collapse of the AI boom. This reflects growing worries about AI-related debt. Rising demand for default insurance suggests investors are increasingly concerned about the sustainability of AI investments and potential financial risks. Watch for signs of stress in tech company balance sheets or changes in AI investment sentiment.</div>
+          <a href="https://www.ft.com/content/6dd31584-064c-4015-bf5d-e5747799ccd5?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Iran war tilts balance of global oil power towards Americas</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Countries from Canada to Argentina have experienced increased oil investment and production as buyers seek to replace supplies lost due to disruptions at the Strait of Hormuz. The Iran war has shifted global oil power dynamics toward the Americas. This shift represents a major realignment of global energy supply chains away from Middle Eastern oil toward Western Hemisphere sources. Watch for continued developments in the Iran conflict and their impact on Hormuz shipping routes and global oil markets.</div>
+          <a href="https://www.ft.com/content/cfa976d5-e320-4ee8-8c86-84733471a4a1?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Britain’s £100,000 tax trap</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Many of Britain's most skilled workers are reducing their work hours or withdrawing from the economy due to crushing marginal tax rates affecting those earning around £100,000. This creates a tax trap discouraging productive labor. High marginal tax rates at this income level are causing skilled workers to withhold labor, potentially harming economic productivity and growth. Watch for potential government policy changes to address the marginal tax rate issue in upcoming budgets.</div>
+          <a href="https://www.ft.com/content/248b7408-b4cd-46aa-a829-a54c618e31fe?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">The Dubai firm that promised 30% returns — then stopped paying</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A Dubai firm based in the Burj Khalifa promised prospective clients double-digit returns of 30% but has now stopped making payments. Thousands of clients are facing losses. This appears to be a significant investment fraud case affecting thousands of investors who were lured by unrealistic return promises. Watch for regulatory action by Dubai authorities and potential legal proceedings against the firm.</div>
+          <a href="https://www.ft.com/content/83be85af-1cc5-4661-954e-f671e8f3aa3b?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏛️ Politics</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Parade ban reflected reality of situation, court told</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The High Court in Belfast heard that the decision to ban an Orange Order parade along the Garvaghy Road reflected the reality of the situation and changed policing circumstances. This justification was presented in court proceedings. This case addresses the sensitive issue of parade routes in Northern Ireland and the balance between civil liberties and public order. Watch for the court's ruling on the legality of the parade ban.</div>
+          <a href="https://www.rte.ie/news/2026/1020/1596112-drumcree-court/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">PSNI to question SF leaders over Garvaghy Road protest</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Sinn Féin leader Mary Lou McDonald and Northern Ireland First Minister Michelle O'Neill will be questioned by PSNI about their attendance at a counter-demonstration to the Drumcree Orange Order march. The police are investigating their participation in the Garvaghy Road protest. This police action involves two of the most senior Sinn Féin politicians and raises questions about protest participation and potential legal issues. Watch for the outcome of the police interviews and any potential charges or political fallout.</div>
+          <a href="https://www.rte.ie/news/2026/1019/1596029-sinn-fein-psni/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">UK Treasury expected to reignite ‘Project Fear’ row with EU study</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - UK</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The UK Treasury is expected to release a study on EU relations that may reignite 'Project Fear' debates. Andy Burnham is preparing to present options for Britain's longer-term relationship with the EU bloc. This study could revive contentious debates about Brexit and UK-EU economic ties, influencing future policy direction. Watch for the release of the Treasury study and political reactions to Burnham's proposed options.</div>
+          <a href="https://www.ft.com/content/4f466ef0-04ea-4bbb-89f7-927f2a4b2f54?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Chancellor rejects calls to raise Capital Gains Tax in Budget</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Business</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The Chancellor rejected calls from influential Labour figures to raise Capital Gains Tax to match income tax rates in the Budget. Critics argued such increases could drive wealthy people out of Britain. This decision affects tax policy and reflects concerns about capital flight and maintaining competitiveness for wealthy individuals. Watch for the final Budget announcement and whether any Capital Gains Tax changes are ultimately included.</div>
+          <a href="https://www.bbc.co.uk/news/articles/c50me4w4x1vyo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🤖 Technology</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">US bans China's DeepSeek from government in race for AI dominance</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Business</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The US has banned China's DeepSeek technology from most government agencies as the race for AI dominance intensifies. This removal represents a significant escalation in US-China technology competition. This ban reflects growing US concerns about Chinese AI capabilities and national security implications of using Chinese technology in government. Watch for China's response and whether other countries follow the US lead in restricting DeepSeek.</div>
+          <a href="https://www.bbc.co.uk/news/articles/cjkgeq0k1wevo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Revolut confirms multiple services, including payments for Irish users, are currently down</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Revolut experienced service outages affecting multiple functions including payments for Irish users. The digital bank apologized and stated engineers were working to restore services. This disruption affects users' ability to access their money and conduct transactions through a major digital banking platform. Watch for service restoration updates and Revolut's explanation of the cause of the outage.</div>
+          <a href="https://www.thejournal.ie/revolut-outage-customers-card-payments-app-7198815-Oct2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Japanese spacecraft en route to moon of Mars</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A Japanese spacecraft has launched on a world-first mission to retrieve samples from one of Mars's moons. The mission could help unlock understanding of the Solar System's origins and life on Earth. This pioneering mission could provide unprecedented scientific insights into planetary formation and the origins of life. Watch for the spacecraft's arrival at the Martian moon and the eventual return of samples to Earth.</div>
+          <a href="https://www.rte.ie/news/world/2026/1020/1596048-japan-mars-moon/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">South Korean data centre builder tumbles 32% on trading debut</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">South Korean data centre builder Elice's shares tumbled 32% on its trading debut in Seoul. This decline adds to growing concerns about AI valuations in the market. This poor market performance signals rising investor skepticism about AI-related investments and potential overvaluation in the sector. Watch for whether this trend spreads to other AI-related IPOs and tech stocks globally.</div>
+          <a href="https://www.ft.com/content/cddafc0a-1ae6-467b-84b8-34c172002b6a?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🌍 World</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">France to impose new curfews where necessary, says PM</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">French Prime Minister Sebastien Lecornu announced France will impose new curfews where necessary, stating that measures introduced in several cities the previous day helped keep the night calm. Curfews will be applied in areas where needed. This indicates ongoing civil unrest in France requiring government intervention to maintain public order. Watch for which additional areas receive curfews and whether the measures successfully contain the unrest.</div>
+          <a href="https://www.rte.ie/news/world/2026/1020/1596065-france-protests/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Trump open to joint meeting with Xi, Putin next month</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">US President Donald Trump said he is open to holding three-way arms control talks with the leaders of China and Russia as soon as next month. This would involve joint meetings with Xi and Putin. This represents a potentially significant shift in global arms control diplomacy involving the three major nuclear powers. Watch for confirmation from China and Russia about their willingness to participate in such talks.</div>
+          <a href="https://www.rte.ie/news/world/2026/1020/1596050-us-russia-china/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Trump envoys to hold fresh Ukraine talks in Norway</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Trump envoys Steve Witkoff and Jared Kushner will hold fresh Ukraine talks in Norway on Tuesday, meeting with Volodymyr Zelenskyy and other European leaders. These discussions represent continued diplomatic efforts regarding the Ukraine conflict. This meeting could signal new US approaches to ending the Ukraine war and reshaping European security arrangements. Watch for any announcements or agreements emerging from the Norway talks.</div>
+          <a href="https://www.ft.com/content/581d8a59-b128-4f68-9f34-6c066b36ca5b?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Alberta separatists lose vote on leaving Canada</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Alberta residents voted to remain part of Canada in the province's first-ever referendum on separation. The separatist movement lost the vote. This result preserves Canadian unity and rejects Alberta separatism despite regional grievances. Watch for how this result affects Alberta's relationship with the federal government and future separatist sentiment.</div>
+          <a href="https://www.rte.ie/news/world/2026/1020/1596059-alberta-canada-referendum/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">👀 Worth Knowing</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/storm-austen-rain-7198982-Oct2026/' style='color:#333;text-decoration:none;'>Storm Austen: Rain warning for Ireland on Thursday for first named storm of the season</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/athgarvan-wicklow-collision-7198609-Oct2026/' style='color:#333;text-decoration:none;'>Man (60s) dies following collision between truck and car in Wicklow</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/rsa-pub-breathalysers-7198206-Oct2026/' style='color:#333;text-decoration:none;'>'Disgraceful': RSA defends decision to spend €1.5m on breathalysers in hotels and pubs</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/munster/2026/1020/1596071-limerick-mayor/' style='color:#333;text-decoration:none;'>Online abusers feel 'emboldened,' says Limerick mayor</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/business/2026/1020/1596099-black-box-cover-sees-big-cut-in-car-insurance-costs/' style='color:#333;text-decoration:none;'>'Black box' cover sees big cut in car insurance costs</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/business/2026/1020/1596018-motor-insurance-costs/' style='color:#333;text-decoration:none;'>Car insurance premiums up 4% last year, says Central Bank</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li></ul>
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏆 Sport</div>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:10px;">Premier League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Brentford contact police after rugby ball kicked into stadium during game</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Brentford say they are working with the police following a "dangerous" incident in which a rugby ball was kicked from a height towards the pitch during their Premier League game with Liverpool.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/cm4g17d11zvwo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Guehi among players not to take knee - is it time to 'move campaign along'?</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Six players, including Guehi, chose not to take the knee when Premier League clubs performed the gesture for the first time this season.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/cxyvrndz49v7o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Spurs beat Coventry to claim first win as Kulusevski makes long-awaited return</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Tottenham claimed their first Premier League win of the season by beating Coventry 3-1 as Dejan Kulusevski made his long-awaited return after 526 days out injured.</div>
+          <a href="https://www.skysports.com/football/tottenham-hotspur-vs-coventry-city/report/559513" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Champions League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">PSG v Barcelona - Europe's most exciting match-up?</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Paris St-Germain and Barcelona, the current top two in this season's Champions League, meet on Tuesday.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c820vw7velvro?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">How to follow the Champions League on the BBC</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">The Champions League returns this week and you will be able to listen to commentary and watch highlights of the best of the action on the BBC.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c5yw79e4zgdo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Five Man Utd players miss training ahead of Como Champions League trip</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Five Manchester United players were absent from training before the team's Champions League match against Como.</div>
+          <a href="https://www.skysports.com/football/como-vs-manchester-united/live/577645" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Other Sports</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/rugby-union/articles/cjn5vqq974epo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Uncapped Dragons get Wales Nations Championship call</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/basketball/articles/cqe9lr3zr4k1o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Reese stars as Dream win first WNBA Finals match</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/boxing/articles/cm5ynv7ze0dxo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Stevenson 'granted' Zuffa release without fighting</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/rugby-union/articles/cw1l38g6lz88o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>How have Canada closed gap to world champions England?</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li></ul>
+
+  
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Your Teams &amp; Players</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Liverpool and Man Utd eye Nmecha - Tuesday's gossip</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Liverpool and Manchester United are interested in Borussia Dortmund midfielder Felix Nmecha, plus the rest of Tuesday's gossip.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/crjwe6wyjeqwo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Araujo the stopgap solution fixing Liverpool's problems</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Ronald Araujo has made a positive impression at Liverpool since joining from Barcelona, potentially offering a longer-term solution to the team's issues.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/ck8dz7pp4089o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Brentford contact police after rugby ball kicked into stadium during game</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Brentford say they are working with the police following a "dangerous" incident in which a rugby ball was kicked from a height towards the pitch during their Premier League game with Liverpool.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/cm4g17d11zvwo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
+    Generated automatically. Headlines and teasers only - click through for full articles.
+  </div>
+</div>
+</body></html>
