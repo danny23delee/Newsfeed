@@ -1,0 +1,324 @@
+# Phone dashboard - rebuilt from the tablet "Living Room" dash.
+# Core cards only (no mushroom / card_mod / browser_mod).
+# Paste via: Dashboard > ⋮ > Raw configuration editor.
+title: Home
+views:
+  # ───────────────────────── MAIN ─────────────────────────
+  - title: Home
+    path: home
+    type: sections
+    max_columns: 1
+    sections:
+      # Header
+      - type: grid
+        cards:
+          - type: markdown
+            content: >-
+              # {{ now().strftime('%H:%M') }}
+
+              {% set h = now().hour %}{% if h < 12 %}Good morning{% elif h < 18 %}Good afternoon{% else %}Good evening{% endif %}, {{ now().strftime('%A %-d %B') }}
+
+              {% set d = states('sensor.bin_next_collection_date') %}{% if d not in ['unavailable','unknown','none'] %}{% set days = ((as_timestamp(d) - as_timestamp(now())) / 86400) | round(0, 'floor') | int %}🗑️ {{ states('sensor.bin_next_collection_colour') }} bin {% if days <= 0 %}today{% elif days == 1 %}tomorrow{% else %}in {{ days }} days{% endif %}{% endif %}
+          - type: heading
+            heading: ' '
+            heading_style: subtitle
+            badges:
+              - type: entity
+                entity: weather.forecast_home
+                show_state: true
+              - type: entity
+                entity: person.conor
+                show_state: true
+                show_icon: true
+              - type: entity
+                entity: person.daniel
+                show_state: true
+                show_icon: true
+              - type: entity
+                entity: sensor.alpstuga_air_quality_monitor_temperature
+                show_state: true
+              - type: entity
+                entity: binary_sensor.door_sensor
+                show_state: true
+                color: red
+
+      # Lights + scenes
+      - type: grid
+        cards:
+          - type: heading
+            heading: Lights
+            icon: mdi:ceiling-light
+          - type: tile
+            entity: light.living_room_front
+            name: Front
+            icon: mdi:ceiling-light
+            features: [{type: light-brightness}]
+            features_position: inline
+            vertical: false
+          - type: tile
+            entity: light.living_room_back
+            name: Back
+            icon: mdi:ceiling-light
+            features: [{type: light-brightness}]
+            features_position: inline
+            vertical: false
+          - type: tile
+            entity: light.living_room_corner
+            name: Corner
+            icon: mdi:floor-lamp
+            features: [{type: light-brightness}]
+            features_position: inline
+            vertical: false
+          - type: heading
+            heading: Scenes
+            icon: mdi:palette
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: tile
+                name: Bright
+                icon: mdi:white-balance-sunny
+                icon_tap_action: {action: none}
+                tap_action: {action: perform-action, perform_action: script.bright_mode}
+              - type: tile
+                name: Evening
+                icon: mdi:weather-sunset
+                tap_action: {action: perform-action, perform_action: script.evening_mode}
+              - type: tile
+                name: Movie
+                icon: mdi:movie
+                tap_action: {action: perform-action, perform_action: script.movie_mode}
+              - type: tile
+                name: All off
+                icon: mdi:power
+                tap_action: {action: perform-action, perform_action: script.living_room_off}
+
+      # Heating
+      - type: grid
+        cards:
+          - type: heading
+            heading: Heating
+            icon: mdi:radiator
+          - type: thermostat
+            entity: climate.halo_zone_1
+            name: Halo
+            features:
+              - type: climate-hvac-modes
+                hvac_modes: [auto, heat, 'off']
+          - type: tile
+            name: Boost 1h to 20°
+            icon: mdi:fire
+            color: orange
+            tap_action:
+              action: perform-action
+              perform_action: ideal_halo.boost
+              target: {entity_id: climate.halo_zone_1}
+              data: {temperature: 20, duration: 60}
+          - type: grid
+            columns: 4
+            square: false
+            cards:
+              - type: tile
+                entity: sensor.alpstuga_air_quality_monitor_temperature
+                name: Temp
+                vertical: true
+              - type: tile
+                entity: sensor.alpstuga_air_quality_monitor_humidity
+                name: Humidity
+                vertical: true
+              - type: tile
+                entity: sensor.alpstuga_air_quality_monitor_carbon_dioxide
+                name: CO₂
+                vertical: true
+              - type: tile
+                entity: sensor.alpstuga_air_quality_monitor_pm2_5
+                name: PM2.5
+                vertical: true
+
+      # TV
+      - type: grid
+        cards:
+          - type: heading
+            heading: TV
+            icon: mdi:television
+          - type: media-control
+            entity: media_player.samsung_tv
+          - type: tile
+            entity: media_player.samsung_tv
+            name: Volume
+            icon: mdi:volume-high
+            hide_state: true
+            features: [{type: media-player-volume-slider}]
+            features_position: inline
+          - type: grid
+            columns: 4
+            square: false
+            cards:
+              - type: tile
+                entity: media_player.samsung_tv
+                name: Power
+                icon: mdi:power
+                vertical: true
+                tap_action: {action: perform-action, perform_action: media_player.toggle, target: {entity_id: media_player.samsung_tv}}
+              - type: tile
+                name: TV
+                icon: mdi:television-classic
+                vertical: true
+                tap_action: {action: perform-action, perform_action: script.tv_input, data: {source: TV}}
+              - type: tile
+                name: Fire Stick
+                icon: mdi:play-box
+                vertical: true
+                tap_action: {action: perform-action, perform_action: script.tv_input, data: {source: Fire Stick}}
+              - type: tile
+                name: PS5
+                icon: mdi:gamepad-variant
+                vertical: true
+                tap_action: {action: perform-action, perform_action: script.tv_input, data: {source: PS5}}
+          - type: grid
+            columns: 3
+            square: false
+            cards:
+              - type: tile
+                name: Netflix
+                icon: mdi:netflix
+                color: red
+                vertical: true
+                tap_action: &netflix {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: monkey -p com.netflix.ninja 1}}
+              - type: tile
+                name: Disney+
+                icon: mdi:star-four-points
+                color: blue
+                vertical: true
+                tap_action: {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: monkey -p com.disney.disneyplus 1}}
+              - type: tile
+                name: YouTube
+                icon: mdi:youtube
+                color: red
+                vertical: true
+                tap_action: {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: monkey -p com.amazon.firetv.youtube 1}}
+              - type: tile
+                name: RTÉ Player
+                icon: mdi:television-play
+                color: teal
+                vertical: true
+                tap_action: {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: monkey -p com.twentyfouri.tvbridge.rte 1}}
+              - type: tile
+                name: Spotify
+                icon: mdi:spotify
+                color: green
+                vertical: true
+                tap_action: {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: monkey -p com.spotify.tv.android 1}}
+              - type: tile
+                name: Moonlight
+                icon: mdi:monitor-shimmer
+                color: purple
+                vertical: true
+                tap_action: {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: monkey -p com.limelight 1}}
+          - type: tile
+            name: Fire Stick remote
+            icon: mdi:remote
+            tap_action: {action: navigate, navigation_path: /dashboard-phone/remote}
+
+      # Home info
+      - type: grid
+        cards:
+          - type: heading
+            heading: Home
+            icon: mdi:home
+          - type: weather-forecast
+            entity: weather.forecast_home
+            forecast_type: daily
+            show_current: false
+          - type: markdown
+            title: Fridge
+            content: >
+              {% set items = state_attr('sensor.fridge_expiring_soon', 'expiring_soon') %}{% if items %}
+              **{{ items | length }} expiring soon**
+
+              {% set t = items | selectattr('days_remaining','equalto',0) | list %}{% set m = items | selectattr('days_remaining','equalto',1) | list %}{% set s = items | selectattr('days_remaining','in',[2,3]) | list %}{% if t %}🔴 **Today:** {{ t | map(attribute='item_name') | map('capitalize') | join(', ') }}
+
+              {% endif %}{% if m %}🟠 **Tomorrow:** {{ m | map(attribute='item_name') | map('capitalize') | join(', ') }}
+
+              {% endif %}{% if s %}🟡 **2 to 3 days:** {{ s | map(attribute='item_name') | map('capitalize') | join(', ') }}{% endif %}
+              {% else %}✅ Nothing expiring in the next 3 days.{% endif %}
+          - type: tile
+            name: Full fridge
+            icon: mdi:fridge
+            tap_action: {action: navigate, navigation_path: /dashboard-phone/fridge}
+          - type: todo-list
+            entity: todo.shopping_list
+            title: Shopping list
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: tile
+                entity: switch.water_pump
+                name: Water pump
+                icon: mdi:water-pump
+                color: blue
+                tap_action: {action: toggle}
+              - type: tile
+                name: Automations
+                icon: mdi:robot
+                tap_action: {action: navigate, navigation_path: /dashboard-phone/automations}
+
+  # ───────────────────── SUBVIEWS ─────────────────────
+  - title: Fire Stick remote
+    path: remote
+    subview: true
+    type: sections
+    max_columns: 1
+    sections:
+      - type: grid
+        cards:
+          - type: grid
+            columns: 3
+            square: true
+            cards:
+              - {type: button, icon: mdi:arrow-left, show_name: false, tap_action: {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: BACK}}}
+              - {type: button, icon: mdi:chevron-up, show_name: false, tap_action: {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: UP}}}
+              - {type: button, icon: mdi:home, show_name: false, tap_action: {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: HOME}}}
+              - {type: button, icon: mdi:chevron-left, show_name: false, tap_action: {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: LEFT}}}
+              - {type: button, icon: mdi:circle-medium, show_name: false, tap_action: {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: CENTER}}}
+              - {type: button, icon: mdi:chevron-right, show_name: false, tap_action: {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: RIGHT}}}
+              - {type: button, icon: mdi:menu, show_name: false, tap_action: {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: MENU}}}
+              - {type: button, icon: mdi:chevron-down, show_name: false, tap_action: {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: DOWN}}}
+              - {type: button, icon: mdi:play-pause, show_name: false, tap_action: {action: perform-action, perform_action: androidtv.adb_command, target: {entity_id: media_player.living_room_fire_tv}, data: {command: input keyevent KEYCODE_MEDIA_PLAY_PAUSE}}}
+
+  - title: Fridge
+    path: fridge
+    subview: true
+    type: sections
+    max_columns: 1
+    sections:
+      - type: grid
+        cards:
+          - type: markdown
+            content: >
+              {% set items = state_attr('sensor.fridge_all_items','fridge_items') %}{% if items %}{% set today = now().date() %}{% for who in ['conor','daniel'] %}{% set mine = items | selectattr('added_by','equalto',who) | sort(attribute='expiry_date') | list %}{% if mine %}
+              ### 👤 {{ who | capitalize }}
+
+              | Item | Qty | Expires |
+              |:--|:-:|--:|
+              {% for i in mine %}{% set d = (strptime(i.expiry_date,'%Y-%m-%d').date() - today).days %}| {% if d <= 3 %}⚠️ **{{ i.item_name | capitalize }}**{% else %}{{ i.item_name | capitalize }}{% endif %} | {{ i.quantity or '-' }} | {{ i.expiry_date }} |
+              {% endfor %}{% endif %}{% endfor %}{% else %}Fridge is empty.{% endif %}
+
+  - title: Automations
+    path: automations
+    subview: true
+    type: sections
+    max_columns: 1
+    sections:
+      - type: grid
+        cards:
+          - type: entities
+            state_color: true
+            entities:
+              - {entity: automation.empty_room_lights_off, name: Lights off when room empties}
+              - {entity: automation.opening_door_lights, name: Lights on when door opens}
+              - {entity: automation.new_automation, name: Room control}
+              - {entity: automation.sonoff_zigbee_button, name: Bathroom control}
+              - {entity: automation.late_night_snack, name: Late night snack}
