@@ -2,5 +2,15 @@
   {
     "date": "2026-11-11",
     "stories": []
+  },
+  {
+    "date": "2026-11-11",
+    "stories": [
+      {
+        "title": "Public sector strike suspended as unions agree pay deal",
+        "category": "Ireland",
+        "why_it_matters": "Suspending the strike avoids the disruption it would have caused and shows the pay dispute is moving toward a settlement."
+      }
+    ]
   }
 ]
