@@ -36,7 +36,7 @@ import requests
 
 LOOKBACK_HOURS = 30
 DUBLIN = ZoneInfo("Europe/Dublin")
-CLAUDE_MODEL = "claude-sonnet-4-5"
+CLAUDE_MODEL = "claude-sonnet-5-5"
 
 # Path to the dedupe state file. Committed back to the repo by the GitHub
 # Actions workflow after each run - see the "Persist dedupe state" step.
@@ -672,6 +672,8 @@ def call_claude(prompt, max_tokens=2000):
         },
         timeout=90,
     )
+    if not resp.ok:
+        print(f"  [error] Anthropic API {resp.status_code}: {resp.text[:500]}")
     resp.raise_for_status()
     data = resp.json()
     return "".join(b.get("text", "") for b in data.get("content", []) if b.get("type") == "text")
