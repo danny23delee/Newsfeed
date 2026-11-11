@@ -16,7 +16,7 @@
  *   4. Add that URL as the VERIFY_WORKER_URL secret in your GitHub repo.
  */
 
-const CLAUDE_MODEL = "claude-sonnet-4-5";
+const CLAUDE_MODEL = "claude-sonnet-5-5";
 const MAX_QUERY_LENGTH = 500;
 
 function corsHeaders(env) {
