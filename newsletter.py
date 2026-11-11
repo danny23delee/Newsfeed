@@ -667,7 +667,9 @@ def call_claude(prompt, max_tokens=2000):
         },
         json={
             "model": CLAUDE_MODEL,
-            "max_tokens": max_tokens,
+            # newer models can spend part of the budget before the visible
+            # answer, so give every call generous headroom
+            "max_tokens": max(max_tokens * 4, 4000),
             "messages": [{"role": "user", "content": prompt}],
         },
         timeout=90,
@@ -676,7 +678,12 @@ def call_claude(prompt, max_tokens=2000):
         print(f"  [error] Anthropic API {resp.status_code}: {resp.text[:500]}")
     resp.raise_for_status()
     data = resp.json()
-    return "".join(b.get("text", "") for b in data.get("content", []) if b.get("type") == "text")
+    text = "".join(b.get("text", "") for b in data.get("content", []) if b.get("type") == "text")
+    if data.get("stop_reason") == "max_tokens" or not text.strip():
+        kinds = [b.get("type") for b in data.get("content", [])]
+        print(f"  [warn] Claude reply stop_reason={data.get('stop_reason')} "
+              f"blocks={kinds} text_len={len(text)}", file=sys.stderr)
+    return text
 
 
 def extract_json(raw):
