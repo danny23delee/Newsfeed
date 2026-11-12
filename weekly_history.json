@@ -16,5 +16,15 @@
   {
     "date": "2026-11-11",
     "stories": []
+  },
+  {
+    "date": "2026-11-12",
+    "stories": [
+      {
+        "title": "50 leaders in Dublin for State's largest diplomatic event",
+        "category": "Politics",
+        "why_it_matters": "It is the biggest diplomatic event the State has hosted, which puts Ireland at the centre of European political discussions."
+      }
+    ]
   }
 ]

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f2efe9;">
+<div style="max-width:640px;margin:0 auto;background:#fff;padding:28px 24px;">
+  <div style="text-align:center;border-bottom:4px double #111;padding-bottom:10px;margin-bottom:18px;">
+    <div style="font-family:Georgia,serif;font-size:30px;font-weight:900;letter-spacing:0.02em;">THE MORNING BRIEF</div>
+    <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Thursday 12 November 2026</div>
+    <div style="text-align:center;font-family:Georgia,serif;font-size:13px;color:#555;margin-top:6px;">Dublin today: Overcast, 4–9°C, 10% chance of rain</div>
+  </div>
+
+  
+        <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">🔎 Verify a Claim</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#555;margin-bottom:10px;">Heard something on TikTok or elsewhere? Check it against real news sources.</div>
+          <div style="display:flex;gap:8px;">
+            <input id="verify-input" type="text" placeholder="e.g. Did the government really ban X?" style="flex:1;padding:8px;font-family:Georgia,serif;font-size:14px;border:1px solid #999;box-sizing:border-box;" />
+            <button id="verify-btn" style="padding:8px 16px;font-family:Georgia,serif;font-weight:700;background:#111;color:#fff;border:none;cursor:pointer;white-space:nowrap;">Check</button>
+          </div>
+          <div id="verify-result" style="margin-top:12px;font-family:Georgia,serif;font-size:14px;color:#333;white-space:pre-wrap;line-height:1.5;"></div>
+        </div>
+        <script>
+        (function() {
+          var btn = document.getElementById('verify-btn');
+          var input = document.getElementById('verify-input');
+          var result = document.getElementById('verify-result');
+          function runCheck() {
+            var query = input.value.trim();
+            if (!query) return;
+            result.textContent = 'Checking...';
+            btn.disabled = true;
+            fetch("newslette-verify.daniel04delee.workers.dev", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({query: query})
+            })
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                result.textContent = data.error ? ('Error: ' + data.error) : data.result;
+              })
+              .catch(function(e) {
+                result.textContent = 'Something went wrong: ' + e;
+              })
+              .finally(function() { btn.disabled = false; });
+          }
+          btn.addEventListener('click', runCheck);
+          input.addEventListener('keydown', function(e) { if (e.key === 'Enter') runCheck(); });
+        })();
+        </script>
+        
+  
+        <div style="background:#111;color:#fff;padding:14px 18px;margin-bottom:22px;">
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Today's Bulletin</div>
+          <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.4;padding-left:18px;margin:0;"><li style='margin-bottom:6px;'>LEAD STORY: 50 leaders descend on Dublin for the biggest diplomatic event the State has ever hosted, putting Ireland at the heart of European political talks, backed by a massive security operation.</li><li style='margin-bottom:6px;'>NEUTRALITY: The Taoiseach says Ireland will remain neutral in the years ahead, while 'who speaks for Europe' in any talks with Russia emerges as a key issue for the visiting leaders.</li><li style='margin-bottom:6px;'>UKRAINE: US envoys urge Putin to let Europe join Ukraine talks as they land in Moscow, while Kyiv says Starlink restrictions are back and Zelensky warns the EU to watch for Russian threats.</li><li style='margin-bottom:6px;'>BUSINESS: Nvidia's CEO is to step down after affair controversies, and China warns the US not to use the scandal as a pretext for tech curbs.</li><li style='margin-bottom:6px;'>SPORT: Manchester United have reportedly sacked Michael Carrick, with Mauricio Pochettino lined up, and Crystal Palace dismiss Pierre Sage after just 16 matches.</li></ul>
+        </div>
+        
+  
+    <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;background:#faf8f4;">
+      <div style="font-family:Georgia,serif;font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">⚽ Fixtures &amp; Results</div>
+      
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No Liverpool, Real Betis, or Cork City fixtures today.</p>
+    
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-top:14px;margin-bottom:6px;">Yesterday's Results</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No results from yesterday.</p>
+    
+    </div>
+    
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">💷 Next Match Odds (informational only)</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Liverpool v Manchester United: Liverpool 1.73, Manchester United 4.2, Draw 4.2 (via Coral)</li></ul>
+        </div>
+        
+  
+
+  <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🔴 Top Stories</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">50 leaders in Dublin for State's largest diplomatic event</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The ninth European Political Community meeting is being held in Dublin, with 50 leaders attending. It is described as the largest diplomatic undertaking in Irish history. It is the biggest diplomatic event the State has hosted, which puts Ireland at the centre of European political discussions. Watch for what comes out of the meeting and how Ireland's handling of the event is judged.</div>
+          <a href="https://www.rte.ie/news/eu-presidency/2026/1112/1598891-epc-summit/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🇮🇪 Ireland</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">What is in the new public sector pay deal?</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A new draft public sector pay deal has been agreed between trade unions and the Government. Economics and Public Affairs Editor David Murphy sets out what it contains. A pay deal affects public sector workers and sets the terms between the Government and unions. Watch for the formal response to the draft deal and whether it is accepted.</div>
+          <a href="https://www.rte.ie/news/ireland/2026/1111/1598877-public-sector-pay-deal-analysis/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Massive security operation as political leaders meet</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Thousands of gardaí are on the streets of Dublin for a major security operation. It covers the largest gathering of political leaders ever hosted in Ireland. The scale of the operation reflects the size of the event and the demands of protecting so many political leaders at once. Watch for how the security operation holds up as the gathering continues.</div>
+          <a href="https://www.rte.ie/news/dublin/2026/1112/1598890-dublin-traffic-restrictions/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Ireland will remain neutral in years ahead - Taoiseach</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The Taoiseach has insisted that Ireland will remain militarily neutral in the years ahead. It restates Ireland's neutrality at a time when European leaders are meeting in Dublin. Watch for whether this stance is challenged or discussed further in the talks and in public debate.</div>
+          <a href="https://www.rte.ie/news/2026/1112/1598903-eu-summit-dublin/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Could Ireland and Ukraine do a deal on drones? Officials say talks only at 'earliest of stages'</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Taoiseach Micheál Martin and Ukrainian President Volodymyr Zelenskyy have both mentioned, in July and again on Wednesday night, that a deal on drones is being worked on. Officials say talks are only at the 'earliest of stages'. It points to possible cooperation between Ireland and Ukraine, though officials are playing down how far talks have got. Watch for any further official detail on whether the talks progress.</div>
+          <a href="https://www.thejournal.ie/ukraine-drone-deal-ireland-what-we-know-so-far-7223294-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">💷 Business & Markets</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Trump threatens to double tariffs on Mexico over illegal immigration</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">President Trump has threatened to double tariffs on Mexico over illegal immigration. He says the levies will rise if Mexico does nothing to stop illegal crossings. Higher tariffs on a trade partner could affect trade between the two countries and escalate tensions over immigration. Watch for Mexico's response and whether the increase is actually imposed.</div>
+          <a href="https://www.ft.com/content/b4bb6e99-97c8-4392-a227-b7b74853ba26?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">UK economy expanded by 0.7% in third quarter</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - UK</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The UK economy expanded by 0.7% in the third quarter. The figure shows resilience despite surging energy prices and rising borrowing costs. Watch whether that resilience continues as energy prices and borrowing costs keep rising.</div>
+          <a href="https://www.ft.com/content/94f3ad1c-a186-4893-ae97-5f129690d121?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">France signals support for Spain’s ECB presidential candidate</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - UK</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">France has signalled support for Spain's candidate, Pablo Hernández de Cos, for the ECB presidency. His bid is gaining momentum as Paris and Berlin consider a package deal on central bank leadership. Backing from France and possibly Germany could help decide who leads the European Central Bank. Watch for whether Paris and Berlin agree a package deal on central bank leadership.</div>
+          <a href="https://www.ft.com/content/b0d03a62-a75d-41f9-bac3-1518cefe400a?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏛️ Politics</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Who speaks for Europe key issue as leaders meet</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Who would speak for Europe in any peace negotiations with Russia is shaping up as a key issue at today's EPC meeting. The issue may get more focus when 27 EU leaders meet separately tomorrow at the Convention Centre. Who represents Europe in any talks with Russia could shape how much influence European countries have over a settlement. Watch the separate meeting of 27 EU leaders tomorrow for any position on European representation.</div>
+          <a href="https://www.rte.ie/news/analysis-and-comment/2026/1112/1598946-epc-analysis/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Maga architects blame Big Tech and AI data centres for midterms rout</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The head of the Heritage Foundation has admitted that Republicans' embrace of Silicon Valley, and the effect of Donald Trump's Iran war, cost them votes in the midterms. Maga architects are blaming Big Tech and AI data centres for the rout. It shows Republican insiders acknowledging that tech-industry ties and the Iran war hurt the party with voters. Watch whether Republicans change their approach to Big Tech and AI after the midterm losses.</div>
+          <a href="https://www.ft.com/content/43da75e5-e8fd-4aea-8afb-e3d75c9f176f?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Democrats pledge to expose ‘absolute avalanche of corruption’ under Trump</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Congress member Jamie Raskin says Democrats will launch a sweeping probe of the president and his allies, and pledges to expose an 'absolute avalanche of corruption'. He warns his party to avoid an impeachment 'distraction'. It signals that Democrats plan to prioritise oversight and investigation of the Trump administration over impeachment. Watch for the start of the probe and whether pressure for impeachment grows within the party.</div>
+          <a href="https://www.ft.com/content/3d3fcb94-143d-446c-8b09-b1f830ca97e9?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🤖 Technology</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Nvidia CEO to step down after affair controversies</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Nvidia CEO Jensen Huang is stepping down after affair controversies. His departure leaves the AI industry without its biggest champion. It clouds the future of the chipmaker he built into an AI powerhouse. Watch for who takes over and what it means for Nvidia's direction.</div>
+          <a href="https://www.rte.ie/news/business/2026/1112/1598921-nvidia-board-meets-to-decide-ceo-huangs-future/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">China warns US not to use Nvidia scandal as pretext for tech curbs</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">China has warned the US not to use the Nvidia scandal as a pretext for tech curbs. Beijing accuses the US of fabricating 'espionage narratives' that ultimately forced co-founder Jensen Huang to resign. It ties the Nvidia scandal to US-China tensions over technology. Watch whether the US responds to China's accusation or moves toward new tech restrictions.</div>
+          <a href="https://www.ft.com/content/66e7337e-3696-4259-84f4-57533bc185bd?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🌍 World</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">US envoys urge Putin to let Europe join Ukraine talks</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">US envoys Steve Witkoff and Jared Kushner urged President Vladimir Putin, in a Kremlin meeting, to agree to European representatives taking part in talks on ending the Ukraine war. Whether Europe has a seat at the table could shape the outcome of any talks to end the war. Watch for Putin's response on European participation in the talks.</div>
+          <a href="https://www.rte.ie/news/ukraine/2026/1112/1598908-ukraine-russia/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Zelensky warns EU to be alert to Russian threats</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Ukrainian President Volodymyr Zelensky has warned the EU to be alert to Russian efforts to re-write Europe's security architecture ahead of any ceasefire in the war. It highlights a concern that Russia could try to reshape European security arrangements before a ceasefire is reached. Watch how EU leaders respond to the warning when they meet.</div>
+          <a href="https://www.rte.ie/news/ireland/2026/1112/1598960-epc-meetings-dublin/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Ukraine says Starlink restrictions are back as US envoys land in Moscow</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Ukraine says Starlink restrictions are back and that its army is struggling to intercept Russian jet-powered drones. The report comes as Steve Witkoff and Jared Kushner meet Vladimir Putin. The reported restrictions and difficulty intercepting drones point to pressure on Ukraine's forces as diplomacy goes on. Watch for the outcome of the Witkoff and Kushner meeting with Putin and any change to the Starlink restrictions.</div>
+          <a href="https://www.ft.com/content/6cd890f1-2e4d-468a-807f-529f45e1678e?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Eight dead after apartment building in New York collapses</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Eight people were killed when an apartment building in Brooklyn collapsed into a neighbouring construction site, according to New York City Mayor Zohran Mamdani. The deaths make it a serious tragedy and raise questions about how the building came to collapse. Watch for updates on the cause of the collapse and any investigation.</div>
+          <a href="https://www.rte.ie/news/us/2026/1112/1598896-brooklyn-building-collapse/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">👀 Worth Knowing</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/school-hoax-bomb-threats-ireland-7223893-Nov2026/' style='color:#333;text-decoration:none;'>Minister says lessons will be learned from hoax bomb threats sent to schools</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/jason-hutch-bail-hearing-7223866-Nov2026/' style='color:#333;text-decoration:none;'>Son of Gerry Hutch denied bail pending trial over allegations of facilitating organised crime</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/simon-harris-dole-comments-3-7223616-Nov2026/' style='color:#333;text-decoration:none;'>Harris accused of using dole recipients to ‘distract from failures’</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/smart-glasses-ban-ireland-ai-poll-7223341-Nov2026/' style='color:#333;text-decoration:none;'>Do you think 'smart glasses' that can record people should be banned?</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/tusla-secure-care-beds-7222725-Nov2026/' style='color:#333;text-decoration:none;'>Tusla faces growing demand for secure care places for girls at risk of exploitation</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/healy-rae-firm-paid-e1-38m-for-accommodating-ukrainians-since-2022-7223064-Nov2026/' style='color:#333;text-decoration:none;'>Healy-Rae firm paid €1.38m for accommodating Ukrainians since 2022, with payments halved this year</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li></ul>
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏆 Sport</div>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:10px;">Premier League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Six matches that defined Carrick's Man Utd tenure</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">BBC Sport looks back at the six Premier League matches that defined the highs and lows of Michael Carrick's 10-month spell in charge of Manchester United.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/c5ev37egv97mo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Champions League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">How 'Barca way' continues despite big-name exits</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Arsenal face a much-changed Barcelona in the Women's Champions League on Thursday - but how have the Spanish giants coped so well with losing key players?</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c5vg23nmgp2yo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">How 'Barca way' continues despite big-name exits</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Arsenal face a much-changed Barcelona in the Women's Champions League on Thursday - but how have the Spanish giants coped so well with losing key players?</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c5vg23nmgp2yo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Other Sports</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.skysports.com/football/news/12040/13606106/man-utd-sack-michael-carrick-with-mauricio-pochettino-set-to-be-appointed-after-worst-start-to-premier-league-season' style='color:#333;text-decoration:none;'>Carrick sacked by Man Utd</a> <span style='color:#999;font-size:12px;'>(Sky Sports - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.skysports.com/football/news/12040/13606476/pierre-sage-crystal-palace-sack-manager-with-club-bottom-of-premier-league-table-after-10-matches' style='color:#333;text-decoration:none;'>Crystal Palace sack Sage</a> <span style='color:#999;font-size:12px;'>(Sky Sports - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/tennis/articles/cq1md03gz0zvo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Andreeva wins 11 games in a row to thrash Sabalenka at WTA Finals</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/football/articles/c6y49yz77pppo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>USA withdraw from U17 World Cup over armed conflict risk</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li></ul>
+
+  
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Your Teams &amp; Players</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">O'Shea proud of how team-mates handled Israel games</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Republic of Ireland defender Dara O'Shea is "proud" of how he and his team-mates came through a trying October international window.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/cwg7l9nd0p1zo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Papers: Arsenal, Chelsea and Liverpool chase Bournemouth star Scott</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Thursday's newspapers report that Arsenal, Chelsea and Liverpool are all interested in signing Bournemouth player Scott.</div>
+          <a href="https://www.skysports.com/football/news/11095/13611225/arsenal-chelsea-and-liverpool-chase-bournemouth-star-alex-scott-paper-talk" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
+    Generated automatically. Headlines and teasers only - click through for full articles.
+  </div>
+</div>
+</body></html>
