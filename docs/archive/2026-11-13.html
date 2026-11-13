@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f2efe9;">
+<div style="max-width:640px;margin:0 auto;background:#fff;padding:28px 24px;">
+  <div style="text-align:center;border-bottom:4px double #111;padding-bottom:10px;margin-bottom:18px;">
+    <div style="font-family:Georgia,serif;font-size:30px;font-weight:900;letter-spacing:0.02em;">THE MORNING BRIEF</div>
+    <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Friday 13 November 2026</div>
+    <div style="text-align:center;font-family:Georgia,serif;font-size:13px;color:#555;margin-top:6px;">Dublin today: Overcast, 1–7°C, 0% chance of rain</div>
+  </div>
+
+  
+        <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">🔎 Verify a Claim</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#555;margin-bottom:10px;">Heard something on TikTok or elsewhere? Check it against real news sources.</div>
+          <div style="display:flex;gap:8px;">
+            <input id="verify-input" type="text" placeholder="e.g. Did the government really ban X?" style="flex:1;padding:8px;font-family:Georgia,serif;font-size:14px;border:1px solid #999;box-sizing:border-box;" />
+            <button id="verify-btn" style="padding:8px 16px;font-family:Georgia,serif;font-weight:700;background:#111;color:#fff;border:none;cursor:pointer;white-space:nowrap;">Check</button>
+          </div>
+          <div id="verify-result" style="margin-top:12px;font-family:Georgia,serif;font-size:14px;color:#333;white-space:pre-wrap;line-height:1.5;"></div>
+        </div>
+        <script>
+        (function() {
+          var btn = document.getElementById('verify-btn');
+          var input = document.getElementById('verify-input');
+          var result = document.getElementById('verify-result');
+          function runCheck() {
+            var query = input.value.trim();
+            if (!query) return;
+            result.textContent = 'Checking...';
+            btn.disabled = true;
+            fetch("newslette-verify.daniel04delee.workers.dev", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({query: query})
+            })
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                result.textContent = data.error ? ('Error: ' + data.error) : data.result;
+              })
+              .catch(function(e) {
+                result.textContent = 'Something went wrong: ' + e;
+              })
+              .finally(function() { btn.disabled = false; });
+          }
+          btn.addEventListener('click', runCheck);
+          input.addEventListener('keydown', function(e) { if (e.key === 'Enter') runCheck(); });
+        })();
+        </script>
+        
+  
+        <div style="background:#111;color:#fff;padding:14px 18px;margin-bottom:22px;">
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Today's Bulletin</div>
+          <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.4;padding-left:18px;margin:0;"><li style='margin-bottom:6px;'>STATE AGENT CLAIM: An inquiry has been told a state agent was involved in planting the Omagh bomb, a claim that goes to the heart of what authorities knew, or did, about the atrocity.</li><li style='margin-bottom:6px;'>€323m BILL: The fuel protests helped public sector unions win a bigger pay deal, at a substantial cost to the State.</li><li style='margin-bottom:6px;'>FARMERS ON THE STREETS: Hundreds protested CAP cuts in Dublin as EU leaders met nearby, warning that farm incomes could fall with any cut to the budget.</li><li style='margin-bottom:6px;'>MARKETS JOLTED: US Treasuries are set for their worst week since Trump's 'liberation day', as investors who thought the bond rout was over were caught out. Meanwhile, global oil has swung to surplus as Gulf shipments rebound.</li><li style='margin-bottom:6px;'>SPORT: Man Utd have appointed Mauricio Pochettino as head coach after sacking Michael Carrick, and Arsenal held Barcelona 1-1 at the Camp Nou to stay unbeaten in the Women's Champions League.</li></ul>
+        </div>
+        
+  
+    <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;background:#faf8f4;">
+      <div style="font-family:Georgia,serif;font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">⚽ Fixtures &amp; Results</div>
+      
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No Liverpool, Real Betis, or Cork City fixtures today.</p>
+    
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-top:14px;margin-bottom:6px;">Yesterday's Results</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No results from yesterday.</p>
+    
+    </div>
+    
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">💷 Next Match Odds (informational only)</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Liverpool v Manchester United: Liverpool 1.73, Manchester United 4.2, Draw 4.2 (via Coral)</li></ul>
+        </div>
+        
+  
+
+  <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🔴 Top Stories</div>
+  <p style='color:#777;'>Nothing cleared the must-know bar today.</p>
+
+  
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🇮🇪 Ireland</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">The €323m bill: How the fuel protests helped public sector unions secure a bigger pay deal</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The fuel protests shifted the balance of power between unions and the government. The resulting delay in public pay negotiations may have cost the State €323 million. It suggests the protests helped public sector unions win a bigger pay deal, at a substantial cost to the State. Watch for further reaction to the €323m figure and how it shapes future pay talks between unions and the government.</div>
+          <a href="https://www.thejournal.ie/readme/public-pay-talks-7224151-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Hundreds of farmers protest CAP cuts in Dublin as EU leaders meet nearby</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Hundreds of farmers protested in Dublin against CAP cuts while EU leaders met nearby. The Irish Farmers' Association warned that a 24% cut to the CAP budget could mean a 24% reduction in payments to farmers. The warning shows farm incomes could fall directly with any cut to the CAP budget. Watch for any response from EU leaders or the government to the farmers' concerns about the CAP budget.</div>
+          <a href="https://www.thejournal.ie/dublin-ifa-protest-today-7223613-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Death of man found in Phoenix Park treated as suspicious</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A man's body was found in the Phoenix Park in Dublin. Gardaí are treating his death as suspicious. A suspicious death in a major public park raises concern and will prompt a garda investigation. Watch for updates from gardaí on the investigation, including any identification of the man or the circumstances of his death.</div>
+          <a href="https://www.rte.ie/news/dublin/2026/1113/1599108-gardai-dublin-death/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">State agent involved in planting Omagh bomb, inquiry told</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A former senior police officer told the inquiry that a state agent was among those who planted the Omagh bomb. The inquiry is investigating the 1998 attack. The claim of state agent involvement goes to the heart of questions about what authorities knew or did about the bombing. Watch for further evidence to the inquiry on the claim and any response from the relevant authorities.</div>
+          <a href="https://www.rte.ie/news/2026/1112/1599036-omagh-bomb-inquiry/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">💷 Business & Markets</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Nvidia ex-CEO to testify before US Senate committee</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">US politicians have called Nvidia ex-CEO Jensen Huang to face a Senate committee in December. He quit over extramarital affairs. Huang is described as an architect of the AI boom, so his appearance puts a leading figure of the industry in front of US lawmakers. Watch for the December hearing and the questions senators put to him.</div>
+          <a href="https://www.rte.ie/news/us/2026/1113/1599069-nvidia-us/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Shop around to save €300 on motor insurance - research</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">New Central Bank research suggests consumers can save around €300 by shopping around for motor insurance. It points to a real potential saving for drivers who compare prices rather than simply renewing. Watch for whether consumers act on the findings and whether the Central Bank or insurers respond.</div>
+          <a href="https://www.rte.ie/news/business/2026/1113/1599053-motor-insurance/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">US Treasuries set for worst week since Trump’s ‘liberation day’</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">US Treasuries are set for their worst week since Trump's 'liberation day'. Higher than expected inflation and hawkish remarks by Fed officials have hit investors who bet a global bond rout was over. The selloff shows investors were caught out in their view that the bond rout had ended. Watch for further inflation data and comments from Fed officials that could move bond markets.</div>
+          <a href="https://www.ft.com/content/7bebace2-dc87-410a-ae29-ffd9f3176def?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Global oil markets swing to surplus as Gulf shipments rebound</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Global oil markets have swung to surplus as Gulf shipments rebound. IEA analysts warn it will take months to rebuild stockpiles depleted by conflict. The shift to surplus signals easing supply, but stocks remain depleted. Watch for whether Gulf shipments keep recovering and how quickly stockpiles are rebuilt.</div>
+          <a href="https://www.ft.com/content/20b68fe2-9d60-4c0c-b714-1f3e03015823?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏛️ Politics</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">5 takeaways from Dublin's EPC summit</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Dublin's Convention Centre hosted the ninth European Political Community summit, with a day of hectic diplomatic activity. Reporter Harry Manning has set out five key takeaways. The summit brought European leaders together in Dublin for a day of diplomacy. Watch for follow-up on the five takeaways and any commitments that come out of the summit.</div>
+          <a href="https://www.rte.ie/news/2026/1112/1599048-epc-takeaways/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Ukraine talks must be European-wide issue - Taoiseach</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The Taoiseach said Ukraine peace talks must be a European-wide issue. He said the question of who represents Europe in the negotiations needs to be resolved within the next two weeks. It highlights that Europe has not yet settled who speaks for it in the peace negotiations. Watch for whether European leaders agree on a representative within the two-week timeframe.</div>
+          <a href="https://www.rte.ie/news/ireland/2026/1113/1599056-eu-leaders-dublin/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Martin says he will lead Fianna Fáil into next election</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Taoiseach Micheál Martin confirmed he will contest the next General Election. He insisted he will lead Fianna Fáil into the campaign. It settles questions about his leadership of Fianna Fáil heading into the next election. Watch for reaction within Fianna Fáil and from other parties, and for election preparations.</div>
+          <a href="https://www.rte.ie/news/politics/2026/1113/1599091-martin-general-election/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Burnham says 'win-win' deal can be agreed between UK and EU</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Business</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Burnham, described as prime minister, said a 'win-win' deal can be agreed between the UK and EU. He said it could be 'more like the Brexit people thought they were voting for' in 2016. It signals the UK government's ambition for a new arrangement with the EU. Watch for any response from the EU and for detail on what a deal would contain.</div>
+          <a href="https://www.bbc.co.uk/news/articles/cm2l5n07l87vo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🤖 Technology</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Microsoft gradually restoring service after global outage</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Microsoft said services are being 'gradually restored' after a major global outage. Businesses, police forces, health services and schools were affected. The outage disrupted essential public services as well as businesses. Watch for full restoration of services and for an explanation of what caused the outage.</div>
+          <a href="https://www.rte.ie/news/business/2026/1113/1599061-microsoft-tech-outage/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Tinder owner fined €11m by Data Protection Commission</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Ireland's Data Protection Commission fined Tinder's parent company Match €11m for failing to comply with GDPR rules. The fine shows regulators will penalise major platforms for GDPR failures. Watch for any response or appeal from Match.</div>
+          <a href="https://www.rte.ie/news/business/2026/1113/1599105-tinder-owner-fined-11m-by-data-protection-commission/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🌍 World</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Zelenskyy hails 'real results' on prisoner of war exchange after meeting with Kushner and Witkoff</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Zelenskyy hailed 'real results' on a prisoner of war exchange after meeting US envoys Kushner and Witkoff. The envoys were in Moscow for talks with Vladimir Putin on ending the Ukraine war. A prisoner exchange is a concrete outcome amid the wider diplomacy on ending the war. Watch for the exchange being carried out and for further talks on ending the war.</div>
+          <a href="https://www.thejournal.ie/zelenskyy-kushner-baldonnel-meeting-7224099-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Israeli military's strike on Gaza's Nasser Hospital deadliest since election</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">An Israeli military strike hit Gaza's Nasser Hospital in what was described as the deadliest strike since the election. A doctor there said the targeted building was the surgery ward and that nearly 30 people were wounded. A strike on a hospital surgery ward affects the care of people already injured. Watch for official responses, including from the Israeli military, and for updated casualty figures.</div>
+          <a href="https://www.thejournal.ie/gaza-nasser-hospital-strike-7224485-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Ukrainian strikes kill nine in Russia, Kyiv hospital hit</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Ukrainian attacks killed at least nine people in Russia overnight. Moscow struck a hospital in Kyiv and killed at least three people in the south of Ukraine, officials on both sides said. Civilian harm continues on both sides, including a strike on a hospital. Watch for updated casualty figures and any further strikes or responses from either side.</div>
+          <a href="https://www.rte.ie/news/ukraine/2026/1113/1599085-ukraine-russia-conflict/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">World leaders clash over climate change talks at COP31</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">World leaders set out competing positions and clashing demands over two days of speeches at the COP31 climate talks in Turkey. The divisions leave negotiators with a tough task drafting a meaningful deal all sides can agree. Watch for whether negotiators can produce a draft agreement that all parties accept.</div>
+          <a href="https://www.rte.ie/news/environment/2026/1112/1599028-world-leaders-clash-over-climate-change-talks-at-cop31/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">👀 Worth Knowing</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/ucd-lecturer-trial-7225094-Nov2026/' style='color:#333;text-decoration:none;'>UCD lecturer to face trial over alleged hacking of dozens of students’ accounts</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/ireland/2026/1113/1599110-eleanor-donaldson/' style='color:#333;text-decoration:none;'>Eleanor Donaldson on sex offenders list for five years</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/ulster/2026/1113/1599045-psni-officers-sacked/' style='color:#333;text-decoration:none;'>PSNI officers fired over 'utterly despicable' behaviour</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/middle-east/2026/1113/1599114-israel-gaza/' style='color:#333;text-decoration:none;'>Gaza flooding will cause more respiratory illnesses - WHO</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/2026/1113/1599080-eu-climate-change/' style='color:#333;text-decoration:none;'>EU recommits to 2050 climate-neutral target at COP31</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/primetime/2026/1112/1599044-this-cant-be-right-tenants-challenge-council-rent-rises/' style='color:#333;text-decoration:none;'>'This can't be right': Tenants challenge council rent rises</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li></ul>
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏆 Sport</div>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:10px;">Premier League</div>
+  <p style='color:#777;'>No notable general Premier League storylines today.</p>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Champions League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Arsenal dig in for draw at Barcelona to extend unbeaten start</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Arsenal extend their unbeaten start to four matches in the Uefa Women's Champions League, as they produce a dogged display to hold Barcelona to a 1-1 draw at the Camp Nou. 
+The point moves Renee Slegers' side into the top four, putting them in a great position to automatically qualify for the knockout stages.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/crlye55q790yo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Arsenal dig in for draw at Barcelona to extend unbeaten start</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Arsenal extend their unbeaten start to four matches in the Uefa Women's Champions League, as they produce a dogged display to hold Barcelona to a 1-1 draw at the Camp Nou. 
+The point moves Renee Slegers' side into the top four, putting them in a great position to automatically qualify for the knockout stages.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/crlye55q790yo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Other Sports</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.skysports.com/football/news/12040/13610882/mauricio-pochettino-appointed-as-manchester-united-head-coach-after-michael-carricks-sacking-at-old-trafford' style='color:#333;text-decoration:none;'>Man Utd appoint Pochettino as head coach</a> <span style='color:#999;font-size:12px;'>(Sky Sports - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/football/articles/cm782d4pz9jyo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Fernandes rejects second Man Utd contract offer</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/tennis/videos/cqrmg2w1038ro?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Andreeva beats world number two Sabalenka to reach WTA semis</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.skysports.com/golf/news/12040/13611860/dp-world-tour-championship-rory-mcilroy-takes-share-of-lead-alongside-tyrrell-hatton-in-race-to-dubai-finale' style='color:#333;text-decoration:none;'>McIlroy overcomes late stumble to take share of lead in Dubai</a> <span style='color:#999;font-size:12px;'>(Sky Sports - News)</span></li></ul>
+
+  
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Your Teams &amp; Players</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Liverpool and Van Dijk have a decision to make</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Virgil van Dijk says he is in no panic about his contract situation at Liverpool - BBC Sport takes a look at what could happen with his future.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/ck4gnd2pgd06o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Missing Israel games 'stressful' for captain Collins</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Republic of Ireland captain Nathan Collins says he felt he left his team-mates "on their own" after missing the two controversial Nations League games against Israel.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/cq7821vdgrevo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
+    Generated automatically. Headlines and teasers only - click through for full articles.
+  </div>
+</div>
+</body></html>
