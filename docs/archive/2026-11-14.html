@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f2efe9;">
+<div style="max-width:640px;margin:0 auto;background:#fff;padding:28px 24px;">
+  <div style="text-align:center;border-bottom:4px double #111;padding-bottom:10px;margin-bottom:18px;">
+    <div style="font-family:Georgia,serif;font-size:30px;font-weight:900;letter-spacing:0.02em;">THE MORNING BRIEF</div>
+    <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Saturday 14 November 2026</div>
+    
+  </div>
+
+  
+        <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">🔎 Verify a Claim</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#555;margin-bottom:10px;">Heard something on TikTok or elsewhere? Check it against real news sources.</div>
+          <div style="display:flex;gap:8px;">
+            <input id="verify-input" type="text" placeholder="e.g. Did the government really ban X?" style="flex:1;padding:8px;font-family:Georgia,serif;font-size:14px;border:1px solid #999;box-sizing:border-box;" />
+            <button id="verify-btn" style="padding:8px 16px;font-family:Georgia,serif;font-weight:700;background:#111;color:#fff;border:none;cursor:pointer;white-space:nowrap;">Check</button>
+          </div>
+          <div id="verify-result" style="margin-top:12px;font-family:Georgia,serif;font-size:14px;color:#333;white-space:pre-wrap;line-height:1.5;"></div>
+        </div>
+        <script>
+        (function() {
+          var btn = document.getElementById('verify-btn');
+          var input = document.getElementById('verify-input');
+          var result = document.getElementById('verify-result');
+          function runCheck() {
+            var query = input.value.trim();
+            if (!query) return;
+            result.textContent = 'Checking...';
+            btn.disabled = true;
+            fetch("newslette-verify.daniel04delee.workers.dev", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({query: query})
+            })
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                result.textContent = data.error ? ('Error: ' + data.error) : data.result;
+              })
+              .catch(function(e) {
+                result.textContent = 'Something went wrong: ' + e;
+              })
+              .finally(function() { btn.disabled = false; });
+          }
+          btn.addEventListener('click', runCheck);
+          input.addEventListener('keydown', function(e) { if (e.key === 'Enter') runCheck(); });
+        })();
+        </script>
+        
+  
+        <div style="background:#111;color:#fff;padding:14px 18px;margin-bottom:22px;">
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Today's Bulletin</div>
+          <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.4;padding-left:18px;margin:0;"><li style='margin-bottom:6px;'>LEAD STORY: Trump, Xi and Putin are set to meet in China next week, a three-leader format that has never happened before.</li><li style='margin-bottom:6px;'>Ukraine: Zelensky says the US proposed a Donbas swap for NATO membership, while Rosenberg reports an uncompromising Putin raising his demands for peace.</li><li style='margin-bottom:6px;'>Nvidia in turmoil: Arm boss Rene Haas has been approached in the search for a new CEO after Jensen Huang's downfall. The company could face lawsuits without full insurance, and Trump's treasury secretary is publicly blaming a cabinet colleague.</li><li style='margin-bottom:6px;'>Record 18,065 people are now in emergency accommodation, a new high and still rising.</li><li style='margin-bottom:6px;'>Sport: A tearful Pochettino explains his 'difficult' decision to leave the USA for Man Utd, and France stun the Springboks 21-19 in Paris.</li></ul>
+        </div>
+        
+  
+    <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;background:#faf8f4;">
+      <div style="font-family:Georgia,serif;font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">⚽ Fixtures &amp; Results</div>
+      
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No Liverpool, Real Betis, or Cork City fixtures today.</p>
+    
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-top:14px;margin-bottom:6px;">Yesterday's Results</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No results from yesterday.</p>
+    
+    </div>
+    
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">💷 Next Match Odds (informational only)</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Liverpool v Manchester United: Liverpool 1.73, Manchester United 4.2, Draw 4.2 (via Coral)</li></ul>
+        </div>
+        
+  
+
+  <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🔴 Top Stories</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">US proposed Donbas swap for NATO membership - Zelensky</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Ukrainian President Volodymyr Zelensky said the United States proposed that Ukraine cede land to Russia in exchange for joining NATO. He added that his government is in talks on "specific" security guarantees from the west. A proposal linking territory to NATO membership bears directly on Ukraine's borders and its future security. Watch whether the security guarantees under discussion are spelled out, and how Ukraine responds to the land proposal.</div>
+          <a href="https://www.rte.ie/news/europe/2026/1114/1599202-us-ukraine-russia/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Trump, Xi and Putin to meet in China next week</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The White House says Donald Trump, Vladimir Putin and Xi Jinping will meet at a summit in China next week. It would be the first three-way meeting of the US, Russian and Chinese leaders. It would bring together the leaders of three major powers in a format that has never happened before. Watch for the summit next week and whether it produces any announcements.</div>
+          <a href="https://www.rte.ie/news/world/2026/1114/1599193-trump-xi-putin/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🇮🇪 Ireland</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Record 18,065 people in emergency accommodation</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The number of people in emergency accommodation in Ireland has passed 18,000 for the first time. The record figure is 18,065. It shows the number of people in emergency accommodation is still rising and has reached a new high. Watch whether the number continues to rise in the next set of figures.</div>
+          <a href="https://www.rte.ie/news/ireland/2026/1113/1599178-homeless-figures-september/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Primary teachers union says it will back pay deal</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The INTO, the primary teachers union, said it will back a pay deal. It would also accept the "disappointing" decision to delay certain localised pay increases until after 2029. The union's support moves the deal forward, even though it is unhappy about the delayed increases. Watch for how the union's support affects the deal's progress and whether members voice discontent about the delay.</div>
+          <a href="https://www.thejournal.ie/into-public-sector-pay-deal-7224903-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">'Crude but viable' device made safe in Dublin</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Gardaí said a "crude but viable" device found at a building on Merrion Square in Dublin has been made safe. A viable device in a Dublin city location is a serious security matter, even though it was made safe. Watch for updates from gardaí on the investigation into the device.</div>
+          <a href="https://www.rte.ie/news/dublin/2026/1113/1599157-gardai-merrion-square/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">'Garda-MI5' source drove Omagh bomb car - former officer</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A former head of the PSNI's Serious Crime Branch told the Omagh Bomb Inquiry that a "Garda-MI5 source" was involved in carrying out the attack. The headline says this source drove the bomb car. The claim of a state-linked source's involvement bears on the questions the inquiry is examining about the attack. Watch for further evidence to the inquiry and any response to the claim.</div>
+          <a href="https://www.rte.ie/news/ireland/2026/1113/1599127-omagh-inquiry/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">💷 Business & Markets</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Arm boss Rene Haas approached in Nvidia CEO search</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Rene Haas, head of the SoftBank-owned UK semiconductor group Arm, has been approached in the search for a new Nvidia CEO. Jensen Huang resigned over affairs. Nvidia needs a new chief executive, and the approach to Haas shows who is being considered. Watch whether Haas or another candidate is named as Huang's successor.</div>
+          <a href="https://www.ft.com/content/2a64f698-46dd-4178-a3f4-4c5f4c0a0926?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Nvidia exposed to possible lawsuits after Jensen Huang’s downfall</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Nvidia could face lawsuits after Jensen Huang's downfall. The chip group lacks full insurance coverage for damages stemming from executives' conduct. Without full insurance, the company itself could bear the cost of any damages. Watch for any lawsuits being filed against Nvidia.</div>
+          <a href="https://www.ft.com/content/4aba8386-35cc-463b-a79c-a0c85c362c89?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">BoE chief economist says further rate rises needed to combat inflation</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - UK</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">BoE chief economist Huw Pill called last week's quarter-point rate rise to 4% a "significant step". He said there was "further to go" with borrowing costs to combat inflation. His comments suggest borrowing costs could rise further. Watch for the Bank of England's next rate decision and further comments from its officials.</div>
+          <a href="https://www.ft.com/content/806b0158-41c5-4db2-ac33-93621f72297b?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Nvidia scandal fallout widens as Trump's treasury secretary blames cabinet colleague</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Treasury Secretary Scott Bessent suggested Howard Lutnick's commerce department failed to ban exports of Nvidia's chips to a firm thought to have links with China. It shows a public disagreement between cabinet members over the Nvidia scandal. Watch for a response from Lutnick or the commerce department.</div>
+          <a href="https://www.bbc.co.uk/news/articles/cqvg2d1eg7zro?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏛️ Politics</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Tánaiste seeks views on Irish unity from party leaders</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Tánaiste Simon Harris has written to all political leaders across the island seeking their views on Irish unity. He wants to explore what common ground exists on reunification. It is an attempt to gather views across the island on Irish unity and find areas of agreement. Watch for how the political leaders respond to the letter.</div>
+          <a href="https://www.rte.ie/news/politics/2026/1114/1599192-tanaiste-irish-unity/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">EU seeks 'united voice' ahead of Ukraine peace talks</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The European Political Community summit in Dublin took on a harder edge because of events in Moscow. The EU is seeking a "united voice" ahead of Ukraine peace talks. The events put extra focus on Micheál Martin's role as host and on whether Europe can present a united position. Watch whether European leaders present a united position ahead of the Ukraine peace talks.</div>
+          <a href="https://www.rte.ie/news/analysis-and-comment/2026/1114/1599180-eu-summit-ukraine/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">More than half of NI voters back UK rejoining EU - poll</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A new opinion poll suggests more than half of Northern Ireland voters think the UK should rejoin the EU. It comes a decade after the Brexit referendum. It gives a snapshot of Northern Ireland opinion on Brexit ten years on. Watch for reaction to the poll from political parties.</div>
+          <a href="https://www.rte.ie/news/2026/1114/1599195-ni-eu-poll/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🤖 Technology</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Microsoft services fully restored after global outage</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Microsoft said services including Teams and Outlook have fully recovered. A global outage had crippled online communications for businesses and governments for over 24 hours. The outage disrupted communications for businesses and governments for more than a day. Watch for an explanation of what caused the outage.</div>
+          <a href="https://www.rte.ie/news/2026/1114/1599205-microsoft-outage/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🌍 World</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Disruption, delays as US resumes flights after grounding</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A grounding of flights in the US has been lifted. A communications failure at air traffic control centres had caused chaos, and disruption and delays continue. The failure at air traffic control centres caused widespread disruption to flights. Watch how quickly delays clear and what caused the communications failure.</div>
+          <a href="https://www.rte.ie/news/us/2026/1114/1599194-travel-stop-lifted/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">'Miracle on Mississippi' - All rescued in US ship crash</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A tanker ship collided with a luxury paddle wheeler docked in New Orleans on the Mississippi River. The cruise vessel rolled over and sank, and everyone was rescued. Everyone being rescued, described as the "Miracle on Mississippi", means the collision caused no reported deaths despite the vessel sinking. Watch for details on the cause of the collision.</div>
+          <a href="https://www.rte.ie/news/us/2026/1114/1599198-vessel-new-orleans/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Rosenberg: Uncompromising Putin ups demands for peace with Ukraine</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">BBC Russia Editor Steve Rosenberg says Putin is uncompromising and has increased his demands for peace with Ukraine. Moscow sees the fact that European security now features in discussions as a victory. It suggests Russia is hardening its position, which could make a peace deal harder to reach. Watch whether Russia's demands shift as the discussions continue.</div>
+          <a href="https://www.bbc.co.uk/news/articles/cq39glwprknjo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">👀 Worth Knowing</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/garda-bought-israeli-anti-drone-tech-7225221-Nov2026/' style='color:#333;text-decoration:none;'>Gardaí purchased Israeli anti-drone equipment for EU Presidency events</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/coercive-control-assault-case-7225785-Nov2026/' style='color:#333;text-decoration:none;'>First person in Ireland convicted of coercive control admits vicious assault on other woman</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/ires-reit-takeover-barings-7224769-Nov2026/' style='color:#333;text-decoration:none;'>As its mulls €731m takeover, Ires Reit tells staff ‘vast majority’ will likely be kept on</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/ireland/2026/1113/1599186-ai-taoiseach-eu/' style='color:#333;text-decoration:none;'>AI should be for the benefit of mankind - Taoiseach</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/ireland/2026/1113/1599179-yvonne-nolan-dublin/' style='color:#333;text-decoration:none;'>Mother facing eviction denied respite for non-verbal sons</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/ireland/2026/1114/1599199-ireland-us-flights/' style='color:#333;text-decoration:none;'>Some Irish flights affected by US cancellations, delays</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li></ul>
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏆 Sport</div>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:10px;">Premier League</div>
+  <p style='color:#777;'>No notable general Premier League storylines today.</p>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Champions League</div>
+  <p style='color:#777;'>No notable general Champions League storylines today.</p>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Other Sports</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/football/articles/cmd61qne8352o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Tearful Pochettino on 'difficult' decision to leave USA for Man Utd</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.skysports.com/football/scotland-vs-north-macedonia/report/554098' style='color:#333;text-decoration:none;'>McGinn double seals win for ragged Scotland</a> <span style='color:#999;font-size:12px;'>(Sky Sports - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.skysports.com/rugby-union/france-vs-south-africa/report/111688' style='color:#333;text-decoration:none;'>France put injuries behind them to stun Springboks</a> <span style='color:#999;font-size:12px;'>(Sky Sports - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/rugby-league/videos/cqy4jdxven1go?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>England beat France to become back-to-back world champions</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li></ul>
+
+  
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Your Teams &amp; Players</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">'Exciting' Moylan flourishing for club and country</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">BBC Sport NI looks as Jack Moylan's terrific form for Cardiff City and Republic of Ireland ahead of the Irish's final two Nations League games.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/cmlydwy2zg10o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Salah scores twice as Egypt and Nigeria win Afcon 2027 qualifiers</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Nigeria beat Tanzania to boost their hopes of reaching the 2027 Africa Cup of Nations, while Mohamed Salah scores twice as Egypt cruise to victory over Malawi.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/cw1md9jx2r3po?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
+    Generated automatically. Headlines and teasers only - click through for full articles.
+  </div>
+</div>
+</body></html>

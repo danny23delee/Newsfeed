@@ -30,5 +30,20 @@
   {
     "date": "2026-11-13",
     "stories": []
+  },
+  {
+    "date": "2026-11-14",
+    "stories": [
+      {
+        "title": "US proposed Donbas swap for NATO membership - Zelensky",
+        "category": "World",
+        "why_it_matters": "A proposal linking territory to NATO membership bears directly on Ukraine's borders and its future security."
+      },
+      {
+        "title": "Trump, Xi and Putin to meet in China next week",
+        "category": "World",
+        "why_it_matters": "It would bring together the leaders of three major powers in a format that has never happened before."
+      }
+    ]
   }
 ]
