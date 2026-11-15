@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f2efe9;">
+<div style="max-width:640px;margin:0 auto;background:#fff;padding:28px 24px;">
+  <div style="text-align:center;border-bottom:4px double #111;padding-bottom:10px;margin-bottom:18px;">
+    <div style="font-family:Georgia,serif;font-size:30px;font-weight:900;letter-spacing:0.02em;">THE MORNING BRIEF</div>
+    <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Sunday 15 November 2026</div>
+    <div style="text-align:center;font-family:Georgia,serif;font-size:13px;color:#555;margin-top:6px;">Dublin today: Slight rain, 4–10°C, 88% chance of rain</div>
+  </div>
+
+  
+        <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">🔎 Verify a Claim</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#555;margin-bottom:10px;">Heard something on TikTok or elsewhere? Check it against real news sources.</div>
+          <div style="display:flex;gap:8px;">
+            <input id="verify-input" type="text" placeholder="e.g. Did the government really ban X?" style="flex:1;padding:8px;font-family:Georgia,serif;font-size:14px;border:1px solid #999;box-sizing:border-box;" />
+            <button id="verify-btn" style="padding:8px 16px;font-family:Georgia,serif;font-weight:700;background:#111;color:#fff;border:none;cursor:pointer;white-space:nowrap;">Check</button>
+          </div>
+          <div id="verify-result" style="margin-top:12px;font-family:Georgia,serif;font-size:14px;color:#333;white-space:pre-wrap;line-height:1.5;"></div>
+        </div>
+        <script>
+        (function() {
+          var btn = document.getElementById('verify-btn');
+          var input = document.getElementById('verify-input');
+          var result = document.getElementById('verify-result');
+          function runCheck() {
+            var query = input.value.trim();
+            if (!query) return;
+            result.textContent = 'Checking...';
+            btn.disabled = true;
+            fetch("newslette-verify.daniel04delee.workers.dev", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({query: query})
+            })
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                result.textContent = data.error ? ('Error: ' + data.error) : data.result;
+              })
+              .catch(function(e) {
+                result.textContent = 'Something went wrong: ' + e;
+              })
+              .finally(function() { btn.disabled = false; });
+          }
+          btn.addEventListener('click', runCheck);
+          input.addEventListener('keydown', function(e) { if (e.key === 'Enter') runCheck(); });
+        })();
+        </script>
+        
+  
+        <div style="background:#111;color:#fff;padding:14px 18px;margin-bottom:22px;">
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Today's Bulletin</div>
+          <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.4;padding-left:18px;margin:0;"><li style='margin-bottom:6px;'>LEAD: Trump, Putin and Xi plan a historic joint meeting in China next week, the White House says, with nuclear arms on the agenda.</li><li style='margin-bottom:6px;'>AI TRADE WOBBLES: Data centre construction stocks have lost $4.2tn as the AI boom unravels, while Anthropic's IPO looms as the next big test.</li><li style='margin-bottom:6px;'>WAR WATCH: Bahrain intercepted Iranian missiles aimed at a US base, and the US reportedly proposed a Donbas swap for NATO membership, according to Zelensky.</li><li style='margin-bottom:6px;'>BIG TECH BILL: Italy fines Meta €805m over accessing users' photos, and Congress moves to tighten AI chip export rules after the Nvidia scandal.</li><li style='margin-bottom:6px;'>SPORT: Wales stun the All Blacks for the first time in 73 years, and Rory McIlroy wins a record-equalling eighth European title.</li></ul>
+        </div>
+        
+  
+    <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;background:#faf8f4;">
+      <div style="font-family:Georgia,serif;font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">⚽ Fixtures &amp; Results</div>
+      
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No Liverpool, Real Betis, or Cork City fixtures today.</p>
+    
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-top:14px;margin-bottom:6px;">Yesterday's Results</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No results from yesterday.</p>
+    
+    </div>
+    
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">💷 Next Match Odds (informational only)</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Liverpool v Manchester United: Liverpool 1.73, Manchester United 4.2, Draw 4.2 (via Coral)</li></ul>
+        </div>
+        
+  
+
+  <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🔴 Top Stories</div>
+  <p style='color:#777;'>Nothing cleared the must-know bar today.</p>
+
+  
+        <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">📊 This Week</div>
+        <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.5;color:#333;padding-left:20px;margin:0 0 16px;"><li style='margin-bottom:8px;'>Ireland's public sector strike was suspended on Wednesday after unions agreed a pay deal. The suspension spares the country the disruption a walkout would have caused and suggests the dispute is heading toward a settlement.</li><li style='margin-bottom:8px;'>Dublin hosted 50 leaders on Thursday for the largest diplomatic event the State has ever held. The gathering put Ireland at the centre of European political discussions.</li><li style='margin-bottom:8px;'>Zelensky said the US proposed a swap that would link the Donbas to NATO membership for Ukraine. The idea bears directly on Ukraine's borders and its future security, and it is Zelensky's account of the proposal.</li><li style='margin-bottom:8px;'>Trump, Xi and Putin are due to meet in China next week. A meeting of the three leaders in this format has never happened before.</li><li style='margin-bottom:8px;'>Taken together, the week moved from a domestic dispute easing at home to high-stakes diplomacy abroad. Ireland welcomed Europe's leaders, while the Donbas proposal and the planned three-leader meeting in China point to a busy week ahead for global politics.</li></ul>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🇮🇪 Ireland</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Record homeless level revealed as EU red carpet rolled up</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The Government quietly published an action plan on child and family homelessness alongside the latest homeless figures, while events at the Convention Centre drew attention elsewhere. The figures showed homelessness reaching 18,000 for the first time. A record homeless level, with a dedicated plan for children and families, points to a deepening housing crisis. Watch for how the action plan on child and family homelessness is received and whether the figures change after its measures begin.</div>
+          <a href="https://www.rte.ie/news/2026/1114/1599206-homeles-figures/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">New measures set to target money laundering</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Tánaiste Simon Harris announced new measures to improve transparency around beneficial ownership and to strengthen Ireland's anti-money laundering regime. Greater transparency over who ultimately owns companies and assets is central to tackling money laundering. Watch for further detail on how the measures will be implemented and what they require.</div>
+          <a href="https://www.rte.ie/news/business/2026/1115/1599153-measures-money-laundering/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">💷 Business & Markets</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Data centre construction stocks lose $4.2tn as boom in AI trade unravels</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Shares in data centre construction companies, described as AI 'picks and shovels' businesses, lost $4.2tn in value as the AI trade unravelled. The companies were hit hard by a tech sell-off. The loss suggests the investment boom around AI infrastructure is under serious strain. Watch whether the tech sell-off continues or the AI trade stabilises.</div>
+          <a href="https://www.ft.com/content/d5adde7e-68cc-455b-ba78-b39cc3676b7a?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Anthropic’s IPO is the next big test for AI</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A commentary argues that Anthropic's IPO is the next big test for AI. It says even the most powerful frontier labs must bend to the power of public equity. It suggests that going public would subject a leading AI lab to the demands of public shareholders. Watch how Anthropic's IPO is received and how public-market pressure shapes frontier labs.</div>
+          <a href="https://www.ft.com/content/bc8ac781-9837-46de-b7ed-958886ba43af?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏛️ Politics</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">DUP says Harris letter to political leaders north and south seeking views on Irish unity is ‘crass'</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The DUP called a letter from Harris to political leaders north and south 'crass'. The letter seeks views on Irish unity, and Harris shared a copy of the blueprint and sought further engagement on the documents. The reaction shows how politically charged the discussion of Irish unity remains. Watch for responses from other political leaders and whether further engagement on the documents takes place.</div>
+          <a href="https://www.thejournal.ie/simon-harris-writes-to-political-leaders-seeking-views-on-irish-unity-7226153-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🤖 Technology</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Congress moves to pass tighter AI chip export rules following Nvidia scandal</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Congress is moving to pass tighter AI chip export rules following the Nvidia scandal. Jensen Huang's alleged affair with a Chinese spy is said to have 'increased momentum' for a crackdown on US hardware reaching China. Tighter rules could limit China's access to advanced US chip technology and affect Nvidia. Watch whether the export rules pass and what they require.</div>
+          <a href="https://www.ft.com/content/3062790a-553d-41b8-9c7d-bae17b9d2e29?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Italy fines Meta €805m over accessing users' photos</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Italy fined Meta €805m, accusing the company of not informing 20 million users that it had access to their photos. The size of the fine shows regulators are willing to penalise large platforms over how they handle users' data. Watch for Meta's response and whether it challenges the fine.</div>
+          <a href="https://www.bbc.co.uk/news/articles/cwn83gxemk35o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🌍 World</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">US proposed Donbas swap for NATO membership - Zelensky</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Zelensky said the United States proposed that Ukraine cede land to Russia in exchange for joining NATO. He said his government was in talks on 'specific' security guarantees from the west. The proposal ties territorial concessions to Ukraine's security, which is central to any settlement. Watch for details of the security guarantees under discussion and how Ukraine and its allies respond.</div>
+          <a href="https://www.rte.ie/news/ukraine/2026/1114/1599202-us-ukraine-russia/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Trump, Putin and Xi plan historic joint meeting in China next week, White House says</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The White House said Trump, Putin and Xi plan an unprecedented joint meeting in China next week. A spokeswoman said Trump will discuss the 'reduction of nuclear weapons'. A meeting of the three leaders would be historic, with nuclear arms on the agenda. Watch for confirmation of the meeting and what comes out of the nuclear weapons discussion.</div>
+          <a href="https://www.bbc.co.uk/news/articles/ckz74jzpy18do?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Bahrain intercepts Iranian missiles targeting US base</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Bahrain intercepted Iranian missiles targeting a US base, with blasts heard over the country this morning. It was the second Iranian drone attack in three days, ending a long lull in strikes during the Middle East war. The renewed strikes show the Middle East war is still active and affecting Gulf states hosting US forces. Watch for further Iranian attacks and any response from Bahrain or the US.</div>
+          <a href="https://www.rte.ie/news/2026/1115/1599264-bahrain-iran-attacks/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Senior Hamas commander killed in Israeli strike in Gaza</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Hamas said a senior commander who helped plan and oversee the 7 October 2023 attack on Israel was killed in an Israeli airstrike in Gaza. The Israeli military confirmed his death. The commander's death removes a figure tied to the 7 October attack from Hamas's ranks. Watch for any Hamas response and further Israeli strikes in Gaza.</div>
+          <a href="https://www.rte.ie/news/middle-east/2026/1115/1599265-hamas-commander-killed/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">👀 Worth Knowing</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/no-young-landlords-ireland-thejournal-7225551-Nov2026/' style='color:#333;text-decoration:none;'>Why aren't young Irish people becoming landlords?</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/irish-citizens-refused-entry-israel-7221379-Nov2026/' style='color:#333;text-decoration:none;'>Number of Irish citizens refused entry to Israel sharply rises after 7 October attacks</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/france-protests-for-fifth-saturday-in-a-row-7226354-Nov2026/' style='color:#333;text-decoration:none;'>France protests for fifth Saturday in a row, with over 100,000 taking to the streets nationwide</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/climate-protest-dublin-cop31-7226255-Nov2026/' style='color:#333;text-decoration:none;'>Over 4,000 march in Dublin to demand end to fossil fuels</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/ireland/2026/1115/1599280-cork-bus-hijacking/' style='color:#333;text-decoration:none;'>Man held after allegedly pulling fake gun on bus driver</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/2026/1115/1599272-ukrainian-strikes-hit-major-russian-industrial-city/' style='color:#333;text-decoration:none;'>Ukrainian strikes hit major Russian petrochemical plant</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li></ul>
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏆 Sport</div>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:10px;">Premier League</div>
+  <p style='color:#777;'>No notable general Premier League storylines today.</p>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Champions League</div>
+  <p style='color:#777;'>No notable general Champions League storylines today.</p>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Other Sports</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/rugby-union/articles/cmkg57rz2re9o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>'One of the greatest wins' - Wales stun All Blacks to go from no-hopers to heroes</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/golf/articles/c6kg7rwmz1g8o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>McIlroy wins record-equalling eighth European title</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/rugby-league/articles/cm9q8l51pgeqo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Dominant Australia defeat New Zealand in Men's World Cup final</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/mixed-martial-arts/articles/c5742819x9n3o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Harrison shocks Nunes on UFC return to retain title</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li></ul>
+
+  
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Your Teams &amp; Players</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Arsenal target Nusa could cost £66m - Sunday's gossip</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Arsenal could have to pay £66m for RB Leipzig's Antonio Nusa, Real Betis reject Chelsea's bid for Jose Morante, plus more.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c6e9kgn532gxo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Hallgrimsson rues 'painful' defeat for Republic of Ireland</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Republic of Ireland boss Heimir Hallgrimsson says their 1-0 defeat against Austria in their penultimate Nations League game was "painful".</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/cr15e4w75wxpo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Kalajdzic scores late as Republic of Ireland taste defeat in Austria</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Sasa Kalajdzic dealt the Republic of Ireland a late blow in Linz with the only goal in Austria's 1-0 Nations League victory at the Raiffeisen Arena.</div>
+          <a href="https://www.skysports.com/football/austria-vs-republic-of-ireland/report/554103" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
+    Generated automatically. Headlines and teasers only - click through for full articles.
+  </div>
+</div>
+</body></html>
