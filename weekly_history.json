@@ -61,5 +61,15 @@
   {
     "date": "2026-11-18",
     "stories": []
+  },
+  {
+    "date": "2026-11-19",
+    "stories": [
+      {
+        "title": "China, US, Russia issue 'peace declaration' after summit",
+        "category": "World",
+        "why_it_matters": "It is a rare joint statement from the three powers' leaders, issued while both the Ukraine war and the Iran situation remain unresolved."
+      }
+    ]
   }
 ]
