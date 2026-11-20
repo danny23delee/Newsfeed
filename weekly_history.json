@@ -1,23 +1,5 @@
 [
   {
-    "date": "2026-11-11",
-    "stories": []
-  },
-  {
-    "date": "2026-11-11",
-    "stories": [
-      {
-        "title": "Public sector strike suspended as unions agree pay deal",
-        "category": "Ireland",
-        "why_it_matters": "Suspending the strike avoids the disruption it would have caused and shows the pay dispute is moving toward a settlement."
-      }
-    ]
-  },
-  {
-    "date": "2026-11-11",
-    "stories": []
-  },
-  {
     "date": "2026-11-12",
     "stories": [
       {
@@ -69,6 +51,21 @@
         "title": "China, US, Russia issue 'peace declaration' after summit",
         "category": "World",
         "why_it_matters": "It is a rare joint statement from the three powers' leaders, issued while both the Ukraine war and the Iran situation remain unresolved."
+      }
+    ]
+  },
+  {
+    "date": "2026-11-20",
+    "stories": [
+      {
+        "title": "UK, EU launch reset with deals on food, youth mobility",
+        "category": "Politics",
+        "why_it_matters": "It marks a formal reset in UK-EU relations by altering the post-Brexit terms between the two sides."
+      },
+      {
+        "title": "Trump, Putin and Xi release 'peace declaration' after historic meeting",
+        "category": "World",
+        "why_it_matters": "It is the first time the three leaders have held a trilateral discussion, which makes the meeting notable."
       }
     ]
   }
