@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f2efe9;">
+<div style="max-width:640px;margin:0 auto;background:#fff;padding:28px 24px;">
+  <div style="text-align:center;border-bottom:4px double #111;padding-bottom:10px;margin-bottom:18px;">
+    <div style="font-family:Georgia,serif;font-size:30px;font-weight:900;letter-spacing:0.02em;">THE MORNING BRIEF</div>
+    <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Saturday 21 November 2026</div>
+    <div style="text-align:center;font-family:Georgia,serif;font-size:13px;color:#555;margin-top:6px;">Dublin today: Slight rain, 7–11°C, 8% chance of rain</div>
+  </div>
+
+  
+        <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">🔎 Verify a Claim</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#555;margin-bottom:10px;">Heard something on TikTok or elsewhere? Check it against real news sources.</div>
+          <div style="display:flex;gap:8px;">
+            <input id="verify-input" type="text" placeholder="e.g. Did the government really ban X?" style="flex:1;padding:8px;font-family:Georgia,serif;font-size:14px;border:1px solid #999;box-sizing:border-box;" />
+            <button id="verify-btn" style="padding:8px 16px;font-family:Georgia,serif;font-weight:700;background:#111;color:#fff;border:none;cursor:pointer;white-space:nowrap;">Check</button>
+          </div>
+          <div id="verify-result" style="margin-top:12px;font-family:Georgia,serif;font-size:14px;color:#333;white-space:pre-wrap;line-height:1.5;"></div>
+        </div>
+        <script>
+        (function() {
+          var btn = document.getElementById('verify-btn');
+          var input = document.getElementById('verify-input');
+          var result = document.getElementById('verify-result');
+          function runCheck() {
+            var query = input.value.trim();
+            if (!query) return;
+            result.textContent = 'Checking...';
+            btn.disabled = true;
+            fetch("newslette-verify.daniel04delee.workers.dev", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({query: query})
+            })
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                result.textContent = data.error ? ('Error: ' + data.error) : data.result;
+              })
+              .catch(function(e) {
+                result.textContent = 'Something went wrong: ' + e;
+              })
+              .finally(function() { btn.disabled = false; });
+          }
+          btn.addEventListener('click', runCheck);
+          input.addEventListener('keydown', function(e) { if (e.key === 'Enter') runCheck(); });
+        })();
+        </script>
+        
+  
+        <div style="background:#111;color:#fff;padding:14px 18px;margin-bottom:22px;">
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Today's Bulletin</div>
+          <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.4;padding-left:18px;margin:0;"><li style='margin-bottom:6px;'>LEAD: A Russian missile hitting a NATO country in the Warsaw incident is a serious escalation, and leaders are rallying behind Poland.</li><li style='margin-bottom:6px;'>Middle East: Trump is weighing fresh Iran strikes while the US military warns of strain on its forces, and oil shipped through Hormuz falls as Iranian strikes increase.</li><li style='margin-bottom:6px;'>Markets: US tech stocks have plunged into a bear market in their worst week since the Covid-19 crisis, with Wall Street anxious about the AI spending boom. Nvidia now faces a US regulator's probe into its accounting.</li><li style='margin-bottom:6px;'>Home front: Protesters gathered in Dublin against removing the triple lock as battle lines harden for the Government. Separately, the HSE is cutting access to knee and hip MRI scans for over 60s to save money.</li><li style='margin-bottom:6px;'>Sport: Harry Kane is out for the next few months after surgery on torn ankle ligaments, and Australia chased down a record 188 at the MCG to edge England by three wickets with a ball to spare.</li></ul>
+        </div>
+        
+  
+    <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;background:#faf8f4;">
+      <div style="font-family:Georgia,serif;font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">⚽ Fixtures &amp; Results</div>
+      
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No Liverpool, Real Betis, or Cork City fixtures today.</p>
+    
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-top:14px;margin-bottom:6px;">Yesterday's Results</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No results from yesterday.</p>
+    
+    </div>
+    
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">💷 Next Match Odds (informational only)</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Liverpool v Manchester United: Liverpool 1.7, Manchester United 4.2, Draw 4.4 (via Coral)</li></ul>
+        </div>
+        
+  
+
+  <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🔴 Top Stories</div>
+  <p style='color:#777;'>Nothing cleared the must-know bar today.</p>
+
+  
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🇮🇪 Ireland</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">What the EU-UK deal on food means for Ireland</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Britain and the EU signed three agreements today that change the terms of the Brexit arrangements. One of them focuses on the cross-border trade of food, and RTÉ's Agriculture and Consumer Affairs Correspondent Aengus Cox examines the details for Ireland. Changes to cross-border food trade rules could directly affect Ireland, because the deal alters the terms of the Brexit arrangements. Watch for the detailed terms of the food agreement and how they are set to apply to Irish trade.</div>
+          <a href="https://www.rte.ie/news/analysis-and-comment/2026/1120/1600018-ireland-uk-brexit/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">HSE to cut access to knee and hip MRI scans for over 60s</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Under a new HSE cost-saving plan, public health patients over 60 will no longer be able to access MRI scans for knee and hip issues. It limits access to diagnostic scans for older public patients, and the change is driven by cost savings. Watch for reaction to the plan, and whether it is changed or challenged.</div>
+          <a href="https://www.rte.ie/news/2026/1121/1600077-mri-cuts/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Protest against removal of the triple lock taking place in Dublin city centre</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A protest is taking place in Dublin city centre against the removal of the triple lock. The government is seeking to remove it through new legislation. The protest shows public opposition to the government's plan to change the triple lock. Watch how the government responds and how the legislation progresses.</div>
+          <a href="https://www.thejournal.ie/triple-lock-protest-dublin-7233462-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">💷 Business & Markets</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">US tech stocks plunge into bear market in worst week since Covid-19 crisis</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">US tech stocks have plunged into a bear market in their worst week since the Covid-19 crisis. Shares in Anthropic and Nvidia tumbled amid fears over the AI spending boom. The sell-off shows Wall Street growing anxious about the AI spending boom. Watch whether the fears over AI spending continue to weigh on tech shares.</div>
+          <a href="https://www.ft.com/content/9f3c6ed6-c08f-4710-9683-ee2f5eb25841?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">EU proposes tax on big tech companies to fund budget</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The EU has proposed taxing the world's biggest digital companies to fund its next budget. It is trying to bridge divisions among member states over the bloc's long-term funding. The proposal could shape how the EU funds its next budget and may ease disagreements among member states. Watch how member states respond to the proposed tax.</div>
+          <a href="https://www.rte.ie/news/europe/2026/1121/1600093-european-union-budget/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Nvidia faces US regulator’s probe into its accounting</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The US Securities and Exchange Commission has opened an investigation into Nvidia's accounting. This adds to the chip group's difficulties following Jensen Huang's resignation. A regulatory probe on top of a leadership change adds to the pressure on the company. Watch for further developments in the SEC's investigation and in Nvidia's leadership.</div>
+          <a href="https://www.ft.com/content/9b28ed72-aac4-4291-9734-bf60b66645ab?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏛️ Politics</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Battle lines drawn for Govt over Triple Lock legislation</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Pressure on the Government is mounting as the Triple Lock debate intensifies. A compromise amendment has been proposed, the Opposition is warning of a threat to neutrality, and President Connolly's role is adding to the tensions. The debate is becoming more contentious for the Government as it pursues the legislation. Watch whether the compromise amendment is accepted and how the Government handles the Opposition's concerns.</div>
+          <a href="https://www.rte.ie/news/analysis-and-comment/2026/1121/1600089-triple-lock-analysis/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">O'Donovan warned government would suffer 'significant reputational damage' by 'reneging' on RTÉ budget</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">O'Donovan was warned that the government would suffer 'significant reputational damage' by 'reneging' on the RTÉ budget. Ministers were also warned that without a bigger budget, funding would be diverted from the GAA and FAI to fund Olympics preparation. It suggests the RTÉ budget decision carries political risk and possible knock-on effects for sports funding. Watch whether the government changes its stance on the RTÉ budget.</div>
+          <a href="https://www.thejournal.ie/rte-budget-allocation-funding-row-7232364-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Trump proposes Miller as a presidential candidate in 2028</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">During a White House briefing, President Trump floated the idea of his new chief of staff, Stephen Miller, running as a candidate in the 2028 presidential election. It points to early speculation about who might carry the political movement into the 2028 race. Watch for any response from Miller or others about a possible 2028 run.</div>
+          <a href="https://www.rte.ie/news/us/2026/1121/1600103-us-president-trump/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🤖 Technology</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Trump threatens tax for overseas US data centres</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">President Trump threatened to impose a 'tremendous tax' on US companies that build their data centres overseas. The threat could affect where US companies choose to build data centres. Watch for whether the threat becomes a formal policy and how companies react.</div>
+          <a href="https://www.rte.ie/news/us/2026/1120/1600079-trump-data-centers-punish/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">In a year of AI solving maths problems, an Anthropic worker says he may have cracked the biggest</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A mathematician at Anthropic says he used an AI to prove the famed Riemann hypothesis. Verification of the claim will take some time. If confirmed, it would be a major result in mathematics, though for now it is only a claim. Watch for the outcome of the verification of the proof.</div>
+          <a href="https://www.bbc.co.uk/news/articles/c6pqr2g7w059o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🌍 World</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Leaders offer support after Warsaw missile incident</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">World leaders have offered Poland their support after Warsaw said at least one Russian missile hit the NATO country during a massive attack on Ukraine. A Russian missile hitting a NATO country is a serious development, which is why leaders are rallying behind Poland. Watch for further responses from Poland, NATO and other leaders.</div>
+          <a href="https://www.rte.ie/news/2026/1120/1600033-warsaw-support/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Trump considering new Iran strikes as US military warns of strain on forces</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Trump is considering new strikes on Iran, while the US military warns of strain on its forces. Officials say indefinite deployments and potential budget cuts risk eroding readiness if the conflict continues into the new year. It shows possible escalation alongside concerns about the military's ability to sustain the conflict. Watch for whether Trump decides on new strikes and how the military's concerns are addressed.</div>
+          <a href="https://www.ft.com/content/2daf570c-189a-4362-a128-828c520b902e" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Oil shipped through Hormuz falls as Iranian strikes increase</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Oil shipped through Hormuz has fallen as Iranian strikes increase. An analyst says the recovery in Middle Eastern crude exports looks 'increasingly fragile'. It signals that the recovery in Middle Eastern crude exports is under threat from the strikes. Watch whether Hormuz oil shipments keep falling as Iranian strikes continue.</div>
+          <a href="https://www.ft.com/content/5fbc2b9d-0360-4a1f-9e4a-3e86168cbbc5?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">EU climate envoy says 'no compromise yet' on COP31 deal</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The EU's climate envoy says no compromise has been reached yet on key sticking points blocking a deal at the COP31 climate talks. The unresolved sticking points are holding up a deal at the talks. Watch for whether a compromise emerges on the key sticking points.</div>
+          <a href="https://www.rte.ie/news/environment/2026/1121/1600094-cop31-turkey/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">👀 Worth Knowing</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/chay-bowes-eu-sanctions-misinformation-7229080-Nov2026/' style='color:#333;text-decoration:none;'>Chay Bowes: The Russian propaganda and disinformation that landed an Irish man on an EU blacklist</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/housing-crisis-in-europe-7233253-Nov2026/' style='color:#333;text-decoration:none;'>From rent caps to housing co-ops: How other countries in Europe are dealing with housing crises</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/developers-add-56-apartments-high-profile-drumcondra-site-new-government-guidelines-7232942-Nov2026/' style='color:#333;text-decoration:none;'>Developers seek to squeeze additional 56 apartments onto green-lit Drumcondra site</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/world/2026/1121/1600087-suspect-in-deadly-palisades-fire-in-la-convicted-of-arson/' style='color:#333;text-decoration:none;'>Man convicted of arson for deadly Palisades fire in LA</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/business/2026/1121/1600029-ai-impact-economy/' style='color:#333;text-decoration:none;'>'Biggest economic issue': Why should you care about AI?</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/2026/1121/1600055-omagh-bombing-inquiry-families/' style='color:#333;text-decoration:none;'>Govt urged to agree terms of reference for Omagh inquiry</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li></ul>
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏆 Sport</div>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:10px;">Premier League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Anderson steps up, Berge impresses - player ratings for Man City v Fulham</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">The article provides player ratings for Manchester City and Fulham from their Premier League match, noting that Anderson stepped up and Berge impressed.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/cqwy06p44g3no?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Football Daily</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">This Football Daily item asks why Leon chose Aston Villa and how the Premier League compares to the Bundesliga.</div>
+          <a href="https://www.bbc.co.uk/sounds/play/p0pp3b1b?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Champions League</div>
+  <p style='color:#777;'>No notable general Champions League storylines today.</p>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Other Sports</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/football/videos/ck7v2nz0lp32o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Bayern draw with Cologne as Kane picks up ankle injury</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.skysports.com/cricket/news/12040/13614645/australia-beat-england-in-first-t20i-as-mcg-record-run-chase-earns-hosts-1-0-lead-in-five-match-series' style='color:#333;text-decoration:none;'>Australia complete record T20I chase at MCG to edge England in thriller</a> <span style='color:#999;font-size:12px;'>(Sky Sports - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/formula1/articles/cqlyj4yg366wo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Antonelli fastest but penalty leaves Verstappen on pole</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/cricket/articles/cm62pxqwzw9go?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Lehmann again denies knowing about sandpaper plot</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li></ul>
+
+  
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Your Teams &amp; Players</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Chelsea drop points at a stubborn Liverpool LIVE!</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Chelsea dropped points in a live-covered match against a stubborn Liverpool side.</div>
+          <a href="https://www.skysports.com/football/liverpool-women-vs-chelsea-women/live/575829" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Drones, data and Bruno - Pochettino on his early Man Utd challenges</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Mauricio Pochettino has questioned what could have been gained from the drone footage of a Manchester United training session ahead of his first game in charge against Liverpool.</div>
+          <a href="https://www.skysports.com/football/news/11095/13614363/mauricio-pochettino-manchester-united-head-coach-discusses-drone-footage-his-approach-to-data-and-bruno-fernandes-ahead-of-first-game" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
+    Generated automatically. Headlines and teasers only - click through for full articles.
+  </div>
+</div>
+</body></html>
