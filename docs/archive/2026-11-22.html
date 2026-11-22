@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f2efe9;">
+<div style="max-width:640px;margin:0 auto;background:#fff;padding:28px 24px;">
+  <div style="text-align:center;border-bottom:4px double #111;padding-bottom:10px;margin-bottom:18px;">
+    <div style="font-family:Georgia,serif;font-size:30px;font-weight:900;letter-spacing:0.02em;">THE MORNING BRIEF</div>
+    <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Sunday 22 November 2026</div>
+    
+  </div>
+
+  
+        <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">🔎 Verify a Claim</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#555;margin-bottom:10px;">Heard something on TikTok or elsewhere? Check it against real news sources.</div>
+          <div style="display:flex;gap:8px;">
+            <input id="verify-input" type="text" placeholder="e.g. Did the government really ban X?" style="flex:1;padding:8px;font-family:Georgia,serif;font-size:14px;border:1px solid #999;box-sizing:border-box;" />
+            <button id="verify-btn" style="padding:8px 16px;font-family:Georgia,serif;font-weight:700;background:#111;color:#fff;border:none;cursor:pointer;white-space:nowrap;">Check</button>
+          </div>
+          <div id="verify-result" style="margin-top:12px;font-family:Georgia,serif;font-size:14px;color:#333;white-space:pre-wrap;line-height:1.5;"></div>
+        </div>
+        <script>
+        (function() {
+          var btn = document.getElementById('verify-btn');
+          var input = document.getElementById('verify-input');
+          var result = document.getElementById('verify-result');
+          function runCheck() {
+            var query = input.value.trim();
+            if (!query) return;
+            result.textContent = 'Checking...';
+            btn.disabled = true;
+            fetch("newslette-verify.daniel04delee.workers.dev", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({query: query})
+            })
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                result.textContent = data.error ? ('Error: ' + data.error) : data.result;
+              })
+              .catch(function(e) {
+                result.textContent = 'Something went wrong: ' + e;
+              })
+              .finally(function() { btn.disabled = false; });
+          }
+          btn.addEventListener('click', runCheck);
+          input.addEventListener('keydown', function(e) { if (e.key === 'Enter') runCheck(); });
+        })();
+        </script>
+        
+  
+        <div style="background:#111;color:#fff;padding:14px 18px;margin-bottom:22px;">
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Today's Bulletin</div>
+          <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.4;padding-left:18px;margin:0;"><li style='margin-bottom:6px;'>FRONT PAGE: COP31 climate talks collapse with no agreement, as the EU and others reject the draft as too weak - and Darragh O'Brien says 'COP needs a reset'.</li><li style='margin-bottom:6px;'>Triple Lock under fire: thousands take to the streets in its defence while Willie O'Dea's dissent complicates the coalition's plan to scrap it and raises questions about Fianna Fáil's identity.</li><li style='margin-bottom:6px;'>Tension rising: Bahrain says Iran hit a facility, while a tanker is struck in the Strait of Hormuz. Meanwhile a Russian strike kills one in a collapsed block of flats, and a Russian ship burns in the Baltic after a Ukrainian strike.</li><li style='margin-bottom:6px;'>Cost shock for tech buyers: suppliers raise AI server prices by up to 45% months after deals were signed, hitting trading firms among others.</li><li style='margin-bottom:6px;'>Sport: Ireland hang on to beat world champions South Africa 20-17 in Dublin, Leeds win at Stamford Bridge for the first time since 1999 with a 4-1 rout of Chelsea, and Arsenal go six points clear after a 2-2 draw at Newcastle.</li></ul>
+        </div>
+        
+  
+    <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;background:#faf8f4;">
+      <div style="font-family:Georgia,serif;font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">⚽ Fixtures &amp; Results</div>
+      
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No Liverpool, Real Betis, or Cork City fixtures today.</p>
+    
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-top:14px;margin-bottom:6px;">Yesterday's Results</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No results from yesterday.</p>
+    
+    </div>
+    
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">💷 Next Match Odds (informational only)</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Liverpool v Manchester United: Liverpool 1.75, Manchester United 4.0, Draw 4.2 (via Coral)</li></ul>
+        </div>
+        
+  
+
+  <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🔴 Top Stories</div>
+  <p style='color:#777;'>Nothing cleared the must-know bar today.</p>
+
+  
+        <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">📊 This Week</div>
+        <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.5;color:#333;padding-left:20px;margin:0 0 16px;"><li style='margin-bottom:8px;'>Three-power summit: Trump, Xi and Putin met in China, an event announced on Nov. 14 as a first-of-its-kind gathering of the three leaders. Their trilateral discussion is described as historic precisely because nothing like it had happened before.</li><li style='margin-bottom:8px;'>The summit produced a 'peace declaration' from the three leaders. Such a joint statement from these powers is rare.</li><li style='margin-bottom:8px;'>The declaration's weight is tempered by its timing. It came while both the Ukraine war and the Iran situation remain unresolved.</li><li style='margin-bottom:8px;'>On Ukraine, Zelensky said the US proposed a Donbas swap in exchange for NATO membership. The idea ties territory to security guarantees, so it bears directly on Ukraine's borders and its future.</li><li style='margin-bottom:8px;'>UK and EU launched a formal reset in relations, with deals on food and youth mobility. The agreements alter the post-Brexit terms between the two sides.</li></ul>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🇮🇪 Ireland</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Darragh O'Brien says 'COP needs a reset' as deal on fossil fuels rejected</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Darragh O'Brien said 'COP needs a reset' after a deal on fossil fuels was rejected. He said Saudi Arabia 'had far too much influence' in the process. An Irish politician is publicly criticising how the COP process works, after a fossil fuels deal was rejected. Watch whether other governments echo calls for the COP process to be reset.</div>
+          <a href="https://www.thejournal.ie/fossil-fuels-still-missing-from-latest-cop31-draft-deal-7234129-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">CUH row continues with substantial daylight between sides</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A row continued over Cork University Hospital, with its management and senior medical staff on one side and senior HSE management and the Government on the other. It dominated exchanges at the Oireachtas Health Committee and in the Dáil on Wednesday. There is substantial daylight between the hospital's leadership and the HSE and Government, so the dispute is not close to being resolved. Watch whether the two sides move closer together or the row escalates further.</div>
+          <a href="https://www.rte.ie/news/analysis-and-comment/2026/1122/1600140-cuh-analysis/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">A rocky road to Irish unity</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Dublin has taken an initiative on Irish unity. It has put a spotlight on both the obstacles to a united Ireland and the arguments for one. It sets out the difficulties as well as the case for unity, which informs the debate over a united Ireland. Watch how the obstacles and arguments raised shape the debate on Dublin's initiative.</div>
+          <a href="https://www.ft.com/content/4d467ab8-00a7-4937-8775-30a42a00131f?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">💷 Business & Markets</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Did Anthropic and its bankers get a key call wrong after IPO?</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Anthropic's share price has been weak after its IPO. This raises questions about whether it and its bankers were too hasty in exercising the 'greenshoe' option to issue more stock. It questions a key decision by the company and its bankers on issuing extra shares, at a time when the share price is weak. Watch how the share price performs and whether more scrutiny of the greenshoe decision follows.</div>
+          <a href="https://www.ft.com/content/d501198c-14a4-4b96-8880-c3997545902e" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏛️ Politics</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Willie O’Dea’s intervention is complicating the coalition's plan to scrap the triple lock</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Willie O'Dea, a veteran TD, co-signed an amendment that complicates the coalition's plan to scrap the triple lock. It has reopened questions about what is at the core of Fianna Fáil's identity. Dissent from a veteran TD complicates the coalition's plan and raises questions about Fianna Fáil's identity. Watch what happens to the amendment and to the coalition's plan to scrap the triple lock.</div>
+          <a href="https://www.thejournal.ie/willie-odea-triple-lock-7231572-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Thousands attend protest in defence of Triple Lock</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Thousands of people attended a protest in Dublin city centre in support of calls to protect the Triple Lock and Irish neutrality. The turnout shows public opposition to scrapping the Triple Lock, which the coalition plans to do. Watch whether the protest influences the debate on the Triple Lock and the coalition's plans.</div>
+          <a href="https://www.rte.ie/news/dublin/2026/1121/1600126-rally-neutrality/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Theresa May 'aghast' at Burnham's EU plans and says 'Brexit is done'</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Politics</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Theresa May said she was 'aghast' at Burnham's EU plans and that 'Brexit is done'. She told the BBC's Laura Kuenssberg: 'Just accept Brexit and move on.' A former prime minister is publicly pushing back on Burnham's EU plans, which keeps the debate over Brexit going. Watch how Burnham and others respond to May's criticism of his EU plans.</div>
+          <a href="https://www.bbc.co.uk/news/articles/cvj6l8y3x1x4o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🤖 Technology</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Ireland’s data centre bros want to know if we can all maybe just, start over?</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Ireland's data centre conference worried about the sector's public image. One panellist claimed that Russia and China are potentially funding anti-data centre movements in the West. The sector is worried about its public image, and the claim of foreign funding for opposition adds a contentious element to the debate. Watch whether the panellist's claim is backed up or challenged, and how the sector responds to its image problem.</div>
+          <a href="https://www.thejournal.ie/ireland-data-centre-energy-consumption-7233084-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Tech suppliers raise AI server prices up to 45% months after deals are signed</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Dell, HPE, Lenovo and Supermicro have raised AI server prices by up to 45%, months after deals were signed. The higher costs are hitting trading firms. Buyers face sharply higher costs on deals already signed, and trading firms are among those hit. Watch whether buyers push back on the increases or whether other suppliers follow.</div>
+          <a href="https://www.ft.com/content/dd2a6594-6146-4ff1-ac8e-54749c1fc99f?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🌍 World</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">COP31 climate talks collapse as EU and others reject deal</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">UN climate talks at COP31 collapsed after the EU and others rejected a final draft deal. They said it was too weak to advance the fight against global warming. The collapse means no agreement came out of the talks, as the EU and others judged the draft too weak. Watch how countries respond and what happens next for the climate negotiations.</div>
+          <a href="https://www.rte.ie/news/world/2026/1122/1600166-cop31-turkey/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Tanker struck in strait as Bahrain says Iran hit facility</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Bahrain accused Iran of striking a civilian industrial facility, causing a fire and damage but no casualties. Two tankers were also hit in the Strait of Hormuz. Attacks on a facility and on tankers in the Strait of Hormuz point to rising tension in the region. Watch for Iran's response to Bahrain's accusation and for further incidents in the strait.</div>
+          <a href="https://www.rte.ie/news/middle-east/2026/1122/1600172-middle-east-iran/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Russian strike kills one in collapsed block of flats</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A Russian strike on a block of flats north of Kyiv killed one person and partially collapsed the building. Ukraine warned there could be more victims under the rubble. The strike hit a residential building and the death toll may rise. Watch for updates on rescue efforts and on whether more victims are found.</div>
+          <a href="https://www.rte.ie/news/ukraine/2026/1122/1600199-ukraine-russia/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Russian ship on fire in Baltic Sea after Ukrainian strike</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A Russian cargo ship with links to the military was hit by drones and caught fire in the Baltic Sea. Finland said it was likely a Ukrainian attack, and the vessel later drifted into Finnish waters. The burning vessel drifting into Finnish waters brings the consequences of the strike close to a third country. Watch for further statements from Finland, Ukraine and Russia about the incident and the ship.</div>
+          <a href="https://www.rte.ie/news/ukraine/2026/1121/1600153-finland-russia-ukraine/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">👀 Worth Knowing</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/business/2026/1122/1600078-spy-nvidia-china/' style='color:#333;text-decoration:none;'>Spy and sell: The murky history of economic espionage</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/analysis-and-comment/2026/1122/1600167-comment-analysis-ukraine-summits/' style='color:#333;text-decoration:none;'>Two summits with different implications for Ukraine war</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/world/2026/1121/1600134-mexico-drugs-fbi/' style='color:#333;text-decoration:none;'>Mexico captures top drug lord 'El Chapo Isidro'</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.rte.ie/news/world/2026/1121/1600131-israeli-strikes-gaza/' style='color:#333;text-decoration:none;'>Israeli fire kills four in Gaza, civil defence says</a> <span style='color:#999;font-size:12px;'>(RTE - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.ft.com/content/8af97161-2ae0-4655-9f8b-a560f9227359?syn-25a6b1a6=1' style='color:#333;text-decoration:none;'>Democrats will seek to unwind Trump’s tax and tariff policies</a> <span style='color:#999;font-size:12px;'>(FT - World)</span></li><li style='margin-bottom:6px;'><a href='https://www.ft.com/content/2b2824e2-16b9-4621-85a0-7dad220644d5?syn-25a6b1a6=1' style='color:#333;text-decoration:none;'>Cheap Chinese ecommerce parcels flood the UK</a> <span style='color:#999;font-size:12px;'>(FT - UK)</span></li></ul>
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏆 Sport</div>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:10px;">Premier League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Leeds dominate Chelsea for first Stamford Bridge win since 1999</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Noah Okafor scores twice to deliver Leeds United's first win at Chelsea in 27 years, in an impressive 4-1 victory at Stamford Bridge. Daniel Farke's side move up to sixth in the Premier League.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/c3ewvkk4qgxjo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Arsenal go six points clear after lively draw at Newcastle</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Noni Madueke's second-half goal earns Arsenal a 2-2 draw against Newcastle United at St James' Park, as the reigning champions move six points clear at the top of the Premier League table.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/cm702zzl66l6o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Man City drop points to Fulham despite superb Anderson volley</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Elliot Anderson's fantastic volley earns Manchester City a first Premier League point in over a month as they come from behind to hold Fulham.</div>
+          <a href="https://www.bbc.co.uk/sport/football/videos/c30rkq9xyk8eo?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Champions League</div>
+  <p style='color:#777;'>No notable general Champions League storylines today.</p>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Other Sports</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.skysports.com/f1/news/12040/13615083/las-vegas-gp-max-verstappen-wins-wild-race-as-ferraris-lewis-hamilton-and-charles-leclerc-collide-again' style='color:#333;text-decoration:none;'>Verstappen wins wild Las Vegas GP as Ferraris collide again</a> <span style='color:#999;font-size:12px;'>(Sky Sports - News)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/rugby-union/videos/c6742znzggeyo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>England beat New Zealand by record margin</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/videos/crx276g7267do?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Highlights: Ireland hang on to beat South Africa</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/tennis/articles/cw5y1gg7nyv0o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Alcaraz to face Zverev in ATP Finals title decider</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li></ul>
+
+  
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Your Teams &amp; Players</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">'He will see what Man Utd are made of' - Pulis on Pochettino's first game</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">BBC Sport columnist Tony Pulis explains how new Manchester United boss Mauricio Pochettino will prepare for Sunday's game against Liverpool after only a few days with his squad.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/ckqx5w58dgv7o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
+    Generated automatically. Headlines and teasers only - click through for full articles.
+  </div>
+</div>
+</body></html>
