@@ -1,20 +1,5 @@
 [
   {
-    "date": "2026-11-14",
-    "stories": [
-      {
-        "title": "US proposed Donbas swap for NATO membership - Zelensky",
-        "category": "World",
-        "why_it_matters": "A proposal linking territory to NATO membership bears directly on Ukraine's borders and its future security."
-      },
-      {
-        "title": "Trump, Xi and Putin to meet in China next week",
-        "category": "World",
-        "why_it_matters": "It would bring together the leaders of three major powers in a format that has never happened before."
-      }
-    ]
-  },
-  {
     "date": "2026-11-15",
     "stories": []
   },
@@ -62,5 +47,15 @@
   {
     "date": "2026-11-22",
     "stories": []
+  },
+  {
+    "date": "2026-11-23",
+    "stories": [
+      {
+        "title": "O'Connor to 'vigorously' challenge sacking as HSE chief",
+        "category": "Ireland",
+        "why_it_matters": "A contested dismissal at the head of the health service points to a dispute over the leadership of a major public body."
+      }
+    ]
   }
 ]
