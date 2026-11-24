@@ -1,9 +1,5 @@
 [
   {
-    "date": "2026-11-15",
-    "stories": []
-  },
-  {
     "date": "2026-11-16",
     "stories": []
   },
@@ -55,6 +51,16 @@
         "title": "O'Connor to 'vigorously' challenge sacking as HSE chief",
         "category": "Ireland",
         "why_it_matters": "A contested dismissal at the head of the health service points to a dispute over the leadership of a major public body."
+      }
+    ]
+  },
+  {
+    "date": "2026-11-24",
+    "stories": [
+      {
+        "title": "HSE board: CEO removed unanimously, not over single event",
+        "category": "Ireland",
+        "why_it_matters": "The statement gives the board's account of the decision at the top of the national health service, which has been publicly questioned."
       }
     ]
   }
