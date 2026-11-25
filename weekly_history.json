@@ -1,9 +1,5 @@
 [
   {
-    "date": "2026-11-16",
-    "stories": []
-  },
-  {
     "date": "2026-11-17",
     "stories": []
   },
@@ -61,6 +57,16 @@
         "title": "HSE board: CEO removed unanimously, not over single event",
         "category": "Ireland",
         "why_it_matters": "The statement gives the board's account of the decision at the top of the national health service, which has been publicly questioned."
+      }
+    ]
+  },
+  {
+    "date": "2026-11-25",
+    "stories": [
+      {
+        "title": "HSE must provide full account of removal of CEO - Martin",
+        "category": "Politics",
+        "why_it_matters": "It shows the Government is not fully backing the board's handling of the removal of the head of the health service."
       }
     ]
   }
