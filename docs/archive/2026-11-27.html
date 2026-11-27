@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f2efe9;">
+<div style="max-width:640px;margin:0 auto;background:#fff;padding:28px 24px;">
+  <div style="text-align:center;border-bottom:4px double #111;padding-bottom:10px;margin-bottom:18px;">
+    <div style="font-family:Georgia,serif;font-size:30px;font-weight:900;letter-spacing:0.02em;">THE MORNING BRIEF</div>
+    <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Friday 27 November 2026</div>
+    <div style="text-align:center;font-family:Georgia,serif;font-size:13px;color:#555;margin-top:6px;">Dublin today: Moderate drizzle, 6–10°C, 100% chance of rain</div>
+  </div>
+
+  
+        <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:16px;font-weight:900;text-transform:uppercase;margin-bottom:8px;">🔎 Verify a Claim</div>
+          <div style="font-family:Georgia,serif;font-size:13px;color:#555;margin-bottom:10px;">Heard something on TikTok or elsewhere? Check it against real news sources.</div>
+          <div style="display:flex;gap:8px;">
+            <input id="verify-input" type="text" placeholder="e.g. Did the government really ban X?" style="flex:1;padding:8px;font-family:Georgia,serif;font-size:14px;border:1px solid #999;box-sizing:border-box;" />
+            <button id="verify-btn" style="padding:8px 16px;font-family:Georgia,serif;font-weight:700;background:#111;color:#fff;border:none;cursor:pointer;white-space:nowrap;">Check</button>
+          </div>
+          <div id="verify-result" style="margin-top:12px;font-family:Georgia,serif;font-size:14px;color:#333;white-space:pre-wrap;line-height:1.5;"></div>
+        </div>
+        <script>
+        (function() {
+          var btn = document.getElementById('verify-btn');
+          var input = document.getElementById('verify-input');
+          var result = document.getElementById('verify-result');
+          function runCheck() {
+            var query = input.value.trim();
+            if (!query) return;
+            result.textContent = 'Checking...';
+            btn.disabled = true;
+            fetch("newslette-verify.daniel04delee.workers.dev", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({query: query})
+            })
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                result.textContent = data.error ? ('Error: ' + data.error) : data.result;
+              })
+              .catch(function(e) {
+                result.textContent = 'Something went wrong: ' + e;
+              })
+              .finally(function() { btn.disabled = false; });
+          }
+          btn.addEventListener('click', runCheck);
+          input.addEventListener('keydown', function(e) { if (e.key === 'Enter') runCheck(); });
+        })();
+        </script>
+        
+  
+        <div style="background:#111;color:#fff;padding:14px 18px;margin-bottom:22px;">
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Today's Bulletin</div>
+          <ul style="font-family:Georgia,serif;font-size:14px;line-height:1.4;padding-left:18px;margin:0;"><li style='margin-bottom:6px;'>HSE UNDER THE SPOTLIGHT: The board will face public parliamentary questions at the health committee next week, as the fallout over the removal of the HSE's chief executive deepens. The Health Secretary General reportedly told the Taoiseach's department the board meeting outcome 'should not be shared', and ministers are rallying behind Carroll MacNeill.</li><li style='margin-bottom:6px;'>DEAL BLOCKED: The High Court has stopped the €1.6bn takeover of PTSB by an Austrian bank because the required shareholder approval process was not followed.</li><li style='margin-bottom:6px;'>HOUSING STRAIN: Nearly 6,000 children are living in emergency accommodation, a sign of continued pressure on housing. Meanwhile, €1.7 billion in mortgages was approved last month, according to BPFI.</li><li style='margin-bottom:6px;'>BABY BUST: Births have fallen by almost 20% over the past decade, a significant long-term demographic shift.</li><li style='margin-bottom:6px;'>END OF AN ERA: Marc Marquez says he will retire from MotoGP just days after clinching a record-equalling eighth title.</li></ul>
+        </div>
+        
+  
+    <div style="border:2px solid #111;padding:16px 18px;margin-bottom:24px;background:#faf8f4;">
+      <div style="font-family:Georgia,serif;font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:10px;">⚽ Fixtures &amp; Results</div>
+      
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-bottom:6px;">Today's Fixtures</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No Liverpool, Real Betis, or Cork City fixtures today.</p>
+    
+      <div style="font-weight:700;font-family:Georgia,serif;font-size:16px;margin-top:14px;margin-bottom:6px;">Yesterday's Results</div>
+      <p style='color:#777;font-family:Georgia,serif;font-size:15px;'>No results from yesterday.</p>
+    
+    </div>
+    
+  
+        <div style="border:1px solid #ccc;padding:12px 16px;margin-bottom:24px;">
+          <div style="font-family:Georgia,serif;font-size:14px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">💷 Next Match Odds (informational only)</div>
+          <ul style='font-family:Georgia,serif;font-size:13px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'>Everton v Liverpool: Everton 4.1, Liverpool 1.75, Draw 3.8 (via LeoVegas)</li></ul>
+        </div>
+        
+  
+
+  <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🔴 Top Stories</div>
+  <p style='color:#777;'>Nothing cleared the must-know bar today.</p>
+
+  
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🇮🇪 Ireland</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">HSE board confirms health committee attendance next week</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The board of the HSE has confirmed it will attend a hearing of the Oireachtas Committee on Health next Wednesday. It means the board will face parliamentary questions in public, following the controversy around the HSE leadership. Watch what the board says at next Wednesday's committee hearing.</div>
+          <a href="https://www.rte.ie/news/politics/2026/1127/1600861-hse-anne-oconnor/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Health Sec Gen told Taoiseach’s department HSE board meeting outcome ‘should not be shared’</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The secretary general of the Department of the Taoiseach was told last Thursday that, because of legal advice, the outcome of a HSE board meeting should not be shared. It shows legal advice was being used to restrict what was disclosed about the board's decision, which raises questions about transparency. Watch for further detail on this at the Oireachtas health committee hearing, where the HSE board will appear next week.</div>
+          <a href="https://www.thejournal.ie/derek-tierney-john-callinan-hse-board-7239475-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Nearly 6,000 children living in emergency accommodation</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Nearly 6,000 children are living in emergency accommodation. Department of Housing figures show the number of people in emergency accommodation has risen again. The rise in numbers, including children, points to continued pressure on housing in Ireland. Watch the next Department of Housing figures to see whether the number rises again.</div>
+          <a href="https://www.rte.ie/news/ireland/2026/1127/1600919-homeless-figures-ireland/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Births fell by almost 20% over the past decade, new figures show</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">New figures show births fell by almost 20% over the past decade. The death rate also dropped slightly compared with the same quarter in 2016. A fall in births of this size is a significant long-term demographic shift. Watch whether later figures show the decline in births continuing.</div>
+          <a href="https://www.thejournal.ie/ireland-birth-rate-drop-7240313-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">💷 Business & Markets</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">High Court blocks €1.6bn takeover of PTSB by Austrian bank</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The High Court blocked the €1.6bn takeover of PTSB by an Austrian bank. Judge Michael Quinn would not sanction the acquisition because separate shareholder meetings had not been held to approve it. The deal cannot go ahead as it stands, because the required shareholder approval process was not followed. Watch whether the parties hold the separate shareholder meetings and bring the takeover back for approval.</div>
+          <a href="https://www.thejournal.ie/high-court-ptsb-takeover-7239218-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">€1.7 billion in mortgages approved last month - BPFI</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Around €1.7 billion in mortgages were approved in October, according to new figures from Banking and Payments Federation Ireland. Mortgage approvals are an indicator of activity in the housing and lending market. Watch the next monthly BPFI figures to see how approvals compare with October.</div>
+          <a href="https://www.rte.ie/news/business/2026/1127/1600840-banking-payments-federation-ireland-mortgages/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Warsh’s ‘good family fight’ could turn ugly</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Federal Reserve officials face a three-way tussle over inflation, AI and guidance, in what the piece calls Warsh's 'good family fight'. Disagreement among Fed officials on these issues could affect how the central bank approaches policy. Watch whether the 'good family fight' turns ugly, as the headline suggests it could.</div>
+          <a href="https://www.ft.com/content/71ffa69f-2a07-44e4-8305-ae5548b89828?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">US tech stocks rise in latest market swing</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">US tech stocks rose in the latest market swing. The AI trade has been eclipsed by wild moves in a market struggling to price future earnings. It suggests markets are finding it hard to value future earnings, and AI is no longer the only driver of moves. Watch whether the volatile swings continue and whether AI stocks regain their dominance.</div>
+          <a href="https://www.ft.com/content/b80e6259-dca8-4da3-962d-402106a3cd81?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏛️ Politics</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Ministers express confidence in Carroll MacNeill</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Ministers expressed confidence in Jennifer Carroll MacNeill after the sacking of HSE chief executive Anne O'Connor. The Minister said she 'absolutely' has confidence in the HSE board. The show of support comes amid political fallout from the removal of the HSE's chief executive. Watch the HSE board's appearance before the committee next week, where it will answer further questions.</div>
+          <a href="https://www.rte.ie/news/health/2026/1127/1600901-hse-board-reaction/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Defence committee to meet again next week on Triple Lock</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">The Oireachtas defence committee will meet for three more days next week to continue discussing tabled amendments to a Government bill. The bill seeks to remove the United Nations security council element of the Triple Lock. The bill would change the Triple Lock by removing its UN security council element. Watch which amendments are discussed at next week's three days of meetings and how the bill progresses.</div>
+          <a href="https://www.rte.ie/news/ireland/2026/1126/1600828-oireachtas-triple-lock/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🤖 Technology</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Wave of cyber incidents rattles western economies</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">A wave of cyber incidents has hit institutions including the UK Department for Work and Pensions, Fifa and the US Treasury, causing outages. Outages at major institutions are rattling western economies, and concern is growing about the threat from AI. Watch for further disclosures about the causes of the incidents and any role AI played.</div>
+          <a href="https://www.ft.com/content/6ab1172b-4f27-49f5-ad53-b384df82da77?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🌍 World</div>
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Putin can't be a friend, he's like Hitler - Zelensky</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Volodymyr Zelensky said it was strange for Donald Trump to call Vladimir Putin 'my friend'. He compared it to calling Adolf Hitler a friend during World War II. It shows Ukraine's leader openly criticising how the US President speaks about Putin. Watch for any response from Trump or the White House to Zelensky's remarks.</div>
+          <a href="https://www.rte.ie/news/2026/1127/1600845-trump-putin-ukraine/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Marine Le Pen: the woman who could break the EU</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">FT - World</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Marine Le Pen is the far-right frontrunner for the French presidency. She is described as the biggest populist challenge in the EU's history. A Le Pen victory could pose an unprecedented challenge to the EU. Watch how the French presidential race develops and whether Le Pen holds her frontrunner position.</div>
+          <a href="https://www.ft.com/content/9bbd926e-ccef-4717-9044-48a23c9353ba?syn-25a6b1a6=1" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Trump says he asked Putin to end European aggression (but he didn't name specific countries)</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">TheJournal.ie (VERIFY)</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Trump said he asked Putin to end European aggression but did not name specific countries. The statement did not specify which territories he meant and did not specifically include Ukraine. The vagueness, and the absence of any specific mention of Ukraine, leaves unclear what Trump actually asked of Putin. Watch for any clarification of which territories Trump meant and whether Ukraine is included.</div>
+          <a href="https://www.thejournal.ie/trump-putin-military-aggression-7239672-Nov2026/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Spanish PM in bid to beat the right ahead of key poll</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 8px;text-transform:uppercase;letter-spacing:0.03em;">RTE - News</div>
+          <div style="font-size:14px;color:#333;line-height:1.55;font-family:Georgia,serif;">Spanish Prime Minister Pedro Sanchez is making a final push on the last day of campaigning. The election is expected to deliver a victory for conservatives and the far right. The result could remove Spain's Socialist-led government in favour of the conservatives and the far right. Watch the election result to see whether Sanchez beats the odds or the right wins as expected.</div>
+          <a href="https://www.rte.ie/news/2026/1127/1600889-sanchez-spain-elections/" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">👀 Worth Knowing</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/jennifer-carroll-macneill-anne-oconnor-7239989-Nov2026/' style='color:#333;text-decoration:none;'>Fianna Fáil views on Carroll MacNeill: 'You never know what the blue shirts will do in the Sunday papers'</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/drumcondra-station-bridge-defect-7240060-Nov2026/' style='color:#333;text-decoration:none;'>Disruption for children and commuters alike as bridge defect identified at Drumcondra Station</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/readme/hearing-loss-and-brain-health-7236055-Nov2026/' style='color:#333;text-decoration:none;'>Hearing loss in Ireland: Why thousands are waiting too long for help</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/we-consent-ad-ran-for-five-weeks-removal-jim-ocallaghan-7238797-Nov2026/' style='color:#333;text-decoration:none;'>‘Hugging’ consent ad ran for weeks before justice minister intervened over social media storm</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/kevin-lunney-kidnap-sentence-decision-7239613-Nov2026/' style='color:#333;text-decoration:none;'>Gang 'ringleader' in Kevin Lunney kidnap case appeals legitimacy of conviction</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li><li style='margin-bottom:6px;'><a href='https://www.thejournal.ie/ferry-route-ireland-spain-hibernia-7239474-Nov2026/' style='color:#333;text-decoration:none;'>Hibernia Line abruptly stops ferries between Cork and France</a> <span style='color:#999;font-size:12px;'>(TheJournal.ie (VERIFY))</span></li></ul>
+
+  <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;text-transform:uppercase;border-bottom:2px solid #111;margin:26px 0 12px;padding-bottom:4px;">🏆 Sport</div>
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin-bottom:10px;">Premier League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Man City owners should be forced to sell, say clubs</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Manchester City's owners must be forced to sell the club as punishment for breaking financial rules, senior figures at some Premier League clubs tell BBC Sport.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/cwp809d7yp4go?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Maresca: You can't compare Man City and Arsenal</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Enzo Maresca said Premier League title rivals Manchester City and Arsenal couldn&#8217;t be compared after his side's early-season form raised expectations.</div>
+          <a href="https://www.skysports.com/football/news/11095/13617231/arsenal-vs-man-city-enzo-maresca-says-two-teams-cannot-be-compared-due-to-being-in-different-stages-of-project" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">The English Lamine Yamal? Why Williams-Barnett is getting Spurs fans excited</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">To earn comparisons to Lamine Yamal after just three Premier League appearances might seem a little far-fetched, but Roberto De Zerbi showed no hesitation.</div>
+          <a href="https://www.skysports.com/football/news/11095/13616313/why-sky-is-the-limit-for-luca-williams-barnett-as-roberto-de-zerbi-makes-lamine-yamal-comparisons" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Champions League</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Referee being 'drunk' claims are 'entirely unfounded'</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">A referee who was replaced at half-time of an Asian Football Confederation (AFC) Champions League Two match denies he was drunk during the fixture.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c6x289w0vpr1o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Who is close to a yellow card suspension in Champions League?</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">BBC Sport's Ask Me Anything team explains what the rules are regarding yellow card suspensions in this season's Champions League</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c54g1vpypgw3o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Hemmings unfazed by rise at Villa and eager to take next step</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">Sky Sports - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Two days after being thrown into a cauldron in Istanbul during Aston Villa's loss to Galatasaray in the Champions League, George Hemmings strolls into the media centre at Bodymoor Heath, sliders on, looking entirely at home in the senior surroundings that should be new to him.</div>
+          <a href="https://www.skysports.com/football/news/11095/13616958/george-hemmings-exclusive-aston-villa-prospect-unfazed-by-rapid-rise-in-unai-emerys-squad-as-he-eyes-next-step" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Other Sports</div>
+  <ul style='font-family:Georgia,serif;font-size:14px;color:#333;padding-left:22px;margin:0 0 16px;'><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/motorsport/articles/c539gd3r3mk2o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Eight-time champion Marquez to retire from MotoGP</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/boxing/articles/c539gd2x2ye1o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Fury cleared to fight Joshua after wife retracts schizophrenia claim</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/football/articles/cmy49d5kpw78o?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Arsenal head coach Slegers leaves by mutual consent</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li><li style='margin-bottom:6px;'><a href='https://www.bbc.co.uk/sport/football/articles/c6d91j5geepqo?at_medium=RSS&at_campaign=rss' style='color:#333;text-decoration:none;'>Man Utd trigger Fernandes' one-year contract extension</a> <span style='color:#999;font-size:12px;'>(BBC - Sport)</span></li></ul>
+
+  
+
+  <div style="font-weight:700;font-family:Georgia,serif;font-size:15px;margin:16px 0 10px;">Your Teams &amp; Players</div>
+  
+        <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ddd;">
+          <div style="font-size:18px;font-weight:700;font-family:Georgia,serif;color:#111;">Haaland considers Man City exit - Friday's gossip</div>
+          <div style="font-size:12px;color:#777;margin:2px 0 6px;text-transform:uppercase;letter-spacing:0.03em;">BBC - Football</div>
+          <div style="font-size:14px;color:#333;line-height:1.5;font-family:Georgia,serif;">Erling Haaland considers Manchester City exit, Liverpool explore Jamal Musiala deal and Manchester United eye move for Maxi Araujo, plus more.</div>
+          <a href="https://www.bbc.co.uk/sport/football/articles/c9zr568gje67o?at_medium=RSS&at_campaign=rss" style="font-size:13px;color:#8b0000;text-decoration:none;">Read full story &rarr;</a>
+        </div>
+        
+
+  <div style="text-align:center;font-size:11px;color:#999;margin-top:24px;">
+    Generated automatically. Headlines and teasers only - click through for full articles.
+  </div>
+</div>
+</body></html>
